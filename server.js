@@ -6,7 +6,7 @@ const app = express()
 var corOptions = {
     origin : 'https://localhost:8081'
 }
-
+ 
 
 //Middleware
 app.use(cors(corOptions))
