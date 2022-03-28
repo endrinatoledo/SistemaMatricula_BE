@@ -28,6 +28,8 @@ app.get('/', (req,res)=>{
 const PORT = process.env.PORT || 8080
 
 //server
-app.listen(PORT, () =>{
+const server = app.listen(PORT, () =>{
     console.log(`server is runningg port ${PORT}`)
 })
+
+module.exports = {app, server};
