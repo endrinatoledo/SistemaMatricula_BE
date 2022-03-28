@@ -25,7 +25,20 @@ describe("Pruebas de rutas de Usuarios", ()=>{
         })
     })
 
-    test('Create user', async () =>{
+    test('delete user', async () =>{
+        return api
+        .delete(`/api/users/${dataSet.startUserList[0].usuId}`)
+        .then(response => {
+            if(response.body.ok === dataSet.deleteUser.fail.ok){
+                expect(response.body.message).toBe(dataSet.deleteUser.fail.message);
+            }else{
+                expect(response.body.message).toBe(dataSet.deleteUser.success.message);
+             }
+            
+        })
+    })
+
+    test.skip('Create user', async () =>{
         try {
             return api
         .post(`/api/users/`)

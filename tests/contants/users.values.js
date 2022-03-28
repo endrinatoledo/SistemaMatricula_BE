@@ -15,6 +15,21 @@ const dataSet = {
         "usuPassword" : "1234",
         "usuStatus" : 1
     }],
+    startUserList2:[{
+        "usuId":1,
+        "usuName" : "star user 1",
+        "usuLastName" : "star user 1",
+        "usuEmail" : "staruser1@gmail.com",
+        "usuPassword" : "1234",
+        "usuStatus" : 1
+    },{
+        "usuId":2,
+        "usuName" : "star user 2",
+        "usuLastName" : "star user 2",
+        "usuEmail" : "staruser2@gmail.com",
+        "usuPassword" : "1234",
+        "usuStatus" : 1
+    }],
     getUserById:{
         success:{
             "usuId" : 1
@@ -59,10 +74,12 @@ const dataSet = {
     },
     deleteUser:{
         success:{
-            "usuId" : 2
+            "ok" : true,
+            "message" : "Usuario eliminado con éxito"
         },
         fail : {
-            "usuId" : "Anything"
+            "ok" : false,
+            "message" : "Error al eliminar usuario"
         }
     },
     errorEmailExists:{
