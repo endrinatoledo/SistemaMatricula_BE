@@ -38,7 +38,7 @@ const addUser =  async (req, res) =>{
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
                 next(err)
               })
-            // res.sendStatus(200).send(user)
+
 
           }
     } catch (err) {

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "nodemon server.js",
-    "test": "jest --verbose --silent --detectOpenHandles"
+    "test": "jest --verbose --silent --detectOpenHandles --watch",
+    "test:watch" : "npm run test -- --watch"
   },
   "author": "",
   "license": "ISC",
