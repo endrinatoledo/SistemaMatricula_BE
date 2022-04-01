@@ -7,11 +7,12 @@
     "dev": "nodemon server.js",
     "start": "nodemon server.js",
     "test": "jest --verbose --silent --detectOpenHandles --watch",
-    "test:watch" : "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "http-status-codes": "^2.2.0",

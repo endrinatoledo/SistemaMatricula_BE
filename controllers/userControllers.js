@@ -3,6 +3,7 @@ const {  StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
+const encbcrypt = require('../utils/bcrypt');
 
 const UserModel = db.usersModel
 
@@ -27,7 +28,7 @@ const addUser =  async (req, res) =>{
                 usuName: req.body.usuName,
                 usuLastName: req.body.usuLastName,
                 usuEmail: req.body.usuEmail,
-                usuPassword: req.body.usuPassword,
+                usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
                 usuStatus: req.body.usuStatus,
             })
             .then((user) => {
