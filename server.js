@@ -1,22 +1,21 @@
-const express = require('express')
 const cors = require('cors')
+const express = require('express')
 
 const app = express()
 
-var corOptions = {
-    origin : 'https://localhost:8081'
-}
 
-
-//Middleware
-app.use(cors(corOptions))
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.Router())
+app.use(cors())
+app.use(express.Router())
+app.use(express.urlencoded({extended:true})) 
 
 //Routes
 const routerUser = require('./routes/userRoutes.js')
+const routerAccess = require('./routes/accessRoutes.js')
 
 app.use('/api/users',routerUser)
+app.use('/api/access',routerAccess) 
  
 //testing api
 
