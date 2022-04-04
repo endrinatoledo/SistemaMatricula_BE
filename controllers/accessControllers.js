@@ -1,8 +1,11 @@
 const {  StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const db = require("../models");
+const db = require("../models/index.js");
 const {comprarePassword} = require('../utils/bcrypt');
+const jwt = require('jsonwebtoken');
+const config =  require('../config/config.json')
+const verifyToken = require('../utils/token')
 
 const UserModel = db.usersModel
 
@@ -35,9 +38,9 @@ const logIn = async (req, res, next) =>{
                             usuEmail:user.usuEmail,
                             usuStatus:user.usuStatus,
                             usuPassword:user.usuPassword,
-                            // token: jwt.sign({ sub: user.usuId }, config.secret)
+                            token: jwt.sign({ sub: user.usuId }, config.secret,{ expiresIn : 6000})
                           }
-                          res.status(StatusCodes.OK).json({ok: true, validatedUser})
+                          res.status(StatusCodes.OK).json({ok: true, user: validatedUser})
                     }else{
                       return res.status(StatusCodes.OK).json({ok: false, message: 'Contraseña Incorrecta'})
                     }
