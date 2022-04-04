@@ -13,9 +13,11 @@ app.use(express.urlencoded({extended:true}))
 //Routes
 const routerUser = require('./routes/userRoutes.js')
 const routerAccess = require('./routes/accessRoutes.js')
+const routerRol = require('./routes/rolRoutes.js')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
+app.use('/api/roles',routerRol) 
  
 //testing api
 
