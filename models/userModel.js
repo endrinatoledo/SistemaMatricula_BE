@@ -1,14 +1,11 @@
-// const { DataTypes } = require("sequelize/types");
-// const { sequelize } = require(".");
-
 module.exports = (sequelize, DataTypes) => {
 
-    const User = sequelize.define("user", {
+    const usersModel = sequelize.define("usersModel", {
         usuId : {
-            autoIncrement: true,
             type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true,
+            autoIncrement: true,
             field: 'usu_id'    
         },
         usuName:{
@@ -35,9 +32,23 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             field: 'usu_status' 
-        }
+        },
+        rolId: {
+            type: DataTypes.BIGINT,
+            allowNull: false,
+            field: 'rol_id'
+          }
+    }, {
+        tableName: 'users',
+        timestamps: false
+      }) 
 
-    })
+      usersModel.associate = function (models) {
+        usersModel.belongsTo(models.rolesModel, {
+          as: 'roles',
+          foreignKey: 'rolId'
+        })
+      }
 
-    return User
+    return usersModel
 }

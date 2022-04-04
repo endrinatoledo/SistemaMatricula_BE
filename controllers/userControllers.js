@@ -6,10 +6,10 @@ const db = require("../models");
 const encbcrypt = require('../utils/bcrypt');
 
 const UserModel = db.usersModel
-
+const RolesModel = db.rolesModel
 //Add User
 
-const addUser =  async (req, res) =>{
+const addUser =  async (req, res, next) =>{
 
     if (!req.body.usuName || !req.body.usuName || !req.body.usuEmail || !req.body.usuPassword || !req.body.usuStatus) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
     try {
@@ -30,6 +30,7 @@ const addUser =  async (req, res) =>{
                 usuEmail: req.body.usuEmail,
                 usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
                 usuStatus: req.body.usuStatus,
+                rolId: req.body.rolId,
             })
             .then((user) => {
                 message = 'Usuario creado con éxito';
@@ -50,9 +51,15 @@ const addUser =  async (req, res) =>{
 
 }
 //get All User
-const getAllUsers =  async (req, res) =>{
+const getAllUsers =  async (req, res, next) =>{
 
-    UserModel.findAll({})
+    UserModel.findAll({
+      include: {
+        model: RolesModel,
+        as: 'roles',
+        require: true
+      }
+    })
     .then((users) => {
         res.status(StatusCodes.OK).json({ok: true, data: users})
     }, (err) => {
@@ -63,7 +70,7 @@ const getAllUsers =  async (req, res) =>{
 
 }
 //get All User by Id
-const getOneUserById =  async (req, res) =>{
+const getOneUserById =  async (req, res, next) =>{
 
     UserModel.findOne({
         where: {
@@ -80,7 +87,7 @@ const getOneUserById =  async (req, res) =>{
 
 }
 //Update User
-const updateUser =  async (req, res) =>{
+const updateUser =  async (req, res, next) =>{
 
     UserModel.findOne({
         where: {
@@ -105,6 +112,7 @@ const updateUser =  async (req, res) =>{
                   usuEmail: (req.body.usuEmail != null) ? req.body.usuEmail : user.usuEmail,
                   usuPassword: (req.body.usuPassword != null) ? req.body.usuPassword : user.usuPassword,
                   usuStatus: (req.body.usuStatus != null) ? req.body.usuStatus : user.usuStatus,
+                  rolId: (req.body.rolId != null) ? req.body.rolId : user.rolId
                 })
                 .then((user) => {
                   message = 'Usuario editado con éxito';
@@ -125,15 +133,11 @@ const updateUser =  async (req, res) =>{
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
         next(err)
       })
-    // const user = await UserModel.findOne(req.body,{
-    //     where : {usuId : req.params.usuId }
-    // })
-    // res.send(200).send(user)
 
 }
 
 //Delete User
-const deleteUser =  async (req, res) =>{
+const deleteUser =  async (req, res, next) =>{
 
     UserModel.destroy({      
         where: {
@@ -151,10 +155,6 @@ const deleteUser =  async (req, res) =>{
         next(err)
       })    
 
-    // const user = await UserModel.destroy(req.body,{
-    //     where : {usuId : req.params.usuId }
-    // })
-    // res.send(200).send(`Usuario Eliminado exitosamente`)
 }
 module.exports = {
     addUser,
