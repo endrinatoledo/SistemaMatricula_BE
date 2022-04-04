@@ -34,6 +34,13 @@ db.Sequelize = Sequelize
 db.sequelize = sequelize
 
 db.usersModel =  require('./userModel.js')(sequelize,DataTypes)
+db.rolesModel =  require('./rolesModel.js')(sequelize,DataTypes)
+
+Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db);
+    }
+  });
 
 db.sequelize.sync({ force: false })
 .then(() => {
