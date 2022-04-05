@@ -14,10 +14,12 @@ app.use(express.urlencoded({extended:true}))
 const routerUser = require('./routes/userRoutes.js')
 const routerAccess = require('./routes/accessRoutes.js')
 const routerRol = require('./routes/rolRoutes.js')
+const routerFamily = require('./routes/familyRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
 app.use('/api/roles',routerRol) 
+app.use('/api/families',routerFamily) 
  
 //testing api
 
