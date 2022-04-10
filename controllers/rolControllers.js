@@ -60,7 +60,7 @@ const getAllRoles =  async (req, res, next) =>{
 }
 //get All Rol by Id
 const getOneRolById =  async (req, res, next) =>{
-
+  
     RolesModel.findOne({
         where: {
             rolId: req.params.rolId
@@ -120,7 +120,6 @@ const updateRol =  async (req, res, next) =>{
       })
 
 }
-
 //Delete Rol
 const deleteRol =  async (req, res, next) =>{
 
@@ -141,10 +140,29 @@ const deleteRol =  async (req, res, next) =>{
       })    
 
 }
+//get All Active Rol
+const getAllActiveRoles =  async (req, res, next) =>{
+
+  RolesModel.findAll({
+    where: {
+      rolStatus: 1
+      }
+  })
+  .then((roles) => {
+      res.status(StatusCodes.OK).json({ok: true, data: roles})
+  }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+}
+
 module.exports = {
     addRol,
     getAllRoles,
     getOneRolById,
     updateRol,
-    deleteRol
+    deleteRol,
+    getAllActiveRoles
 }
