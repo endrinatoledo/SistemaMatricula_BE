@@ -11,11 +11,11 @@ const RolesModel = db.rolesModel
 
 const addUser =  async (req, res, next) =>{
 
-    if (!req.body.usuName || !req.body.usuName || !req.body.usuEmail || !req.body.usuPassword || !req.body.usuStatus) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
+    if (!req.body.name || !req.body.lastName || !req.body.email || !req.body.password || !req.body.status|| !req.body.rol) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
     try {
 
         let mailExists = await UserModel.findOne({
-            where: { usuEmail: req.body.usuEmail }
+            where: { usuEmail: req.body.email }
       
           }).catch((err) => {
             throw err; 
@@ -25,19 +25,20 @@ const addUser =  async (req, res, next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Email ya se encuentra registrado'})
           }else{
             UserModel.create({
-                usuName: req.body.usuName,
-                usuLastName: req.body.usuLastName,
-                usuEmail: req.body.usuEmail,
-                usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
-                usuStatus: req.body.usuStatus,
-                rolId: req.body.rolId,
+                usuName: req.body.name,
+                usuLastName: req.body.lastName,
+                usuEmail: req.body.email,
+                usuPassword: encbcrypt.encryptPWD(req.body.password),
+                usuStatus: req.body.status,
+                rolId: req.body.rol,
             })
             .then((user) => {
                 message = 'Usuario creado con éxito';
                 res.status(StatusCodes.OK).json({ok: true,data: user, message})
               }, (err) => {
-                message = err
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
+                // message = err
+                message = 'Error de conexión'
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
                 next(err)
               })
 
