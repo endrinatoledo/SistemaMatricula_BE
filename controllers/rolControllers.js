@@ -10,11 +10,11 @@ const RolesModel = db.rolesModel
 
 const addRol =  async (req, res,next) =>{
 
-    if (!req.body.rolName || !req.body.rolStatus) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
+    if (req.body.name === '' || req.body.rolStatus === 0) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
     try {
 
         let rolExists = await RolesModel.findOne({
-            where: { rolName: req.body.rolName }
+            where: { rolName: req.body.name }
       
           }).catch((err) => {
             throw err; 
@@ -24,8 +24,8 @@ const addRol =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Rol ya se encuentra registrado'})
           }else{
             RolesModel.create({
-                rolName: req.body.rolName,
-                rolStatus: req.body.rolStatus
+                rolName: req.body.name,
+                rolStatus: req.body.status
             })
             .then((rol) => {
                 message = 'Rol creado con éxito';
