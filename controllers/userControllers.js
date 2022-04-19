@@ -92,7 +92,7 @@ const updateUser =  async (req, res, next) =>{
 
     UserModel.findOne({
         where: {
-          usuEmail: req.body.usuEmail,
+          usuEmail: req.body.email,
           usuId: {
             [Op.ne]: req.params.usuId
           }
@@ -108,12 +108,12 @@ const updateUser =  async (req, res, next) =>{
             }
           }).then((user) => {
                 user.update({
-                  usuName: (req.body.usuName != null) ? req.body.usuName : user.usuName,
-                  usuLastName: (req.body.usuLastName != null) ? req.body.usuLastName : user.usuLastName,
-                  usuEmail: (req.body.usuEmail != null) ? req.body.usuEmail : user.usuEmail,
-                  usuPassword: (req.body.usuPassword != null) ? req.body.usuPassword : user.usuPassword,
-                  usuStatus: (req.body.usuStatus != null) ? req.body.usuStatus : user.usuStatus,
-                  rolId: (req.body.rolId != null) ? req.body.rolId : user.rolId
+                  usuName: (req.body.name != null) ? req.body.name : user.usuName,
+                  usuLastName: (req.body.lastName != null) ? req.body.lastName : user.usuLastName,
+                  usuEmail: (req.body.email != null) ? req.body.email : user.usuEmail,
+                  usuPassword: (req.body.password != null) ? req.body.password : user.usuPassword,
+                  usuStatus: (req.body.status != null) ? req.body.status : user.usuStatus,
+                  rolId: (req.body.rol != null) ? req.body.rol : user.rolId
                 })
                 .then((user) => {
                   message = 'Usuario editado con éxito';
