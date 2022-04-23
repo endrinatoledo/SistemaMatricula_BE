@@ -20,6 +20,7 @@ const routerSection = require('./routes/sectionRoutes')
 const routerCountry = require('./routes/countryRoutes')
 const routerPaymentMethod = require('./routes/paymentMethodsRoutes')
 const professionRoutes = require('./routes/professionRoutes')
+const periodRoutes = require('./routes/periodRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -30,6 +31,7 @@ app.use('/api/sections',routerSection)
 app.use('/api/countries',routerCountry) 
 app.use('/api/paymentmethod',routerPaymentMethod)
 app.use('/api/professions',professionRoutes)
+app.use('/api/periods',periodRoutes)
  
 //testing api
 

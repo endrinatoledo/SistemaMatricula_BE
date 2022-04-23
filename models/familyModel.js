@@ -15,6 +15,13 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           field: 'fam_name'
         },
+
+        famCode: {
+          type: DataTypes.STRING(100),
+          allowNull: false,
+          field: 'fam_code'
+        },
+
         famStatus: {
           type: DataTypes.INTEGER(11),
           allowNull: false,

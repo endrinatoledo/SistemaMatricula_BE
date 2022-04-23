@@ -5,38 +5,50 @@ const db = require("../models");
 
 const FamilyModel = db.familyModel
 
+const countFamilies = async () =>{
+
+  await FamilyModel.count({})
+      .then((total) => {
+        return {total, result : true}
+      }, (err) => {
+        return {result : false}
+      })
+      .catch((err) => {
+          throw err; 
+     });
+
+}
 //Add Family
 
 const addFamily =  async (req, res,next) =>{
 
-    if (!req.body.famName || !req.body.famStatus) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
+  
+
+    if (!req.body.name || !req.body.status) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
     try {
 
-        let famExists = await FamilyModel.findOne({
-            where: { famName: req.body.famName }
-      
-          }).catch((err) => {
-            throw err; 
-          });
+      FamilyModel.count({}).then((total) => {
 
-          if (famExists){
-            return res.status(StatusCodes.OK).json({ok: false, message: 'Familia ya se encuentra registrada'})
-          }else{
-            FamilyModel.create({
-                famName: req.body.famName,
-                famStatus: req.body.famStatus
-            })
-            .then((family) => {
-                message = 'Famila creada con éxito';
-                res.status(StatusCodes.OK).json({ok: true,data: family, message})
-              }, (err) => {
-                message = err
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
-                next(err)
-              })
+        FamilyModel.create({
+          famName: req.body.name,
+          famCode:  `00${total+1}`,
+          famStatus: req.body.status
+      })
+      .then((family) => {
+          message = 'Famila creada con éxito';
+          res.status(StatusCodes.OK).json({ok: true,data: family, message})
+        }, (err) => {
+          message = err
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
+          next(err)
+        })
+      }, (err) => {
 
-
-          }
+        return {result : false}
+      })
+      .catch((err) => {
+          throw err; 
+     });
     } catch (err) {
         message = err;
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
@@ -76,27 +88,16 @@ const getOneFamilyById =  async (req, res, next) =>{
 }
 //Update Family
 const updateFamily =  async (req, res, next) =>{
-
-    FamilyModel.findOne({
-        where: {
-            famName: req.body.famName,
-            famId: {
-            [Op.ne]: req.params.famId
-          }
-        }
-      })
-      .then((family) => {
-        if(family){
-          return res.status(StatusCodes.OK).json({ok: false, message: 'Famila ya se encuentra registrada'})
-        }else{    
+  
             FamilyModel.findOne({
             where: {
               famId: req.params.famId          
             }
           }).then((family) => {
             family.update({
-                famName: (req.body.famName != null) ? req.body.famName : rol.famName,
-                famStatus: (req.body.famStatus != null) ? req.body.famStatus : rol.famStatus
+                famName: (req.body.name != null) ? req.body.name : family.famName,
+                famCode : family.famCode,
+                famStatus: (req.body.status != null) ? req.body.status : family.famStatus
                 })
                 .then((family) => {
                   message = 'Familia editada con éxito';
@@ -111,12 +112,6 @@ const updateFamily =  async (req, res, next) =>{
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
                 next(err)
               })    
-        }
-      }, (err) => {
-        message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-        next(err)
-      })
 
 }
 
@@ -131,7 +126,7 @@ const deleteFamily =  async (req, res, next) =>{
         if(rowsDeleted > 0) {
           return res.status(StatusCodes.OK).json({ok: true, message: `Familia eliminada con éxito`})  
         }else{
-          return res.status(StatusCodes.OK).json({ok: false, message: `Error al eliminar Rol`})  
+          return res.status(StatusCodes.OK).json({ok: false, message: `Error al eliminar Familia`})  
         }
       }, (err) => {
         message = err

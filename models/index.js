@@ -41,6 +41,7 @@ db.sectionsModel =  require('./sectionsModel')(sequelize,DataTypes)
 db.countriesModel =  require('./countriesModel')(sequelize,DataTypes)
 db.paymentMethodsModel =  require('./paymentMethodsModel')(sequelize,DataTypes)
 db.professionsModel =  require('./professionsModel')(sequelize,DataTypes)
+db.periodsModel =  require('./periodsModel')(sequelize,DataTypes)
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
