@@ -36,6 +36,9 @@ db.sequelize = sequelize
 db.usersModel =  require('./userModel.js')(sequelize,DataTypes)
 db.rolesModel =  require('./rolesModel.js')(sequelize,DataTypes)
 db.familyModel =  require('./familyModel')(sequelize,DataTypes)
+db.levelsModel =  require('./levelsModel')(sequelize,DataTypes)
+db.sectionsModel =  require('./sectionsModel')(sequelize,DataTypes)
+db.countriesModel =  require('./countriesModel')(sequelize,DataTypes)
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {

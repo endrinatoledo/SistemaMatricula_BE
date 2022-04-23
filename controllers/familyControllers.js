@@ -2,7 +2,6 @@ const {  StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
-const encbcrypt = require('../utils/bcrypt');
 
 const FamilyModel = db.familyModel
 

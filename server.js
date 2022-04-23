@@ -15,11 +15,17 @@ const routerUser = require('./routes/userRoutes.js')
 const routerAccess = require('./routes/accessRoutes.js')
 const routerRol = require('./routes/rolRoutes.js')
 const routerFamily = require('./routes/familyRoutes')
+const routerLevel = require('./routes/levelRoutes')
+const routerSection = require('./routes/sectionRoutes')
+const routerCountry = require('./routes/countryRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
 app.use('/api/roles',routerRol) 
 app.use('/api/families',routerFamily) 
+app.use('/api/levels',routerLevel) 
+app.use('/api/sections',routerSection) 
+app.use('/api/countries',routerCountry) 
  
 //testing api
 

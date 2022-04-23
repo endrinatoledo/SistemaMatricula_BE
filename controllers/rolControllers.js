@@ -2,7 +2,6 @@ const {  StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
-const encbcrypt = require('../utils/bcrypt');
 
 const RolesModel = db.rolesModel
 
@@ -10,7 +9,7 @@ const RolesModel = db.rolesModel
 
 const addRol =  async (req, res,next) =>{
 
-    if (req.body.name === '' || req.body.rolStatus === 0) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
+    if (req.body.name === '' || req.body.status === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let rolExists = await RolesModel.findOne({
