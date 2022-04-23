@@ -18,6 +18,8 @@ const routerFamily = require('./routes/familyRoutes')
 const routerLevel = require('./routes/levelRoutes')
 const routerSection = require('./routes/sectionRoutes')
 const routerCountry = require('./routes/countryRoutes')
+const routerPaymentMethod = require('./routes/paymentMethodsRoutes')
+const professionRoutes = require('./routes/professionRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -26,6 +28,8 @@ app.use('/api/families',routerFamily)
 app.use('/api/levels',routerLevel) 
 app.use('/api/sections',routerSection) 
 app.use('/api/countries',routerCountry) 
+app.use('/api/paymentmethod',routerPaymentMethod)
+app.use('/api/professions',professionRoutes)
  
 //testing api
 
