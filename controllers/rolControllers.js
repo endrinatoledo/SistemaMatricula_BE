@@ -80,7 +80,7 @@ const updateRol =  async (req, res, next) =>{
 
     RolesModel.findOne({
         where: {
-            rolName: req.body.rolName,
+            rolName: req.body.name,
             rolId: {
             [Op.ne]: req.params.rolId
           }
@@ -96,8 +96,8 @@ const updateRol =  async (req, res, next) =>{
             }
           }).then((rol) => {
             rol.update({
-                rolName: (req.body.rolName != null) ? req.body.rolName : rol.rolName,
-                rolStatus: (req.body.rolStatus != null) ? req.body.rolStatus : rol.rolStatus
+                rolName: (req.body.name != null) ? req.body.name : rol.rolName,
+                rolStatus: (req.body.status != null) ? req.body.status : rol.rolStatus
                 })
                 .then((rol) => {
                   message = 'Rol editado con éxito';
