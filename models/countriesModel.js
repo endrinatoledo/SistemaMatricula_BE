@@ -23,10 +23,14 @@ module.exports = (sequelize, DataTypes) => {
 
       countriesModel.associate = function (models) {
 
-        // countriesModel.hasMany(models.usersModel, {
-        //   as: 'cou_user',
-        //   foreignKey: 'coud'
-        // })
+        countriesModel.hasMany(models.federalEntityModel, {
+          as: 'cou_fed',
+          foreignKey: 'couId'
+        })
+        countriesModel.hasMany(models.schoolDataModel, {
+          as: 'cou_school_data',
+          foreignKey: 'couId'
+        })
       }
     return countriesModel
 }

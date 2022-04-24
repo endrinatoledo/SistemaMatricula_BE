@@ -21,6 +21,9 @@ const routerCountry = require('./routes/countryRoutes')
 const routerPaymentMethod = require('./routes/paymentMethodsRoutes')
 const professionRoutes = require('./routes/professionRoutes')
 const periodRoutes = require('./routes/periodRoutes')
+const federalEntityRoutes = require('./routes/federalEntityRoutes')
+const schoolDataRoutes = require('./routes/schoolDataRoutes')
+const exchangeRateRoutes = require('./routes/exchangeRateRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -32,6 +35,9 @@ app.use('/api/countries',routerCountry)
 app.use('/api/paymentmethod',routerPaymentMethod)
 app.use('/api/professions',professionRoutes)
 app.use('/api/periods',periodRoutes)
+app.use('/api/federalEntities',federalEntityRoutes)
+app.use('/api/schoolData',schoolDataRoutes)
+app.use('/api/exchangeRate',exchangeRateRoutes)
  
 //testing api
 

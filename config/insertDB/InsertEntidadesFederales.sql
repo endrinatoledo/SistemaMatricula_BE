@@ -1,0 +1,28 @@
+use matricula;
+select * from federal_entities;
+INSERT INTO `federal_entities` (`fed_id`, `fed_name`, `cou_id`) VALUES
+(1, 'Amazonas'  , 232),
+(2, 'Anzoátegui', 232),
+(3, 'Apure'     , 232),
+(4, 'Aragua'    , 232),
+(5, 'Barinas'   , 232),
+(6, 'Bolívar'   , 232),
+(7, 'Carabobo'  , 232),
+(8, 'Cojedes'      , 232),
+(9, 'Delta Amacuro', 232),
+(10, 'Falcón', 232),
+(11, 'Guárico', 232),
+(12, 'Lara', 232),
+(13, 'Mérida', 232),
+(14, 'Miranda', 232),
+(15, 'Monagas', 232),
+(16, 'Nueva Esparta', 232),
+(17, 'Portuguesa', 232),
+(18, 'Sucre', 232),
+(19, 'Táchira', 232),
+(20, 'Trujillo', 232),
+(21, 'La Guaira', 232),
+(22, 'Yaracuy', 232),
+(23, 'Zulia', 232),
+(24, 'Distrito Capital', 232),
+(25, 'Dependencias Federales', 232);
