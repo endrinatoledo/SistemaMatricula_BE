@@ -24,18 +24,18 @@ const addFamily =  async (req, res,next) =>{
 
   
 
-    if (!req.body.name || !req.body.status) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
+    if (!req.body.famName || !req.body.famStatus) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
     try {
 
       FamilyModel.count({}).then((total) => {
 
         FamilyModel.create({
-          famName: req.body.name,
+          famName: req.body.famName,
           famCode:  `00${total+1}`,
-          famStatus: req.body.status
+          famStatus: parseInt(req.body.famStatus)
       })
       .then((family) => {
-          message = 'Famila creada con éxito';
+          message = 'Familia creada con éxito';
           res.status(StatusCodes.OK).json({ok: true,data: family, message})
         }, (err) => {
           message = err
@@ -95,9 +95,9 @@ const updateFamily =  async (req, res, next) =>{
             }
           }).then((family) => {
             family.update({
-                famName: (req.body.name != null) ? req.body.name : family.famName,
+                famName: (req.body.famName != null) ? req.body.famName : family.famName,
                 famCode : family.famCode,
-                famStatus: (req.body.status != null) ? req.body.status : family.famStatus
+                famStatus: (req.body.famStatus != null) ? parseInt(req.body.famStatus) : family.famStatus
                 })
                 .then((family) => {
                   message = 'Familia editada con éxito';
