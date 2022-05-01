@@ -8,13 +8,13 @@ const ExchangeRatesModel = db.exchangeRatesModel
 //Add exchangeRate
 
 const addExchangeRate =  async (req, res,next) =>{
-
-    if (req.body.amount === '' || req.body.date === '' || req.body.shift === '') return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+ 
+    if (req.body.excAmount === '' || req.body.excDate === '' || req.body.excShift === '') return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
             ExchangeRatesModel.create({
-              excAmount: parseFloat(req.body.amount),
-              excDate: req.body.date,
-              excShift: req.body.shift
+              excAmount:  (parseFloat(req.body.excAmount)).toFixed(2),
+              excDate: req.body.excDate,
+              excShift: req.body.excShift
             })
             .then((exchangeRate) => {
                 message = 'Tasa de Cambio creada con éxito';
@@ -72,9 +72,9 @@ const updateExchangeRate =  async (req, res, next) =>{
             }
           }).then((exchangeRate) => {
             exchangeRate.update({
-                excAmount: (req.body.amount != null) ? req.body.amount : exchangeRate.excAmount,
-                excDate: (req.body.date != null) ? req.body.date : exchangeRate.excDate,
-                excShift: (req.body.shift != null) ? req.body.shift : exchangeRate.excShift,
+                excAmount: (req.body.excAmount != null) ? Math.round(parseFloat(req.body.excAmount)) : exchangeRate.excAmount,
+                excDate: (req.body.excDate != null) ? req.body.excDate : exchangeRate.excDate,
+                excShift: (req.body.excShift != null) ? req.body.excShift : exchangeRate.excShift,
                 })
                 .then((exchangeRate) => {
                   message = 'Tasa de Cambio actualizada con éxito';
