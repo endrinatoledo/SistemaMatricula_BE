@@ -100,7 +100,7 @@ const updateFamily =  async (req, res, next) =>{
                 famStatus: (req.body.famStatus != null) ? parseInt(req.body.famStatus) : family.famStatus
                 })
                 .then((family) => {
-                  message = 'Familia editada con éxito';
+                  message = 'Familia actualizada con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:family, message})
                 }, (err) => {
                   message = err

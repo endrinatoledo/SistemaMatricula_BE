@@ -9,12 +9,12 @@ const PeriodsModel = db.periodsModel
 
 const addPeriod =  async (req, res,next) =>{
 
-    if (!req.body.startYear || !req.body.status) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (!req.body.perStartYear || !req.body.perStatus) return res.perStatus(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
         // getFullYear()   // año actual
 
         let perExists = await PeriodsModel.findOne({
-            where: { perStartYear: Number(req.body.startYear) }
+            where: { perStartYear: Number(req.body.perStartYear) }
       
           }).catch((err) => {
             throw err; 
@@ -24,9 +24,9 @@ const addPeriod =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Período ya se encuentra registrado'})
           }else{
             PeriodsModel.create({
-                perStartYear: Number(req.body.startYear),
-                perEndYear: (Number(req.body.startYear) + 1),
-                perStatus: req.body.status
+                perStartYear: Number(req.body.perStartYear),
+                perEndYear: (Number(req.body.perStartYear) + 1),
+                perStatus: req.body.perStatus
             })
             .then((period) => {
                 message = 'Período creado con éxito';
@@ -81,7 +81,7 @@ const updatePeriod =  async (req, res, next) =>{
 
     PeriodsModel.findOne({
         where: {
-            perStartYear: Number(req.body.startYear),
+            perStartYear: Number(req.body.perStartYear),
             perId: {
             [Op.ne]: req.params.perId
           }
@@ -97,12 +97,12 @@ const updatePeriod =  async (req, res, next) =>{
             }
           }).then((period) => {
             period.update({
-                perStartYear: (req.body.startYear != null) ? Number(req.body.startYear) : period.perStartYear,
-                perEndYear: (req.body.startYear != null) ? (Number(req.body.startYear) + 1) : period.perEndYear,
-                perStatus: (req.body.status != null) ? req.body.status : period.perStatus
+                perStartYear: (req.body.perStartYear != null) ? Number(req.body.perStartYear) : period.perStartYear,
+                perEndYear: (req.body.perStartYear != null) ? (Number(req.body.perStartYear) + 1) : period.perEndYear,
+                perStatus: (req.body.perStatus != null) ? req.body.perStatus : period.perStatus
                 })
                 .then((period) => {
-                  message = 'Período editado con éxito';
+                  message = 'Período actualizado con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:period, message})
                 }, (err) => {
                   message = err

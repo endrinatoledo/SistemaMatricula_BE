@@ -9,11 +9,11 @@ const sectionsModel = db.sectionsModel
 
 const addSection =  async (req, res,next) =>{
 
-    if (req.body.name === '' || req.body.status === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (req.body.secName === '' || req.body.secStatus === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let sectionExists = await sectionsModel.findOne({
-            where: { secName: req.body.name }
+            where: { secName: req.body.secName }
       
           }).catch((err) => {
             throw err; 
@@ -23,8 +23,8 @@ const addSection =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Sección ya se encuentra registrada'})
           }else{
             sectionsModel.create({
-                secName: req.body.name,
-                secStatus: req.body.status
+                secName: req.body.secName,
+                secStatus: req.body.secStatus
             })
             .then((section) => {
                 message = 'Sección creada con éxito';
@@ -77,9 +77,11 @@ const getOneSectionById =  async (req, res, next) =>{
 //Update section
 const updateSection =  async (req, res, next) =>{
 
+  console.log('llego', req.body)
+
     sectionsModel.findOne({
         where: {
-            secName: req.body.name,
+            secName: req.body.secName,
             secId: {
             [Op.ne]: req.params.secId
           }
@@ -95,11 +97,11 @@ const updateSection =  async (req, res, next) =>{
             }
           }).then((section) => {
             section.update({
-                secName: (req.body.name != null) ? req.body.name : section.secName,
-                secStatus: (req.body.status != null) ? req.body.status : section.secStatus
+                secName: (req.body.secName != null) ? req.body.secName : section.secName,
+                secStatus: (req.body.secStatus != null) ? req.body.secStatus : section.secStatus
                 })
                 .then((section) => {
-                  message = 'Sección editada con éxito';
+                  message = 'Sección actualizada con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:section, message})
                 }, (err) => {
                   message = err

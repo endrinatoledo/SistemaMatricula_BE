@@ -116,7 +116,7 @@ const updateUser =  async (req, res, next) =>{
                   rolId: (req.body.rol != null) ? req.body.rol : user.rolId
                 })
                 .then((user) => {
-                  message = 'Usuario editado con éxito';
+                  message = 'Usuario actualizado con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:user, message})
                 }, (err) => {
                   message = err

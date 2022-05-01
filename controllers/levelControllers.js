@@ -9,11 +9,11 @@ const LevelsModel = db.levelsModel
 
 const addLevel =  async (req, res,next) =>{
 
-    if (req.body.name === '' || req.body.status === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (req.body.levName === '' || req.body.levStatus === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let levelExists = await LevelsModel.findOne({
-            where: { levName: req.body.name }
+            where: { levName: req.body.levName }
       
           }).catch((err) => {
             throw err; 
@@ -23,8 +23,8 @@ const addLevel =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Nivel ya se encuentra registrado'})
           }else{
             LevelsModel.create({
-                levName: req.body.name,
-                levStatus: req.body.status
+                levName: req.body.levName,
+                levStatus: req.body.levStatus
             })
             .then((level) => {
                 message = 'Nivel creado con éxito';
@@ -79,7 +79,7 @@ const updateLevel =  async (req, res, next) =>{
 
     LevelsModel.findOne({
         where: {
-            levName: req.body.name,
+            levName: req.body.levName,
             levId: {
             [Op.ne]: req.params.levId
           }
@@ -95,11 +95,11 @@ const updateLevel =  async (req, res, next) =>{
             }
           }).then((level) => {
             level.update({
-                levName: (req.body.name != null) ? req.body.name : level.levName,
-                levStatus: (req.body.status != null) ? req.body.status : level.levStatus
+                levName: (req.body.levName != null) ? req.body.levName : level.levName,
+                levStatus: (req.body.levStatus != null) ? req.body.levStatus : level.levStatus
                 })
                 .then((level) => {
-                  message = 'Nivel editado con éxito';
+                  message = 'Nivel actualizado con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:level, message})
                 }, (err) => {
                   message = err

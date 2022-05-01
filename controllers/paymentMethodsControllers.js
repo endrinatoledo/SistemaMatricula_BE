@@ -99,7 +99,7 @@ const updatePaymentMethod  =  async (req, res, next) =>{
                 payStatus: (req.body.status != null) ? req.body.status : payMethod.payStatus
                 })
                 .then((payMethod) => {
-                  message = 'Método de Pago editado con éxito';
+                  message = 'Método de Pago actualizado con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:payMethod, message})
                 }, (err) => {
                   message = err

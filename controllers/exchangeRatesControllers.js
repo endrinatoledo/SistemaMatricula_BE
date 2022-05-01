@@ -77,7 +77,7 @@ const updateExchangeRate =  async (req, res, next) =>{
                 excShift: (req.body.shift != null) ? req.body.shift : exchangeRate.excShift,
                 })
                 .then((exchangeRate) => {
-                  message = 'Tasa de Cambio editada con éxito';
+                  message = 'Tasa de Cambio actualizada con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:exchangeRate, message})
                 }, (err) => {
                   message = err

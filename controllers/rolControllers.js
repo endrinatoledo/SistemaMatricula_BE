@@ -9,11 +9,11 @@ const RolesModel = db.rolesModel
 
 const addRol =  async (req, res,next) =>{
 
-    if (req.body.name === '' || req.body.status === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (req.body.rolName === '' || req.body.rolStatus === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let rolExists = await RolesModel.findOne({
-            where: { rolName: req.body.name }
+            where: { rolName: req.body.rolName }
       
           }).catch((err) => {
             throw err; 
@@ -23,8 +23,8 @@ const addRol =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Rol ya se encuentra registrado'})
           }else{
             RolesModel.create({
-                rolName: req.body.name,
-                rolStatus: req.body.status
+                rolName: req.body.rolName,
+                rolStatus: req.body.rolStatus
             })
             .then((rol) => {
                 message = 'Rol creado con éxito';
@@ -79,7 +79,7 @@ const updateRol =  async (req, res, next) =>{
 
     RolesModel.findOne({
         where: {
-            rolName: req.body.name,
+            rolName: req.body.rolName,
             rolId: {
             [Op.ne]: req.params.rolId
           }
@@ -95,11 +95,11 @@ const updateRol =  async (req, res, next) =>{
             }
           }).then((rol) => {
             rol.update({
-                rolName: (req.body.name != null) ? req.body.name : rol.rolName,
-                rolStatus: (req.body.status != null) ? req.body.status : rol.rolStatus
+                rolName: (req.body.rolName != null) ? req.body.rolName : rol.rolName,
+                rolStatus: (req.body.rolStatus != null) ? req.body.rolStatus : rol.rolStatus
                 })
                 .then((rol) => {
-                  message = 'Rol editado con éxito';
+                  message = 'Rol actualizado con éxito';
                   res.status(StatusCodes.OK).json({ok: true, data:rol, message})
                 }, (err) => {
                   message = err
