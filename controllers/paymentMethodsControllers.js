@@ -9,11 +9,11 @@ const paymentMethodsModel = db.paymentMethodsModel
 
 const addPaymentMethod =  async (req, res,next) =>{
 
-    if (req.body.name === '' || req.body.status === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (req.body.payName === '' || req.body.payStatus === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let payMethodExists = await paymentMethodsModel.findOne({
-            where: { payName: req.body.name }
+            where: { payName: req.body.payName }
       
           }).catch((err) => {
             throw err; 
@@ -23,8 +23,8 @@ const addPaymentMethod =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Método de Pago ya se encuentra registrado'})
           }else{
             paymentMethodsModel.create({
-                payName: req.body.name,
-                payStatus: req.body.status
+                payName: req.body.payName,
+                payStatus: req.body.payStatus
             })
             .then((payMethod) => {
                 message = 'Método de Pago creado con éxito';
@@ -79,7 +79,7 @@ const updatePaymentMethod  =  async (req, res, next) =>{
 
     paymentMethodsModel.findOne({
         where: {
-            payName: req.body.name,
+            payName: req.body.payName,
             payId: {
             [Op.ne]: req.params.payId
           }
@@ -95,8 +95,8 @@ const updatePaymentMethod  =  async (req, res, next) =>{
             }
           }).then((payMethod) => {
             payMethod.update({
-                payName: (req.body.name != null) ? req.body.name : payMethod.payName,
-                payStatus: (req.body.status != null) ? req.body.status : payMethod.payStatus
+                payName: (req.body.payName != null) ? req.body.payName : payMethod.payName,
+                payStatus: (req.body.payStatus != null) ? req.body.payStatus : payMethod.payStatus
                 })
                 .then((payMethod) => {
                   message = 'Método de Pago actualizado con éxito';
