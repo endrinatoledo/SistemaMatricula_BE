@@ -27,7 +27,7 @@ const addFamily =  async (req, res,next) =>{
     if (!req.body.famName || !req.body.famStatus) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
     try {
 
-      FamilyModel.count({}).then((total) => {
+      FamilyModel.max('fam_id',{}).then((total) => {
 
         FamilyModel.create({
           famName: req.body.famName,
