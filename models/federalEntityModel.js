@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'countries',
           foreignKey: 'couId'
         })
+        federalEntityModel.hasMany(models.studentModel, {
+          as: 'fed_stu',
+          foreignKey: 'fedId'
+        })
       }
     return federalEntityModel
 }

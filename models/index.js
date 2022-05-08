@@ -45,13 +45,14 @@ db.periodsModel =  require('./periodsModel')(sequelize,DataTypes)
 db.federalEntityModel =  require('./federalEntityModel')(sequelize,DataTypes)
 db.schoolDataModel =  require('./schoolDataModel')(sequelize,DataTypes)
 db.exchangeRatesModel =  require('./exchangeRatesModel')(sequelize,DataTypes)
+db.studentModel =  require('./studentModel')(sequelize,DataTypes)
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
       db[modelName].associate(db);
     }
   });
-
+//   
 db.sequelize.sync({ force: false })
 .then(() => {
     // console.log('yes re-sync done!')

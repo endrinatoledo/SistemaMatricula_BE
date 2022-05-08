@@ -11,28 +11,33 @@ const RolesModel = db.rolesModel
 
 const addUser =  async (req, res, next) =>{
 
-    if (!req.body.name || !req.body.lastName || !req.body.email || !req.body.password || !req.body.status|| !req.body.rol) return res.status(406).json({ok: false, message: 'Todos os campos son obligatorios'});
+
+    if (!req.body.usuName || !req.body.usuLastName || !req.body.usuEmail ||  !req.body.usuStatus|| !req.body.rolId) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let mailExists = await UserModel.findOne({
-            where: { usuEmail: req.body.email }
+            where: { usuEmail: req.body.usuEmail }
       
           }).catch((err) => {
             throw err; 
           });
 
           if (mailExists){
+
             return res.status(StatusCodes.OK).json({ok: false, message: 'Email ya se encuentra registrado'})
           }else{
+
             UserModel.create({
-                usuName: req.body.name,
-                usuLastName: req.body.lastName,
-                usuEmail: req.body.email,
-                usuPassword: encbcrypt.encryptPWD(req.body.password),
-                usuStatus: req.body.status,
-                rolId: req.body.rol,
+                usuName: req.body.usuName,
+                usuLastName: req.body.usuLastName,
+                usuEmail: req.body.usuEmail,
+                // usuPassword: encbcrypt.encryptPWD(req.body.password),
+                usuPassword: encbcrypt.encryptPWD('1234'),
+                usuStatus: req.body.usuStatus,
+                rolId: req.body.rolId,
             })
             .then((user) => {
+
                 message = 'Usuario creado con éxito';
                 res.status(StatusCodes.OK).json({ok: true,data: user, message})
               }, (err) => {
@@ -41,8 +46,6 @@ const addUser =  async (req, res, next) =>{
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
                 next(err)
               })
-
-
           }
     } catch (err) {
         message = err;
@@ -92,7 +95,7 @@ const updateUser =  async (req, res, next) =>{
 
     UserModel.findOne({
         where: {
-          usuEmail: req.body.email,
+          usuEmail: req.body.usuEmail,
           usuId: {
             [Op.ne]: req.params.usuId
           }
@@ -108,12 +111,12 @@ const updateUser =  async (req, res, next) =>{
             }
           }).then((user) => {
                 user.update({
-                  usuName: (req.body.name != null) ? req.body.name : user.usuName,
-                  usuLastName: (req.body.lastName != null) ? req.body.lastName : user.usuLastName,
-                  usuEmail: (req.body.email != null) ? req.body.email : user.usuEmail,
-                  usuPassword: (req.body.password != null) ? req.body.password : user.usuPassword,
-                  usuStatus: (req.body.status != null) ? req.body.status : user.usuStatus,
-                  rolId: (req.body.rol != null) ? req.body.rol : user.rolId
+                  usuName: (req.body.usuName != null) ? req.body.usuName : user.usuName,
+                  usuLastName: (req.body.usuLastName != null) ? req.body.usuLastName : user.usuLastName,
+                  usuEmail: (req.body.usuEmail != null) ? req.body.usuEmail : user.usuEmail,
+                  usuPassword: (req.body.usuPassword != null) ? req.body.usuPassword : user.usuPassword,
+                  usuStatus: (req.body.usuStatus != null) ? req.body.usuStatus : user.usuStatus,
+                  rolId: (req.body.rolId != null) ? req.body.rolId : user.rolId
                 })
                 .then((user) => {
                   message = 'Usuario actualizado con éxito';

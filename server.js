@@ -24,6 +24,7 @@ const periodRoutes = require('./routes/periodRoutes')
 const federalEntityRoutes = require('./routes/federalEntityRoutes')
 const schoolDataRoutes = require('./routes/schoolDataRoutes')
 const exchangeRateRoutes = require('./routes/exchangeRateRoutes')
+const studentRoutes = require('./routes/studentRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -38,6 +39,7 @@ app.use('/api/periods',periodRoutes)
 app.use('/api/federalEntities',federalEntityRoutes)
 app.use('/api/schoolData',schoolDataRoutes)
 app.use('/api/exchangeRate',exchangeRateRoutes)
+app.use('/api/students',studentRoutes)
  
 //testing api
 

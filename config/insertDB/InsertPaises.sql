@@ -240,3 +240,4 @@ INSERT INTO `countries` VALUES(237, 'Yemen');
 INSERT INTO `countries` VALUES(238, 'Yibuti');
 INSERT INTO `countries` VALUES(239, 'Zambia');
 INSERT INTO `countries` VALUES(240, 'Zimbabue');
+INSERT INTO `countries` VALUES(241, 'Extranjero');

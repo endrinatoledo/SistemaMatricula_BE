@@ -148,7 +148,19 @@ const getAllActiveRoles =  async (req, res, next) =>{
       }
   })
   .then((roles) => {
-      res.status(StatusCodes.OK).json({ok: true, data: roles})
+ 
+    if(roles.length > 0){
+
+      const lookup = roles.reduce(function(acc, cur) {
+        acc[cur.rolId] = cur.rolName;
+        return acc;
+      }, {})
+
+      res.status(StatusCodes.OK).json({ok: true, data: roles, lookup})
+    }else{
+      res.status(StatusCodes.OK).json({ok: true, data: roles, lookup:null})
+    }
+
   }, (err) => {
       message = err
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
