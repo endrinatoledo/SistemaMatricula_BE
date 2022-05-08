@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'fed_stu',
           foreignKey: 'fedId'
         })
+        federalEntityModel.hasMany(models.representativeModel, {
+          as: 'fed_rep',
+          foreignKey: 'fedId'
+        })
       }
     return federalEntityModel
 }

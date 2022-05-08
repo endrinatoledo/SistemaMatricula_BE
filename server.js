@@ -25,6 +25,8 @@ const federalEntityRoutes = require('./routes/federalEntityRoutes')
 const schoolDataRoutes = require('./routes/schoolDataRoutes')
 const exchangeRateRoutes = require('./routes/exchangeRateRoutes')
 const studentRoutes = require('./routes/studentRoutes')
+const representativeRoutes = require('./routes/representativeRoutes')
+const invoiceConceptRoutes = require('./routes/invoiceConceptRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -40,6 +42,8 @@ app.use('/api/federalEntities',federalEntityRoutes)
 app.use('/api/schoolData',schoolDataRoutes)
 app.use('/api/exchangeRate',exchangeRateRoutes)
 app.use('/api/students',studentRoutes)
+app.use('/api/representatives',representativeRoutes)
+app.use('/api/invoiceConcepts',invoiceConceptRoutes)
  
 //testing api
 

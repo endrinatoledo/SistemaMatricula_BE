@@ -46,6 +46,10 @@ db.federalEntityModel =  require('./federalEntityModel')(sequelize,DataTypes)
 db.schoolDataModel =  require('./schoolDataModel')(sequelize,DataTypes)
 db.exchangeRatesModel =  require('./exchangeRatesModel')(sequelize,DataTypes)
 db.studentModel =  require('./studentModel')(sequelize,DataTypes)
+db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
+db.invoiceConceptsModel =  require('./invoiceConceptsModel')(sequelize,DataTypes)
+
+
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {

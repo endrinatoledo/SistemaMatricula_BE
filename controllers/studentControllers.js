@@ -118,7 +118,18 @@ const updateStudent =  async (req, res, next) =>{
           stuId: {
             [Op.ne]: req.params.stuId
           }
+        },
+        include: [{
+          model: CountriesModel,
+          as: 'countries',
+          require: true
         }
+        ,{
+          model: FederalEntityModel,
+          as: 'federalEntity',
+          require: true
+        }
+      ]
       })
       .then((student) => {
         if(student){
@@ -192,7 +203,17 @@ const getAllActiveStudents =  async (req, res, next) =>{
   StudentModel.findAll({
     where: {
       stuStatus: 1
+      },
+      include: [{
+        model: CountriesModel,
+        as: 'countries',
+        require: true
+      },{
+        model: FederalEntityModel,
+        as: 'federalEntity',
+        require: true
       }
+    ]
   })
   .then((students) => {
  

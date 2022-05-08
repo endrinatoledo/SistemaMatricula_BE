@@ -23,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
 
       professionsModel.associate = function (models) {
 
-        // professionsModel.hasMany(models.usersModel, {
-        //   as: 'pro_user',
-        //   foreignKey: 'coud'
-        // })
+        professionsModel.hasMany(models.representativeModel, {
+          as: 'pro_rep',
+          foreignKey: 'proId'
+        })
       }
     return professionsModel
 }
