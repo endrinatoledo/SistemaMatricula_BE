@@ -32,12 +32,12 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
       })
 
-      // periodsModel.associate = function (models) {
+      periodsModel.associate = function (models) {
 
-      //   periodsModel.hasMany(models.usersModel, {
-      //     as: 'per_user',
-      //     foreignKey: 'perId'
-      //   })
-      // }
+        periodsModel.hasMany(models.periodLevelSectionModel, {
+          as: 'periodLevelSection',
+          foreignKey: 'perId'
+        })
+      }
     return periodsModel
 }

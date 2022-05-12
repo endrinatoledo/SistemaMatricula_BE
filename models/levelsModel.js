@@ -28,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
 
       levelsModel.associate = function (models) {
 
-        // levelsModel.hasMany(models.usersModel, {
-        //   as: 'lev_user',
-        //   foreignKey: 'levId'
-        // })
+        levelsModel.hasMany(models.periodLevelSectionModel, {
+          as: 'levelPeriodSection',
+          foreignKey: 'levId'
+        })
       }
     return levelsModel
 }

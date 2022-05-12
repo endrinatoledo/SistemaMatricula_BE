@@ -28,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
 
       sectionsModel.associate = function (models) {
 
-        // sectionsModel.hasMany(models.usersModel, {
-        //   as: 'sec_user',
-        //   foreignKey: 'secId'
-        // })
+        sectionsModel.hasMany(models.periodLevelSectionModel, {
+          as: 'sectionPeriodLevel',
+          foreignKey: 'secId'
+        })
       }
     return sectionsModel
 }

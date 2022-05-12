@@ -49,6 +49,8 @@ db.studentModel =  require('./studentModel')(sequelize,DataTypes)
 db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
 db.invoiceConceptsModel =  require('./invoiceConceptsModel')(sequelize,DataTypes)
 db.representativeStudentModel =  require('./representativeStudentModel')(sequelize,DataTypes)
+db.periodLevelSectionModel =  require('./periodLevelSectionModel')(sequelize,DataTypes)
+
 
 
 
