@@ -48,6 +48,7 @@ db.exchangeRatesModel =  require('./exchangeRatesModel')(sequelize,DataTypes)
 db.studentModel =  require('./studentModel')(sequelize,DataTypes)
 db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
 db.invoiceConceptsModel =  require('./invoiceConceptsModel')(sequelize,DataTypes)
+db.representativeStudentModel =  require('./representativeStudentModel')(sequelize,DataTypes)
 
 
 
@@ -57,7 +58,7 @@ Object.keys(db).forEach(modelName => {
     }
   });
 //    
-db.sequelize.sync({ alter: true })
+db.sequelize.sync({ alter: false })
 .then(() => {
     // console.log('yes re-sync done!')
 })

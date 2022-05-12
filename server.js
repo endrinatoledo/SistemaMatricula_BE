@@ -27,6 +27,7 @@ const exchangeRateRoutes = require('./routes/exchangeRateRoutes')
 const studentRoutes = require('./routes/studentRoutes')
 const representativeRoutes = require('./routes/representativeRoutes')
 const invoiceConceptRoutes = require('./routes/invoiceConceptRoutes')
+const representativeStudentRoutes = require('./routes/representativeStudentRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -44,7 +45,8 @@ app.use('/api/exchangeRate',exchangeRateRoutes)
 app.use('/api/students',studentRoutes)
 app.use('/api/representatives',representativeRoutes)
 app.use('/api/invoiceConcepts',invoiceConceptRoutes)
- 
+app.use('/api/representativeStudentRoutes',representativeStudentRoutes)
+
 //testing api
 
 app.get('/', (req,res)=>{
