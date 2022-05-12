@@ -33,12 +33,16 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
       })
 
-      // familyModel.associate = function (models) {
+      familyModel.associate = function (models) {
 
-      //   familyModel.hasMany(models.usersModel, {
-      //     as: 'fam_user',
-      //     foreignKey: 'famId'
-      //   })
-      // }
+        familyModel.hasMany(models.representativeModel, {
+          as: 'fam_repre',
+          foreignKey: 'famId'
+        })
+        familyModel.hasMany(models.studentModel, {
+          as: 'fam_student',
+          foreignKey: 'famId'
+        })
+      }
     return familyModel
 }

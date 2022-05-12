@@ -92,7 +92,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             field: 'rep_status' 
-        }
+        },
+        repBond:{ 
+            type: DataTypes.STRING(5),
+            allowNull: false,
+            field: 'rep_bond' 
+        },
+        famId: {
+            type: DataTypes.BIGINT,
+            allowNull: false, 
+            field: 'fam_id'
+        },
     }, {
         tableName: 'representatives',
         timestamps: false
@@ -111,6 +121,11 @@ module.exports = (sequelize, DataTypes) => {
             as: 'professions',
             foreignKey: 'proId'
           })
+        representativeModel.belongsTo(models.familyModel, {
+            as: 'families',
+            foreignKey: 'famId'
+          })  
+
       }
 
     return representativeModel

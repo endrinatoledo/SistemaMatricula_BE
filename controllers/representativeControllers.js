@@ -8,6 +8,8 @@ const RepresentativeModel = db.representativeModel
 const FederalEntityModel = db.federalEntityModel
 const CountriesModel = db.countriesModel
 const ProfessionsModel = db.professionsModel
+const FamilyModel = db.familyModel
+
 
 
 //Add representative
@@ -19,7 +21,8 @@ const addRepresentative =  async (req, res, next) =>{
        !req.body.repIdentificationNumber|| !req.body.repDateOfBirth || 
        !req.body.repSex || !req.body.repAddress || !req.body.proId || 
        !req.body.repPhones || !req.body.repEmail ||
-       !req.body.couId || !req.body.fedId || !req.body.repStatus
+       !req.body.couId || !req.body.fedId || !req.body.repStatus || 
+       !req.body.famId || !req.body.repBond
        ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
         let idExists = await RepresentativeModel.findOne({
@@ -51,7 +54,9 @@ const addRepresentative =  async (req, res, next) =>{
               couId: req.body.couId,
               fedId: req.body.fedId,
               repPhoto: req.body.repPhoto,
-              repStatus: req.body.repStatus
+              repStatus: req.body.repStatus,
+              repBond : req.body.repBond,
+              famId : req.body.famId
             })
             .then((representative) => {
 
@@ -89,6 +94,10 @@ const getAllRepresentatives =  async (req, res, next) =>{
         model: ProfessionsModel,
         as: 'professions',
         require: true
+      },{
+        model: FamilyModel,
+        as: 'families',
+        require: true
       }
     ]
     })
@@ -120,6 +129,10 @@ const getOneRepresentativeById =  async (req, res, next) =>{
         },{
           model: ProfessionsModel,
           as: 'professions',
+          require: true
+        },{
+          model: FamilyModel,
+          as: 'families',
           require: true
         }
       ]
@@ -172,6 +185,9 @@ const updateRepresentative =  async (req, res, next) =>{
                   fedId: (req.body.fedId != null) ? req.body.fedId : representative.fedId,
                   repPhoto: (req.body.repPhoto != null) ? req.body.repPhoto : representative.repPhoto,
                   repStatus: (req.body.repStatus != null) ? req.body.repStatus : representative.repStatus,
+                  repBond: (req.body.repBond != null) ? req.body.repBond : representative.repBond,                  
+                  famId : (req.body.famId != null) ? req.body.famId : representative.famId
+                
                 })
                 .then((representative) => {
                   message = 'Representante actualizado con éxito';
@@ -234,6 +250,10 @@ const getAllActiveRepresentatives =  async (req, res, next) =>{
       },{
         model: ProfessionsModel,
         as: 'professions',
+        require: true
+      },{
+        model: FamilyModel,
+        as: 'families',
         require: true
       }
     ]
