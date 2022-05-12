@@ -18,9 +18,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'stu_id'
         },
+        famId: {
+          type: DataTypes.BIGINT,
+          allowNull: false, 
+          field: 'fam_id'
+        }
       
     }, {
-        tableName: 'representative_estudent',
+        tableName: 'representative_student',
         timestamps: false
       }) 
 
@@ -33,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'student',
           foreignKey: 'stuId'
         })
+        representativeStudentModel.belongsTo(models.familyModel, {
+          as: 'families',
+          foreignKey: 'famId'
+        }) 
  
 
       }
