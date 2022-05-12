@@ -29,6 +29,7 @@ const representativeRoutes = require('./routes/representativeRoutes')
 const invoiceConceptRoutes = require('./routes/invoiceConceptRoutes')
 const representativeStudentRoutes = require('./routes/representativeStudentRoutes')
 const periodLevelSectionRoutes = require('./routes/periodLevelSectionRoutes')
+const inscriptionRoutes = require('./routes/inscriptionRoutes')
 
 
 app.use('/api/users',routerUser)
@@ -49,6 +50,9 @@ app.use('/api/representatives',representativeRoutes)
 app.use('/api/invoiceConcepts',invoiceConceptRoutes)
 app.use('/api/representativeStudent',representativeStudentRoutes)
 app.use('/api/periodLevelSection',periodLevelSectionRoutes)
+app.use('/api/inscriptions',inscriptionRoutes)
+
+
 
 //testing api
 

@@ -50,6 +50,7 @@ db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
 db.invoiceConceptsModel =  require('./invoiceConceptsModel')(sequelize,DataTypes)
 db.representativeStudentModel =  require('./representativeStudentModel')(sequelize,DataTypes)
 db.periodLevelSectionModel =  require('./periodLevelSectionModel')(sequelize,DataTypes)
+db.inscriptionsModel =  require('./inscriptionsModel')(sequelize,DataTypes)
 
 
 
