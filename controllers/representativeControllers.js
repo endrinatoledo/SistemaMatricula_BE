@@ -282,11 +282,46 @@ const getAllActiveRepresentatives =  async (req, res, next) =>{
 
 }
 
+const getRepresentativeByIdentification = async (req, res, next) =>{
+
+  if ( !req.body.repIdType || !req.body.repIdentificationNumber) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+
+try {
+  RepresentativeModel.findOne({
+    where: { 
+      repIdentificationNumber: req.body.repIdentificationNumber,
+      repIdType: req.body.repIdType 
+    }      
+  }).then((representative) => {
+    
+    if(representative === null){
+      res.status(StatusCodes.OK).json({ok: true,data: 'noRegistrado', message:'Representante no Registrado'})
+    }else{
+      res.status(StatusCodes.OK).json({ok: true,data: 'registrado', message:'Representante ya Registrado'})
+    }
+    
+  }, (err) => {
+    // message = err
+
+    message = 'Error de conexión'
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
+    next(err)
+  })
+  .catch((err) => {
+    throw err; 
+  })
+} catch (error) {
+  
+}
+
+}
+
 module.exports = {
     addRepresentative,
     getAllRepresentatives,
     getOneRepresentativeById,
     updateRepresentative,
     deleteRepresentative,
-    getAllActiveRepresentatives
+    getAllActiveRepresentatives,
+    getRepresentativeByIdentification
 }
