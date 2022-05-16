@@ -54,9 +54,9 @@ module.exports = (sequelize, DataTypes) => {
             field: 'rep_address' 
         },
         repCivilStatus:{
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING(11),
             allowNull: true,
-            field: 'rep_address' 
+            field: 'rep_civil_status' 
         },
         proId: {
             type: DataTypes.BIGINT,

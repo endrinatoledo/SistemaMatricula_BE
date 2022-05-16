@@ -35,8 +35,30 @@ const getOneFederalEntityById =  async (req, res, next) =>{
 
 }
 
+//get All FederalEntity by Id Country
+const getFederalEntityByIdCountry =  async (req, res, next) =>{
+
+  let extranjero = 1 
+  
+
+  FederalEntityModel.findAll({
+      where: {
+          couId: (req.params.couId == 232) ? couId = req.params.couId : extranjero
+      }
+    })
+    .then((federalEntities) => {
+      res.status(StatusCodes.OK).json({ok: true, data: federalEntities})
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+}
+
 
 module.exports = {
     getAllFederalEntities,
     getOneFederalEntityById,
+    getFederalEntityByIdCountry
 }

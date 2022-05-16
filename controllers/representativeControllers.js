@@ -295,9 +295,9 @@ try {
   }).then((representative) => {
     
     if(representative === null){
-      res.status(StatusCodes.OK).json({ok: true,data: 'noRegistrado', message:'Representante no Registrado'})
+      res.status(StatusCodes.OK).json({ok: true,data: 'noRegistrado', message:'Identificación no Registrada'})
     }else{
-      res.status(StatusCodes.OK).json({ok: true,data: 'registrado', message:'Representante ya Registrado'})
+      res.status(StatusCodes.OK).json({ok: true,data: 'registrado', message:'Identificación ya Registrada'})
     }
     
   }, (err) => {

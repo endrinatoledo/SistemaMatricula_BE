@@ -135,10 +135,26 @@ const deleteFamily =  async (req, res, next) =>{
       })    
 
 }
+
+const getAllActiveFamilies =  async (req, res, next) =>{
+
+  FamilyModel.findAll({
+    where: { famStatus: 1 }
+  })
+  .then((families) => {
+      res.status(StatusCodes.OK).json({ok: true, data: families})
+  }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+}
 module.exports = {
     addFamily,
     getAllFamilies,
     getOneFamilyById,
     updateFamily,
-    deleteFamily
+    deleteFamily,
+    getAllActiveFamilies
 }
