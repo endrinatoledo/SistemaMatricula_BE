@@ -26,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
         repSecondSurname:{
             type: DataTypes.STRING(45),
             allowNull: true,
-            field: 'rep_second_name' 
+            field: 'rep_second_surname' 
         },
         repIdType:{
             type: DataTypes.STRING(1),
             allowNull: false,
-            field: 'rep_second_name' 
+            field: 'rep_id_type' 
         },
         repIdentificationNumber:{
             type: DataTypes.STRING(45),
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         repDateOfBirth:{
             type: DataTypes.DATEONLY,
             allowNull: false,
-            field: 'rep_password' 
+            field: 'rep_date_of_birth' 
         },
         repSex:{
             type: DataTypes.STRING(1),
