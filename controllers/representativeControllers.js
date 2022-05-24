@@ -22,7 +22,7 @@ const addRepresentative =  async (req, res, next) =>{
        !req.body.repIdentificationNumber|| !req.body.repDateOfBirth || 
        !req.body.repSex || !req.body.repAddress || !req.body.proId || 
        !req.body.repPhones || !req.body.repEmail ||
-       !req.body.couId  || !req.body.repStatus || 
+       !req.body.couId  || 
        !req.body.famId || !req.body.repBond
        ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
@@ -56,7 +56,7 @@ const addRepresentative =  async (req, res, next) =>{
               couId: req.body.couId,
               fedId: (req.body.couId === 232)?req.body.fedId : 26,
               repPhoto: req.body.repPhoto,
-              repStatus: req.body.repStatus,
+              repStatus: 1,
               repBond : req.body.repBond,
               famId : req.body.famId
             })
