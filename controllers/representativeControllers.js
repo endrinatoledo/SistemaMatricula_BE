@@ -1,8 +1,10 @@
 // const { default: ModelManager } = require("sequelize/types/model-manager");
+const {LowercaseString, FirstCapitalLetter} = require('../utils/functions')
 const {  StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
+
 
 const RepresentativeModel = db.representativeModel
 const FederalEntityModel = db.federalEntityModel
@@ -16,15 +18,15 @@ const FamilyModel = db.familyModel
 
 const addRepresentative =  async (req, res, next) =>{
 
-
     if (!req.body.repFirstName || !req.body.repSurname || !req.body.repIdType || 
        !req.body.repIdentificationNumber|| !req.body.repDateOfBirth || 
        !req.body.repSex || !req.body.repAddress || !req.body.proId || 
        !req.body.repPhones || !req.body.repEmail ||
-       !req.body.couId || !req.body.fedId || !req.body.repStatus || 
+       !req.body.couId  || !req.body.repStatus || 
        !req.body.famId || !req.body.repBond
        ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
+
         let idExists = await RepresentativeModel.findOne({
             where: { 
               repIdentificationNumber: req.body.repIdentificationNumber,
@@ -38,21 +40,21 @@ const addRepresentative =  async (req, res, next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Identificación ya se encuentra registrada'})
           }else{
             RepresentativeModel.create({
-              repFirstName: req.body.repFirstName,
-              repSecondName: (req.body.repSecondName)?req.body.repSecondName : '',
-              repSurname: req.body.repSurname,
-              repSecondSurname: (req.body.repSecondSurname)?req.body.repSecondSurname : '',
+              repFirstName: FirstCapitalLetter(LowercaseString(req.body.repFirstName)),
+              repSecondName: (req.body.repSecondName)?FirstCapitalLetter(LowercaseString(req.body.repSecondName)) : '',
+              repSurname: FirstCapitalLetter(LowercaseString(req.body.repSurname)),
+              repSecondSurname: (req.body.repSecondSurname)?FirstCapitalLetter(LowercaseString(req.body.repSecondSurname)) : '',
               repIdType: req.body.repIdType,
               repIdentificationNumber: req.body.repIdentificationNumber,
               repDateOfBirth: req.body.repDateOfBirth,
               repSex: req.body.repSex,
-              repAddress: req.body.repAddress,
+              repAddress: FirstCapitalLetter(LowercaseString(req.body.repAddress)),
               proId : req.body.proId,
               repPhones : req.body.repPhones,
-              repEmail :req.body.repEmail,
+              repEmail :LowercaseString(req.body.repEmail),
               repCivilStatus: (req.body.repCivilStatus)?req.body.repCivilStatus:'',
               couId: req.body.couId,
-              fedId: req.body.fedId,
+              fedId: (req.body.couId === 232)?req.body.fedId : 26,
               repPhoto: req.body.repPhoto,
               repStatus: req.body.repStatus,
               repBond : req.body.repBond,
@@ -168,19 +170,19 @@ const updateRepresentative =  async (req, res, next) =>{
             }
           }).then((representative) => {
                 representative.update({
-                  repFirstName: (req.body.repFirstName != null) ? req.body.repFirstName : representative.repFirstName,
-                  repSecondName: (req.body.repSecondName != null) ? req.body.repSecondName : representative.repSecondName,
-                  repSurname: (req.body.repSurname != null) ? req.body.repSurname : representative.repSurname,
-                  repSecondSurname: (req.body.repSecondSurname != null) ? req.body.repSecondSurname : representative.repSecondSurname,
+                  repFirstName: (req.body.repFirstName != null) ? FirstCapitalLetter(LowercaseString(req.body.repFirstName)) : representative.repFirstName,
+                  repSecondName: (req.body.repSecondName != null) ? FirstCapitalLetter(LowercaseString(req.body.repSecondName)) : representative.repSecondName,
+                  repSurname: (req.body.repSurname != null) ? FirstCapitalLetter(LowercaseString(req.body.repSurname)) : representative.repSurname,
+                  repSecondSurname: (req.body.repSecondSurname != null) ? FirstCapitalLetter(LowercaseString(req.body.repSecondSurname)) : representative.repSecondSurname,
                   repIdType: (req.body.repIdType != null) ? req.body.repIdType : representative.repIdType,
                   repIdentificationNumber: (req.body.repIdentificationNumber != null) ? req.body.repIdentificationNumber : representative.repIdentificationNumber,
                   repDateOfBirth: (req.body.repDateOfBirth != null) ? req.body.repDateOfBirth : representative.repDateOfBirth,
                   repSex: (req.body.repSex != null) ? req.body.repSex : representative.repSex,
-                  repAddress: (req.body.repAddress)? req.body.repAddress : representative.repAddress,
+                  repAddress: (req.body.repAddress)? FirstCapitalLetter(LowercaseString(req.body.repAddress)) : representative.repAddress,
                   proId : (req.body.proId) ? req.body.proId : representative.proId,
                   repPhones : (req.body.repPhones) ? req.body.repPhones : representative.repPhones,
-                  repEmail :(req.body.repEmail) ?  req.body.repEmail : representative.repEmail,
-                  repCivilStatus: (req.body.repCivilStatus)?req.body.repCivilStatus:'',
+                  repEmail :(req.body.repEmail) ?  LowercaseString(req.body.repEmail) : representative.repEmail,
+                  repCivilStatus: (req.body.repCivilStatus)?req.body.repCivilStatus:representative.repCivilStatus,
                   couId: (req.body.couId != null) ? req.body.couId : representative.couId,
                   fedId: (req.body.fedId != null) ? req.body.fedId : representative.fedId,
                   repPhoto: (req.body.repPhoto != null) ? req.body.repPhoto : representative.repPhoto,
