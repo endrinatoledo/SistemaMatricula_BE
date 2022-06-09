@@ -1,5 +1,6 @@
 // const { default: ModelManager } = require("sequelize/types/model-manager");
 const {  StatusCodes } = require('http-status-codes')
+const {LowercaseString, FirstCapitalLetter} = require('../utils/functions')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
@@ -14,10 +15,10 @@ const FamilyModel = db.familyModel
 
 const addStudent =  async (req, res, next) =>{
 
+  
     if (!req.body.stuFirstName || !req.body.stuSurname || !req.body.stuIdType || 
-       !req.body.stuIdentificationNumber|| !req.body.stuDdateOfBirth || !req.body.stuSex|| 
-       !req.body.couId || !req.body.fedId|| !req.body.stuPhoto || !req.body.stuStatus ||
-       !req.body.famId
+       !req.body.stuIdentificationNumber|| !req.body.stuDateOfBirth || !req.body.stuSex|| 
+       !req.body.couId || !req.body.famId
 
        ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
@@ -36,18 +37,18 @@ const addStudent =  async (req, res, next) =>{
           }else{
 
             StudentModel.create({
-              stuFirstName: req.body.stuFirstName,
-              stuSecondName: (req.body.stuSecondName)?req.body.stuSecondName : '',
-              stuSurname: req.body.stuSurname,
-              stuSecondSurname: (req.body.stuSecondSurname)?req.body.stuSecondSurname : '',
+              stuFirstName: FirstCapitalLetter(LowercaseString(req.body.stuFirstName)),
+              stuSecondName: (req.body.stuSecondName)?FirstCapitalLetter(LowercaseString(req.body.stuSecondName)) : '',
+              stuSurname: FirstCapitalLetter(LowercaseString(req.body.stuSurname)),
+              stuSecondSurname: (req.body.stuSecondSurname)?FirstCapitalLetter(LowercaseString(req.body.stuSecondSurname)) : '',
               stuIdType: req.body.stuIdType,
               stuIdentificationNumber: req.body.stuIdentificationNumber,
-              stuDdateOfBirth: req.body.stuDdateOfBirth,
+              stuDateOfBirth: req.body.stuDateOfBirth,
               stuSex: req.body.stuSex,
               couId: req.body.couId,
-              fedId: req.body.fedId,
-              stuPhoto: req.body.stuPhoto,
-              stuStatus: req.body.stuStatus,
+              fedId: (req.body.couId === 232)?req.body.fedId : 26,
+              stuPhoto: req.body.stuPhoto ? req.body.stuPhoto : '',
+              stuStatus: 1,
               famId : req.body.famId
             })
             .then((student) => {
@@ -168,7 +169,7 @@ const updateStudent =  async (req, res, next) =>{
                   stuSecondSurname: (req.body.stuSecondSurname != null) ? req.body.stuSecondSurname : student.stuSecondSurname,
                   stuIdType: (req.body.stuIdType != null) ? req.body.stuIdType : student.stuIdType,
                   stuIdentificationNumber: (req.body.stuIdentificationNumber != null) ? req.body.stuIdentificationNumber : student.stuIdentificationNumber,
-                  stuDdateOfBirth: (req.body.stuDdateOfBirth != null) ? req.body.stuDdateOfBirth : student.stuDdateOfBirth,
+                  stuDateOfBirth: (req.body.stuDateOfBirth != null) ? req.body.stuDateOfBirth : student.stuDateOfBirth,
                   stuSex: (req.body.stuSex != null) ? req.body.stuSex : student.stuSex,
                   couId: (req.body.couId != null) ? req.body.couId : student.couId,
                   fedId: (req.body.fedId != null) ? req.body.fedId : student.fedId,
@@ -265,6 +266,37 @@ const getAllActiveStudents =  async (req, res, next) =>{
     })
 
 }
+const getStudentByIdentification = async (req, res, next) =>{
+  if ( !req.body.stuIdType || !req.body.stuIdentificationNumber) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+
+try {
+  StudentModel.findOne({
+    where: { 
+      stuIdentificationNumber: req.body.stuIdentificationNumber,
+      stuIdType: req.body.stuIdType 
+    }      
+  }).then((student) => {
+    
+    if(student === null){
+      res.status(StatusCodes.OK).json({ok: true,data: 'noRegistrado', message:'Identificación no Registrada'})
+    }else{
+      res.status(StatusCodes.OK).json({ok: true,data: 'registrado', message:'Identificación ya Registrada'})
+    }
+    
+  }, (err) => {
+    // message = err
+
+    message = 'Error de conexión'
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
+    next(err)
+  })
+  .catch((err) => {
+    throw err; 
+  })
+} catch (error) {
+  
+}
+}
 
 module.exports = {
     addStudent,
@@ -272,5 +304,6 @@ module.exports = {
     getOneStudentById,
     updateStudent,
     deleteStudent,
-    getAllActiveStudents
+    getAllActiveStudents,
+    getStudentByIdentification
 }

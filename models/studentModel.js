@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'stu_identification_number' 
         },
-        stuDdateOfBirth:{
+        stuDateOfBirth:{
             type: DataTypes.DATEONLY,
             allowNull: false,
             field: 'stu_password' 
