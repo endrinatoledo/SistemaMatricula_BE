@@ -151,6 +151,7 @@ const getOneRepresentativeById =  async (req, res, next) =>{
 //Update Representative
 const updateRepresentative =  async (req, res, next) =>{
 
+  console.log(req.body)
     RepresentativeModel.findOne({
         where: {
           repIdentificationNumber: req.body.repIdentificationNumber,
@@ -184,7 +185,7 @@ const updateRepresentative =  async (req, res, next) =>{
                   repEmail :(req.body.repEmail) ?  LowercaseString(req.body.repEmail) : representative.repEmail,
                   repCivilStatus: (req.body.repCivilStatus)?req.body.repCivilStatus:representative.repCivilStatus,
                   couId: (req.body.couId != null) ? req.body.couId : representative.couId,
-                  fedId: (req.body.fedId != null) ? req.body.fedId : representative.fedId,
+                  fedId: (req.body.couId === 232) ? req.body.fedId : 26,
                   repPhoto: (req.body.repPhoto != null) ? req.body.repPhoto : representative.repPhoto,
                   repStatus: (req.body.repStatus != null) ? req.body.repStatus : representative.repStatus,
                   repBond: (req.body.repBond != null) ? req.body.repBond : representative.repBond,                  

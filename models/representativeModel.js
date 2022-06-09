@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
             field: 'rep_address' 
         },
         repCivilStatus:{
-            type: DataTypes.STRING(11),
+            type: DataTypes.STRING(13),
             allowNull: true,
             field: 'rep_civil_status' 
         },
