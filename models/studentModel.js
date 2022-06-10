@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         stuIdType:{
             type: DataTypes.STRING(1),
             allowNull: false,
-            field: 'stu_second_name' 
+            field: 'stu_id_type'
         },
         stuIdentificationNumber:{
             type: DataTypes.STRING(45),
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         stuDateOfBirth:{
             type: DataTypes.DATEONLY,
             allowNull: false,
-            field: 'stu_password' 
+            field: 'stu_date_of_birth' 
         },
         stuSex:{
             type: DataTypes.STRING(1),

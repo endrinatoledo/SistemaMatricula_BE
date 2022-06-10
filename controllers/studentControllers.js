@@ -163,16 +163,16 @@ const updateStudent =  async (req, res, next) =>{
             }
           }).then((student) => {
                 student.update({
-                  stuFirstName: (req.body.stuFirstName != null) ? req.body.stuFirstName : student.stuFirstName,
-                  stuSecondName: (req.body.stuSecondName != null) ? req.body.stuSecondName : student.stuSecondName,
-                  stuSurname: (req.body.stuSurname != null) ? req.body.stuSurname : student.stuSurname,
-                  stuSecondSurname: (req.body.stuSecondSurname != null) ? req.body.stuSecondSurname : student.stuSecondSurname,
+                  stuFirstName: (req.body.stuFirstName != null) ? FirstCapitalLetter(LowercaseString(req.body.stuFirstName)) : student.stuFirstName,
+                  stuSecondName: (req.body.stuSecondName != null) ? FirstCapitalLetter(LowercaseString(req.body.stuSecondName)) : student.stuSecondName,
+                  stuSurname: (req.body.stuSurname != null) ? FirstCapitalLetter(LowercaseString(req.body.stuSurname)) : student.stuSurname,
+                  stuSecondSurname: (req.body.stuSecondSurname != null) ? FirstCapitalLetter(LowercaseString(req.body.stuSecondSurname)) : student.stuSecondSurname,
                   stuIdType: (req.body.stuIdType != null) ? req.body.stuIdType : student.stuIdType,
                   stuIdentificationNumber: (req.body.stuIdentificationNumber != null) ? req.body.stuIdentificationNumber : student.stuIdentificationNumber,
                   stuDateOfBirth: (req.body.stuDateOfBirth != null) ? req.body.stuDateOfBirth : student.stuDateOfBirth,
                   stuSex: (req.body.stuSex != null) ? req.body.stuSex : student.stuSex,
                   couId: (req.body.couId != null) ? req.body.couId : student.couId,
-                  fedId: (req.body.fedId != null) ? req.body.fedId : student.fedId,
+                  fedId: (req.body.couId === 232) ? req.body.fedId : 26,
                   stuPhoto: (req.body.stuPhoto != null) ? req.body.stuPhoto : student.stuPhoto,
                   stuStatus: (req.body.stuStatus != null) ? req.body.stuStatus : student.stuStatus,
                   famId : (req.body.famId != null) ? req.body.famId : student.famId
