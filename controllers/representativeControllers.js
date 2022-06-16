@@ -300,7 +300,7 @@ try {
     if(representative === null){
       res.status(StatusCodes.OK).json({ok: true,data: 'noRegistrado', message:'Identificación no Registrada'})
     }else{
-      res.status(StatusCodes.OK).json({ok: true,data: 'registrado', message:'Identificación ya Registrada'})
+      res.status(StatusCodes.OK).json({ok: true,result: representative,data: 'registrado', message:'Identificación ya Registrada'})
     }
     
   }, (err) => {
