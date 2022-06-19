@@ -5,24 +5,9 @@ const db = require("../models");
 
 const FamilyModel = db.familyModel
 
-const countFamilies = async () =>{
-
-  await FamilyModel.count({})
-      .then((total) => {
-        return {total, result : true}
-      }, (err) => {
-        return {result : false}
-      })
-      .catch((err) => {
-          throw err; 
-     });
-
-}
 //Add Family
 
 const addFamily =  async (req, res,next) =>{
-
-  
 
     if (!req.body.famName || !req.body.famStatus) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
@@ -56,6 +41,7 @@ const addFamily =  async (req, res,next) =>{
       }
 
 }
+
 //get All Family
 const getAllFamilies =  async (req, res, next) =>{
 
