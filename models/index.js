@@ -35,7 +35,7 @@ db.sequelize = sequelize
 
 db.usersModel =  require('./userModel.js')(sequelize,DataTypes)
 db.rolesModel =  require('./rolesModel.js')(sequelize,DataTypes)
-db.familyModel =  require('./familyModel')(sequelize,DataTypes)
+
 db.levelsModel =  require('./levelsModel')(sequelize,DataTypes)
 db.sectionsModel =  require('./sectionsModel')(sequelize,DataTypes)
 db.countriesModel =  require('./countriesModel')(sequelize,DataTypes)
@@ -45,13 +45,13 @@ db.periodsModel =  require('./periodsModel')(sequelize,DataTypes)
 db.federalEntityModel =  require('./federalEntityModel')(sequelize,DataTypes)
 db.schoolDataModel =  require('./schoolDataModel')(sequelize,DataTypes)
 db.exchangeRatesModel =  require('./exchangeRatesModel')(sequelize,DataTypes)
-db.studentModel =  require('./studentModel')(sequelize,DataTypes)
-db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
 db.invoiceConceptsModel =  require('./invoiceConceptsModel')(sequelize,DataTypes)
 db.representativeStudentModel =  require('./representativeStudentModel')(sequelize,DataTypes)
 db.periodLevelSectionModel =  require('./periodLevelSectionModel')(sequelize,DataTypes)
 db.inscriptionsModel =  require('./inscriptionsModel')(sequelize,DataTypes)
-
+db.familyModel =  require('./familyModel')(sequelize,DataTypes)
+db.studentModel =  require('./studentModel')(sequelize,DataTypes)
+db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
 
 
 
@@ -61,8 +61,7 @@ Object.keys(db).forEach(modelName => {
     }
   });
 //    
-db.sequelize.sync({ alter: false })
-.then(() => {
+ db.sequelize.sync({ force: true }).then(() => {
     // console.log('yes re-sync done!')
 })
 

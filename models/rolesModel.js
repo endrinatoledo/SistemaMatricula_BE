@@ -1,6 +1,9 @@
 
 module.exports = (sequelize, DataTypes) => {
 
+//npx sequelize-cli model:generate --name Rol --attributes rolName:string,rolStatus:integer
+
+
     const rolesModel = sequelize.define("rolesModel", {
         rolId: {
           type: DataTypes.BIGINT,
@@ -8,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
           primaryKey: true,
           autoIncrement: true,
           field: 'rol_id'
-        },
-   
+        },   
         rolName: {
           type: DataTypes.STRING(100),
           allowNull: false,

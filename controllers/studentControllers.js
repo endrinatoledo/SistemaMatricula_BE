@@ -8,7 +8,7 @@ const db = require("../models");
 const StudentModel = db.studentModel
 const FederalEntityModel = db.federalEntityModel
 const CountriesModel = db.countriesModel
-const FamilyModel = db.familyModel
+// const FamilyModel = db.familyModel
 
 
 //Add student
@@ -18,7 +18,8 @@ const addStudent =  async (req, res, next) =>{
   
     if (!req.body.stuFirstName || !req.body.stuSurname || !req.body.stuIdType || 
        !req.body.stuIdentificationNumber|| !req.body.stuDateOfBirth || !req.body.stuSex|| 
-       !req.body.couId || !req.body.famId
+       !req.body.couId 
+      //  || !req.body.famId
 
        ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
@@ -49,7 +50,7 @@ const addStudent =  async (req, res, next) =>{
               fedId: (req.body.couId === 232)?req.body.fedId : 26,
               stuPhoto: req.body.stuPhoto ? req.body.stuPhoto : '',
               stuStatus: 1,
-              famId : req.body.famId
+              // famId : req.body.famId
             })
             .then((student) => {
 
@@ -82,11 +83,12 @@ const getAllStudents =  async (req, res, next) =>{
         model: FederalEntityModel,
         as: 'federalEntity',
         require: true
-      },{
-        model: FamilyModel,
-        as: 'families',
-        require: true
       }
+      // ,{
+      //   model: FamilyModel,
+      //   as: 'families',
+      //   require: true
+      // }
     ]
     })
     .then((students) => {
@@ -111,11 +113,12 @@ const getOneStudentById =  async (req, res, next) =>{
         model: FederalEntityModel,
         as: 'federalEntity',
         require: true
-      },{
-        model: FamilyModel,
-        as: 'families',
-        require: true
       }
+      // ,{
+      //   model: FamilyModel,
+      //   as: 'families',
+      //   require: true
+      // }
     ],
         where: {
           stuId: req.params.stuId
@@ -175,7 +178,7 @@ const updateStudent =  async (req, res, next) =>{
                   fedId: (req.body.couId === 232) ? req.body.fedId : 26,
                   stuPhoto: (req.body.stuPhoto != null) ? req.body.stuPhoto : student.stuPhoto,
                   stuStatus: (req.body.stuStatus != null) ? req.body.stuStatus : student.stuStatus,
-                  famId : (req.body.famId != null) ? req.body.famId : student.famId
+                  // famId : (req.body.famId != null) ? req.body.famId : student.famId
 
                 })
                 .then((student) => {
@@ -236,11 +239,12 @@ const getAllActiveStudents =  async (req, res, next) =>{
         model: FederalEntityModel,
         as: 'federalEntity',
         require: true
-      },{
-        model: FamilyModel,
-        as: 'families',
-        require: true
       }
+      // ,{
+      //   model: FamilyModel,
+      //   as: 'families',
+      //   require: true
+      // }
     ]
   })
   .then((students) => {

@@ -1,5 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
 
+//npx sequelize-cli model:generate --name User --attributes usuName:string,usuLastName:string,usuEmail:string,usuPassword:string,usuStatus:integer,rolId:bigint
+
     const usersModel = sequelize.define("usersModel", {
         usuId : {
             type: DataTypes.BIGINT,

@@ -10,7 +10,7 @@ const RepresentativeModel = db.representativeModel
 const FederalEntityModel = db.federalEntityModel
 const CountriesModel = db.countriesModel
 const ProfessionsModel = db.professionsModel
-const FamilyModel = db.familyModel
+// const FamilyModel = db.familyModel
 
 
 
@@ -22,8 +22,8 @@ const addRepresentative =  async (req, res, next) =>{
        !req.body.repIdentificationNumber|| !req.body.repDateOfBirth || 
        !req.body.repSex || !req.body.repAddress || !req.body.proId || 
        !req.body.repPhones || !req.body.repEmail ||
-       !req.body.couId  || 
-       !req.body.famId || !req.body.repBond
+       !req.body.couId  || !req.body.repBond
+      //  ||  !req.body.famId 
        ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
@@ -58,7 +58,7 @@ const addRepresentative =  async (req, res, next) =>{
               repPhoto: req.body.repPhoto,
               repStatus: 1,
               repBond : req.body.repBond,
-              famId : req.body.famId
+              // famId : req.body.famId
             })
             .then((representative) => {
 
@@ -96,11 +96,12 @@ const getAllRepresentatives =  async (req, res, next) =>{
         model: ProfessionsModel,
         as: 'professions',
         require: true
-      },{
-        model: FamilyModel,
-        as: 'families',
-        require: true
       }
+      // ,{
+      //   model: FamilyModel,
+      //   as: 'families',
+      //   require: true
+      // }
     ]
     })
     .then((representatives) => {
@@ -132,11 +133,12 @@ const getOneRepresentativeById =  async (req, res, next) =>{
           model: ProfessionsModel,
           as: 'professions',
           require: true
-        },{
-          model: FamilyModel,
-          as: 'families',
-          require: true
         }
+        // ,{
+        //   model: FamilyModel,
+        //   as: 'families',
+        //   require: true
+        // }
       ]
       })
       .then((representative) => {
@@ -189,7 +191,7 @@ const updateRepresentative =  async (req, res, next) =>{
                   repPhoto: (req.body.repPhoto != null) ? req.body.repPhoto : representative.repPhoto,
                   repStatus: (req.body.repStatus != null) ? req.body.repStatus : representative.repStatus,
                   repBond: (req.body.repBond != null) ? req.body.repBond : representative.repBond,                  
-                  famId : (req.body.famId != null) ? req.body.famId : representative.famId
+                  // famId : (req.body.famId != null) ? req.body.famId : representative.famId
                 
                 })
                 .then((representative) => {
@@ -254,11 +256,12 @@ const getAllActiveRepresentatives =  async (req, res, next) =>{
         model: ProfessionsModel,
         as: 'professions',
         require: true
-      },{
-        model: FamilyModel,
-        as: 'families',
-        require: true
       }
+      // ,{
+      //   model: FamilyModel,
+      //   as: 'families',
+      //   require: true
+      // }
     ]
   })
   .then((representatives) => {

@@ -67,11 +67,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             field: 'stu_status' 
-        },
-        famId: {
-            type: DataTypes.BIGINT,
-            allowNull: false, 
-            field: 'fam_id'
         }
     }, {
         tableName: 'students',
@@ -87,10 +82,6 @@ module.exports = (sequelize, DataTypes) => {
           as: 'federalEntity',
           foreignKey: 'fedId'
         })
-        studentModel.belongsTo(models.familyModel, {
-            as: 'families',
-            foreignKey: 'famId'
-          })  
           studentModel.hasMany(models.representativeStudentModel, {
             as: 'repStudents',
             foreignKey: 'stuId'
