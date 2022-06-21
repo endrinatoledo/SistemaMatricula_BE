@@ -25,4 +25,5 @@ INSERT INTO `federal_entities` (`fed_id`, `fed_name`, `cou_id`) VALUES
 (22, 'Yaracuy', 232),
 (23, 'Zulia', 232),
 (24, 'Distrito Capital', 232),
-(25, 'Dependencias Federales', 232);
+(25, 'Dependencias Federales', 232),
+(26, 'Extranjero', 241);
