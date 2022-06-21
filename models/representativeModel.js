@@ -98,11 +98,21 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'rep_bond' 
         }
+        // ,
+        // famId: {
+        //     type: DataTypes.BIGINT,
+        //     allowNull: false, 
+        //     field: 'fam_id'
+        // },
     }, {
         tableName: 'representatives',
         timestamps: false
       }) 
 
+    //   representativeModel.belongsTo(models.familyModel, {
+    //     as: 'families',
+    //     foreignKey: 'famId'
+    //   })  
       representativeModel.associate = function (models) {
         representativeModel.belongsTo(models.countriesModel, {
           as: 'countries',

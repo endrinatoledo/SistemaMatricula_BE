@@ -68,11 +68,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'stu_status' 
         }
+        // ,
+        // famId: {
+        //     type: DataTypes.BIGINT,
+        //     allowNull: false, 
+        //     field: 'fam_id'
+        // }
     }, {
         tableName: 'students',
         timestamps: false
       }) 
-
+    //   studentModel.belongsTo(models.familyModel, {
+    //     as: 'families',
+    //     foreignKey: 'famId'
+    //   })  
       studentModel.associate = function (models) {
         studentModel.belongsTo(models.countriesModel, {
           as: 'countries',

@@ -35,14 +35,14 @@ module.exports = (sequelize, DataTypes) => {
 
       familyModel.associate = function (models) {
 
-        familyModel.hasMany(models.representativeModel, {
-          as: 'fam_repre',
-          foreignKey: 'famId'
-        })
-        familyModel.hasMany(models.studentModel, {
-          as: 'fam_student',
-          foreignKey: 'famId'
-        })
+        // familyModel.hasMany(models.representativeModel, {
+        //   as: 'fam_repre',
+        //   foreignKey: 'famId'
+        // })
+        // familyModel.hasMany(models.studentModel, {
+        //   as: 'fam_student',
+        //   foreignKey: 'famId'
+        // })
         familyModel.hasMany(models.representativeStudentModel, {
           as: 'fam_repstu',
           foreignKey: 'famId'

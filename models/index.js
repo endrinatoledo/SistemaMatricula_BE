@@ -61,7 +61,7 @@ Object.keys(db).forEach(modelName => {
     }
   });
 //    
- db.sequelize.sync({ force: true }).then(() => {
+ db.sequelize.sync({ force: false }).then(() => {
     // console.log('yes re-sync done!')
 })
 
