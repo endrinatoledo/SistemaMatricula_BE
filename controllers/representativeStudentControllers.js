@@ -84,10 +84,7 @@ const getAllRepresentativeStudent =  async (req, res, next) =>{
         model: FamilyModel,
         as: 'families',
         require: true
-      }
-
-
-      
+      }    
     ]
     })
     .then((representativesStudents) => {
@@ -97,6 +94,37 @@ const getAllRepresentativeStudent =  async (req, res, next) =>{
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
         next(err)
       })
+
+}
+//get All RepresentativeStudent groupBy representative
+const getAllRepresentativeStudentGroupByFamily =  async (req, res, next) =>{
+
+  RepresentativeStudentModel.findAll({
+    include: [{
+      model: StudentModel,
+      as: 'student',
+      require: true
+    }
+    ,{
+      model: RepresentativeModel,
+      as: 'representative',
+      require: true
+    },
+    {
+      model: FamilyModel,
+      as: 'families',
+      require: true
+    }    
+    ],
+    group:["famId"]
+  })
+  .then((representativesStudents) => {
+      res.status(StatusCodes.OK).json({ok: true, data: representativesStudents})
+  }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
 
 }
 //get All RepresentativeStudent by Id
@@ -132,6 +160,78 @@ const getOneRepresentativeStudentById =  async (req, res, next) =>{
       })
 
 }
+
+const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
+
+  RepresentativeStudentModel.findAll({
+    include: [{
+      model: StudentModel,
+      as: 'student',
+      require: true
+    }
+    ,{
+      model: RepresentativeModel,
+      as: 'representative',
+      require: true
+    },
+    {
+      model: FamilyModel,
+      as: 'families',
+      require: true
+    }
+  ],
+      where: {
+        famId: req.params.famId
+      }
+    })
+    .then((representativeStudent) => {
+
+      let family = {}
+      let students = []
+      let representatives = []
+
+      if(representativeStudent.length > 0){
+        family = representativeStudent[0].families
+
+        representativeStudent.forEach(element => {
+          if(students.length > 0){ //verifica si el array tiene elementos
+            let resultEstudent = ''
+            resultEstudent = students.find( item => item.stuId === element.student.stuId)
+            if (resultEstudent === undefined){ students.push(element.student) }
+          }else{
+            students.push(element.student)
+          }
+
+          if(representatives.length > 0){
+
+            let resultRepresentative
+            resultRepresentative = representatives.find( item => {
+              item.repId === element.representative.repId
+            } )
+            if (resultRepresentative === undefined){
+              representatives.push(element.representative)
+            }
+          }else{
+            representatives.push(element.representative)
+          }
+         
+        });
+      }
+      const data = {
+        family,
+        representatives,
+        students        
+      }
+
+      res.status(StatusCodes.OK).json({ok: true, data})
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+}
+
 //Update RepresentativeStudent
 const updateRepresentativeStudent =  async (req, res, next) =>{
 
@@ -226,5 +326,7 @@ module.exports = {
     getAllRepresentativeStudent,
     getOneRepresentativeStudentById,
     updateRepresentativeStudent,
-    deleteRepresentativeStudent
+    deleteRepresentativeStudent,
+    getAllRepresentativeStudentGroupByFamily,
+    getOneRepresentativeStudentByFamId
 }
