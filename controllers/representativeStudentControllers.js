@@ -18,7 +18,6 @@ const addRepresentativeStudent =  async (req, res, next) =>{
     try {
 
       const representatives = req.body.representatives
-      console.log('req.body.representatives',req.body.representatives)
       const students = req.body.students
 
       FamilyModel.max('fam_id',{}).then((total) => {
@@ -31,11 +30,9 @@ const addRepresentativeStudent =  async (req, res, next) =>{
       .then((family) => {
         let result = []
         result.push(representatives.forEach(elementR => {
-        
-          console.log('elementR',elementR.repId)
-
+      
           students.forEach(elementE => {
-            console.log('elementE',elementE.stuId)
+            
             RepresentativeStudentModel.create({
               repId: elementR.repId,
               stuId: elementE.stuId,
@@ -210,18 +207,104 @@ const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
           if(students.length > 0){ //verifica si el array tiene elementos
             let resultEstudent = ''
             resultEstudent = students.find( item => item.stuId === element.student.stuId)
-            if (resultEstudent === undefined){ students.push(element.student) }
+            if (resultEstudent === undefined){ 
+              let insert = {
+                couId: element.student.couId,
+                fedId: element.student.fedId,
+                stuDateOfBirth: element.student.stuDateOfBirth,
+                stuFirstName: element.student.stuFirstName,
+                stuId: element.student.stuId,
+                stuIdType: element.student.stuIdType,
+                stuIdentificationNumber: element.student.stuIdentificationNumber,
+                stuPhoto: element.student.stuPhoto,
+                stuSecondName: element.student.stuSecondName,
+                stuSecondSurname: element.student.stuSecondSurname,
+                stuSex: element.student.stuSex,
+                stuStatus: element.student.stuStatus,
+                stuSurname: element.student.stuSurname,
+                statusRepSt: element.rstStaStu,
+                famId: element.famId
+              }
+              students.push(insert) 
+            }
           }else{
-            students.push(element.student)
+            let insert = {
+              couId: element.student.couId,
+              fedId: element.student.fedId,
+              stuDateOfBirth: element.student.stuDateOfBirth,
+              stuFirstName: element.student.stuFirstName,
+              stuId: element.student.stuId,
+              stuIdType: element.student.stuIdType,
+              stuIdentificationNumber: element.student.stuIdentificationNumber,
+              stuPhoto: element.student.stuPhoto,
+              stuSecondName: element.student.stuSecondName,
+              stuSecondSurname: element.student.stuSecondSurname,
+              stuSex: element.student.stuSex,
+              stuStatus: element.student.stuStatus,
+              stuSurname: element.student.stuSurname,
+              statusRepSt: element.rstStaStu,
+              famId: element.famId
           }
-
+          students.push(insert)
+        }
           if(representatives.length > 0){
 
             let resultRepresentative
             resultRepresentative = representatives.find( item => item.repId === element.representative.repId)
-            if (resultRepresentative === undefined){representatives.push(element.representative)}
+            if (resultRepresentative === undefined){
+
+              let insertR = {
+                couId: element.representative.couId,
+                fedId: element.representative.fedId,
+                proId: element.representative.proId,
+                repAddress: element.representative.repAddress,
+                repBond: element.representative.repBond,
+                repCivilStatus: element.representative.repCivilStatus,
+                repDateOfBirth: element.representative.repDateOfBirth,
+                repEmail: element.representative.repEmail,
+                repFirstName: element.representative.repFirstName,
+                repId: element.representative.repId,
+                repIdType: element.representative.repIdType,
+                repIdentificationNumber: element.representative.repIdentificationNumber,
+                repPhones: element.representative.repPhones,
+                repPhoto: element.representative.repPhoto,
+                repSecondName: element.representative.repSecondName,
+                repSecondSurname: element.representative.repSecondSurname,
+                repSex: element.representative.repSex,
+                repStatus: element.representative.repStatus,
+                repSurname: element.representative.repSurname,
+                statusRepSt: element.rstRepSta,
+                famId: element.famId
+              }
+
+              representatives.push(insertR)
+            }
           }else{
-            representatives.push(element.representative)
+            let insertR = {
+              couId: element.representative.couId,
+              fedId: element.representative.fedId,
+              proId: element.representative.proId,
+              repAddress: element.representative.repAddress,
+              repBond: element.representative.repBond,
+              repCivilStatus: element.representative.repCivilStatus,
+              repDateOfBirth: element.representative.repDateOfBirth,
+              repEmail: element.representative.repEmail,
+              repFirstName: element.representative.repFirstName,
+              repId: element.representative.repId,
+              repIdType: element.representative.repIdType,
+              repIdentificationNumber: element.representative.repIdentificationNumber,
+              repPhones: element.representative.repPhones,
+              repPhoto: element.representative.repPhoto,
+              repSecondName: element.representative.repSecondName,
+              repSecondSurname: element.representative.repSecondSurname,
+              repSex: element.representative.repSex,
+              repStatus: element.representative.repStatus,
+              repSurname: element.representative.repSurname,
+              statusRepSt: element.rstRepSta,
+              famId: element.famId
+            }
+
+            representatives.push(insertR)
           }
          
         });
@@ -244,11 +327,6 @@ const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
 
 //Update RepresentativeStudent
 const updateRepresentativeStudent =  async (req, res, next) =>{
-
-  console.log('req.body',req.body)
-  console.log('req.params',req.params)
-
-  
 
   try {
       const representatives = req.body.representatives
@@ -335,29 +413,33 @@ const updateRepresentativeStudent =  async (req, res, next) =>{
 
 const updateStatusRepresentative =  async (req, res, next) =>{
 
-  console.log('req.body',req.body)
-  console.log('req.params',req.params)
-
   try {
    
-          RepresentativeStudentModel.findOne({
+          RepresentativeStudentModel.findAll({
             where: {
                  repId: req.body.repId,
-                 famId: req.body.famId,
-                 rstId: req.params.rstId        
+                 famId: req.body.famId,       
             }
            }).then((representativeStudent) => {
-                representativeStudent.update({
-                    rstRepSta :req.body.rstRepSta
+
+            representativeStudent.forEach(element => {
+
+                element.update({
+                    rstRepSta :(element.rstRepSta === 1) ? 2 : 1
+                },{
+                  where:{rstId: element.rstId}
                 })
                 .then((representativeStudent) => {
-                    message = 'Estatus actualizado con éxito';
-                    res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+                    // message = 'Estatus actualizado con éxito';
+                    // res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
                 }, (err) => {
                     message = err
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
                     next(err)
                })
+
+            })
+              
             }, (err) => {
                 message = err
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
@@ -369,46 +451,47 @@ const updateStatusRepresentative =  async (req, res, next) =>{
     next(err)
   }
 
-    
-    
-
 }
 
 const updateStatusStudent =  async (req, res, next) =>{
 
-  console.log('req.body',req.body)
-  console.log('req.params',req.params)
-
   try {
    
-          RepresentativeStudentModel.findOne({
-            where: {
-                 stuId: req.body.stuId,
-                 famId: req.body.famId,
-                 rstId: req.params.rstId        
-            }
-           }).then((representativeStudent) => {
-                representativeStudent.update({
-                  rstStuSta :req.body.rstStuSta
-                })
-                .then((representativeStudent) => {
-                    message = 'Estatus actualizado con éxito';
-                    res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
-                }, (err) => {
-                    message = err
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-                    next(err)
-               })
-            }, (err) => {
-                message = err
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-                next(err)
-              })       
-  } catch (error) {
-    message = err
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-    next(err)
-  }   
+    RepresentativeStudentModel.findAll({
+      where: {
+        rstStaStu: req.body.rstStaStu,
+           famId: req.body.famId,       
+      }
+     }).then((representativeStudent) => {
+
+      representativeStudent.forEach(element => {
+
+          element.update({
+            rstStaStu :(element.rstStaStu === 1) ? 2 : 1
+          },{
+            where:{rstStaStu: element.rstStaStu}
+          })
+          .then((representativeStudent) => {
+              // message = 'Estatus actualizado con éxito';
+              // res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+          }, (err) => {
+              message = err
+              // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+              next(err)
+         })
+
+      })
+        
+      }, (err) => {
+          message = err
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+          next(err)
+        })       
+} catch (error) {
+message = err
+res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+next(err)
+}  
 
 }
 
