@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'periodLevelSection',
           foreignKey: 'perId'
         })
+        periodsModel.hasMany(models.inscriptionsModel, {
+          as: 'perdiodI',
+          foreignKey: 'perId'
+        })
       }
     return periodsModel
 }
