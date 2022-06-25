@@ -58,6 +58,7 @@ const addInscription =  async (req, res, next) =>{
 //get All inscription
 const getAllInscriptions =  async (req, res, next) =>{
 
+  const date = new Date();
     InscriptionsModel.findAll({
       include: [{
         model: PeriodLevelSectionModel,
@@ -75,7 +76,8 @@ const getAllInscriptions =  async (req, res, next) =>{
       },{
         model: PeriodsModel,
         as: 'period',
-        require: true
+        require: true,
+        where:{ perStartYear : date.getFullYear()}
       }  
     ]
     })
