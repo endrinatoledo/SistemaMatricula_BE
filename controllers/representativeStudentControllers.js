@@ -415,6 +415,7 @@ const updateStatusRepresentative =  async (req, res, next) =>{
 
   try {
    
+    let result = []
           RepresentativeStudentModel.findAll({
             where: {
                  repId: req.body.repId,
@@ -424,21 +425,21 @@ const updateStatusRepresentative =  async (req, res, next) =>{
 
             representativeStudent.forEach(element => {
 
-                element.update({
+              result.push(element.update({
                     rstRepSta :(element.rstRepSta === 1) ? 2 : 1
                 },{
                   where:{rstId: element.rstId}
                 })
                 .then((representativeStudent) => {
-                    // message = 'Estatus actualizado con éxito';
-                    // res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+                  return representativeStudent
+
                 }, (err) => {
-                    message = err
-                    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-                    next(err)
+                    return 'error'
                })
+            )
 
             })
+             res.status(StatusCodes.OK).json({ok: true, data:result})
               
             }, (err) => {
                 message = err
@@ -457,41 +458,42 @@ const updateStatusStudent =  async (req, res, next) =>{
 
   try {
    
-    RepresentativeStudentModel.findAll({
-      where: {
-        rstStaStu: req.body.rstStaStu,
-           famId: req.body.famId,       
-      }
-     }).then((representativeStudent) => {
+    let result = []
+          RepresentativeStudentModel.findAll({
+            where: {
+                 stuId: req.body.stuId,
+                 famId: req.body.famId,       
+            }
+           }).then((representativeStudent) => {
 
-      representativeStudent.forEach(element => {
+            representativeStudent.forEach(element => {
 
-          element.update({
-            rstStaStu :(element.rstStaStu === 1) ? 2 : 1
-          },{
-            where:{rstStaStu: element.rstStaStu}
-          })
-          .then((representativeStudent) => {
-              // message = 'Estatus actualizado con éxito';
-              // res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
-          }, (err) => {
-              message = err
-              // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-              next(err)
-         })
+              result.push(element.update({
+                  rstStaStu :(element.rstStaStu === 1) ? 2 : 1
+                },{
+                  where:{rstId: element.rstId}
+                })
+                .then((representativeStudent) => {
+                  return representativeStudent
 
-      })
-        
-      }, (err) => {
-          message = err
-          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-          next(err)
-        })       
-} catch (error) {
-message = err
-res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-next(err)
-}  
+                }, (err) => {
+                    return 'error'
+               })
+            )
+
+            })
+             res.status(StatusCodes.OK).json({ok: true, data:result})
+              
+            }, (err) => {
+                message = err
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                next(err)
+              })       
+  } catch (error) {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+    next(err)
+  } 
 
 }
 
