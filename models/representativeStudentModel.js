@@ -13,10 +13,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'rep_id'
         },
+        rstRepSta:{
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          field: 'rst_status_rep' 
+        },
         stuId:{
             type: DataTypes.BIGINT,
             allowNull: false,
             field: 'stu_id'
+        },
+        rstStaStu:{
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          field: 'rst_status_stu' 
         },
         famId: {
           type: DataTypes.BIGINT,

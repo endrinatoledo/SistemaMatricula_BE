@@ -9,6 +9,8 @@ router.get   ('/byFam/:famId', representativeStudentControllers.getOneRepresenta
 router.get   ('/:rstId', representativeStudentControllers.getOneRepresentativeStudentById)
 router.put   ('/:rstId', representativeStudentControllers.updateRepresentativeStudent)
 router.delete('/:rstId', representativeStudentControllers.deleteRepresentativeStudent)
+router.put   ('/statusRepresentative/:rstId', representativeStudentControllers.updateStatusRepresentative)
+router.put   ('/statusStudent/:rstId', representativeStudentControllers.updateStatusStudent)
 
 
 

@@ -18,6 +18,7 @@ const addRepresentativeStudent =  async (req, res, next) =>{
     try {
 
       const representatives = req.body.representatives
+      console.log('req.body.representatives',req.body.representatives)
       const students = req.body.students
 
       FamilyModel.max('fam_id',{}).then((total) => {
@@ -28,24 +29,34 @@ const addRepresentativeStudent =  async (req, res, next) =>{
           famStatus: 1
       })
       .then((family) => {
-        representatives.forEach(elementR => {
+        let result = []
+        result.push(representatives.forEach(elementR => {
         
+          console.log('elementR',elementR.repId)
+
           students.forEach(elementE => {
+            console.log('elementE',elementE.stuId)
             RepresentativeStudentModel.create({
               repId: elementR.repId,
               stuId: elementE.stuId,
+              rstRepSta :1,
+              rstStaStu :1,
               famId: family.famId
             })
             .then((representativeStudent) => {
-                message = 'Familia creada con éxito';
-                res.status(StatusCodes.OK).json({ok: true,data: representativeStudent, message})
+                  return representativeStudent
               }, (err) => {
                 message = 'Error de conexión'
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
+                return 'error'
+                // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
                 next(err)
               })
           });
-        });
+        }) )
+        
+                message = 'Familia creada con éxito';
+                res.status(StatusCodes.OK).json({ok: true, data:result, message})
+        ;
         }, (err) => {
           message = err
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
@@ -189,9 +200,11 @@ const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
       let family = {}
       let students = []
       let representatives = []
+      let repstu={}
 
       if(representativeStudent.length > 0){
         family = representativeStudent[0].families
+
 
         representativeStudent.forEach(element => {
           if(students.length > 0){ //verifica si el array tiene elementos
@@ -205,12 +218,8 @@ const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
           if(representatives.length > 0){
 
             let resultRepresentative
-            resultRepresentative = representatives.find( item => {
-              item.repId === element.representative.repId
-            } )
-            if (resultRepresentative === undefined){
-              representatives.push(element.representative)
-            }
+            resultRepresentative = representatives.find( item => item.repId === element.representative.repId)
+            if (resultRepresentative === undefined){representatives.push(element.representative)}
           }else{
             representatives.push(element.representative)
           }
@@ -220,7 +229,8 @@ const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
       const data = {
         family,
         representatives,
-        students        
+        students,
+        representativeStudent        
       }
 
       res.status(StatusCodes.OK).json({ok: true, data})
@@ -235,67 +245,170 @@ const getOneRepresentativeStudentByFamId =  async (req, res, next) =>{
 //Update RepresentativeStudent
 const updateRepresentativeStudent =  async (req, res, next) =>{
 
-    RepresentativeStudentModel.findOne({
-        where: {
-          repId: req.body.repId,
-          stuId: req.body.stuId,
-          famId: req.body.famId,
-          rstId: {
-            [Op.ne]: req.params.rstId
-          }
-        },
-        include: [{
-          model: StudentModel,
-          as: 'student',
-          require: true
-        }
-        ,{
-          model: RepresentativeModel,
-          as: 'representative',
-          require: true
-        },
-        {
-          model: FamilyModel,
-          as: 'families',
-          require: true
-        }
-      ]
-      })
-      .then((representativeStudent) => {
+  console.log('req.body',req.body)
+  console.log('req.params',req.params)
 
-        if(representativeStudent){
-          return res.status(StatusCodes.OK).json({ok: false, message: 'Vínculo ya se encuentra registrado'})
-        }else{    
+  
+
+  try {
+      const representatives = req.body.representatives
+      const students = req.body.students
+      const family = req.body.family
+
+      representatives.forEach(elementR => {
+        students.forEach(elementE => {
             RepresentativeStudentModel.findOne({
-            where: {
-              rstId: req.params.rstId          
-            }
-          }).then((representativeStudent) => {
-                representativeStudent.update({
-                  repId: (req.body.repId != null) ? req.body.repId : representativeStudent.repId,
-                  stuId: (req.body.stuId != null) ? req.body.stuId : representativeStudent.stuId,
-                  famId: (req.body.famId != null) ? req.body.famId : representativeStudent.famId,
+              where: {
+                repId: elementR.repId,
+                stuId: elementE.stuId,
+                famId: family.famId,
+                rstId: {
+                  [Op.ne]: parseInt(req.params.rstId)
+                }
+              },
+              include: [{
+                model: StudentModel,
+                as: 'student',
+                require: true
+              }
+              ,{
+                model: RepresentativeModel,
+                as: 'representative',
+                require: true
+              },
+              {
+                model: FamilyModel,
+                as: 'families',
+                require: true
+              }
+            ]
+            })
+              .then((representativeStudent) => {
 
-                })
-                .then((representativeStudent) => {
-                  message = 'Vínculo actualizado con éxito';
-                  res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+                  if(representativeStudent){
+                    return res.status(StatusCodes.OK).json({ok: false, message: 'Vínculo ya se encuentra registrado'})
+                  }else{    
+                      RepresentativeStudentModel.findOne({
+                      where: {
+                        rstId: req.params.rstId          
+                      }
+                    }).then((representativeStudent) => {
+                          representativeStudent.update({
+                            repId: (elementR.repId != null) ? elementR.repId : representativeStudent.repId,
+                            stuId: (elementE.stuId != null) ? elementE.stuId : representativeStudent.stuId,
+                            famId: (family.famId != null)   ? family.famId :   representativeStudent.famId,
+                            rstRepSta :(elementR.rstRepSta != null) ? elementR.rstRepSta : representativeStudent.rstRepSta,
+                            rstStaStu :(elementR.rstStaStu != null) ? elementE.rstStaStu : representativeStudent.rstStaStu
+                          })
+                          .then((representativeStudent) => {
+                            message = 'Vínculo actualizado con éxito';
+                            res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+                          }, (err) => {
+                            message = err
+                            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                            next(err)
+                          })
+                        }, (err) => {
+                          message = err
+                          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                          next(err)
+                        })    
+                  }
                 }, (err) => {
                   message = err
                   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
                   next(err)
                 })
-              }, (err) => {
+              
+              })
+
+            })
+
+  } catch (error) {
+    
+  }
+
+    
+    
+
+}
+
+const updateStatusRepresentative =  async (req, res, next) =>{
+
+  console.log('req.body',req.body)
+  console.log('req.params',req.params)
+
+  try {
+   
+          RepresentativeStudentModel.findOne({
+            where: {
+                 repId: req.body.repId,
+                 famId: req.body.famId,
+                 rstId: req.params.rstId        
+            }
+           }).then((representativeStudent) => {
+                representativeStudent.update({
+                    rstRepSta :req.body.rstRepSta
+                })
+                .then((representativeStudent) => {
+                    message = 'Estatus actualizado con éxito';
+                    res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+                }, (err) => {
+                    message = err
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                    next(err)
+               })
+            }, (err) => {
                 message = err
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
                 next(err)
-              })    
-        }
-      }, (err) => {
-        message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-        next(err)
-      })
+              })       
+  } catch (error) {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+    next(err)
+  }
+
+    
+    
+
+}
+
+const updateStatusStudent =  async (req, res, next) =>{
+
+  console.log('req.body',req.body)
+  console.log('req.params',req.params)
+
+  try {
+   
+          RepresentativeStudentModel.findOne({
+            where: {
+                 stuId: req.body.stuId,
+                 famId: req.body.famId,
+                 rstId: req.params.rstId        
+            }
+           }).then((representativeStudent) => {
+                representativeStudent.update({
+                  rstStuSta :req.body.rstStuSta
+                })
+                .then((representativeStudent) => {
+                    message = 'Estatus actualizado con éxito';
+                    res.status(StatusCodes.OK).json({ok: true, data:representativeStudent, message})
+                }, (err) => {
+                    message = err
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                    next(err)
+               })
+            }, (err) => {
+                message = err
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                next(err)
+              })       
+  } catch (error) {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+    next(err)
+  }   
 
 }
 
@@ -328,5 +441,7 @@ module.exports = {
     updateRepresentativeStudent,
     deleteRepresentativeStudent,
     getAllRepresentativeStudentGroupByFamily,
-    getOneRepresentativeStudentByFamId
+    getOneRepresentativeStudentByFamId,
+    updateStatusRepresentative, 
+    updateStatusStudent
 }
