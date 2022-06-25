@@ -10,6 +10,8 @@ const RepresentativeStudentModel = db.representativeStudentModel
 const PeriodsModel = db.periodsModel
 const StudentModel = db.studentModel
 const FamilyModel = db.familyModel
+const LevelsModel = db.levelsModel
+const SectionsModel = db.sectionsModel
 
 
 //Add Inscription
@@ -63,7 +65,18 @@ const getAllInscriptions =  async (req, res, next) =>{
       include: [{
         model: PeriodLevelSectionModel,
         as: 'periodLevelSectionI',
-        require: true
+        require: true,
+        include:[
+          {
+            model: LevelsModel,
+            as: 'level',
+            require: true
+          },{
+            model: SectionsModel,
+            as: 'section',
+            require: true
+          }
+        ]
       }
       ,{
         model: StudentModel,
@@ -73,7 +86,8 @@ const getAllInscriptions =  async (req, res, next) =>{
         model: FamilyModel,
         as: 'family',
         require: true
-      },{
+      }
+      ,{
         model: PeriodsModel,
         as: 'period',
         require: true,
