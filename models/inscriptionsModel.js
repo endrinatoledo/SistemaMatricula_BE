@@ -45,15 +45,15 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'plsId'
         })
         inscriptionsModel.belongsTo(models.studentModel, {
-          as: 'inscriptionS',
+          as: 'student',
           foreignKey: 'stuId'
         })
         inscriptionsModel.belongsTo(models.familyModel, {
-          as: 'inscriptionF',
+          as: 'family',
           foreignKey: 'famId'
         })
         inscriptionsModel.belongsTo(models.periodsModel, {
-          as: 'inscriptionP',
+          as: 'period',
           foreignKey: 'perId'
         })
       }
