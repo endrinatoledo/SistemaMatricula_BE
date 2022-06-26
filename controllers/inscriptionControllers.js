@@ -248,6 +248,7 @@ const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
       .then((student) => {
         if(student.length === 0 ){
           let insert = {
+            stuId: element.stuId,
             stuIdType: element.stuIdType,
             stuFirstName : element.stuFirstName,
             stuIdentificationNumber : element.stuIdentificationNumber,
