@@ -7,6 +7,7 @@ router.get   ('/', periodLevelSectionControllers.getAllPeriodLevelSection)
 router.get   ('/:plsId', periodLevelSectionControllers.getOnePeriodLevelSectionById)
 router.put   ('/:plsId', periodLevelSectionControllers.updatePeriodLevelSection)
 router.delete('/:plsId', periodLevelSectionControllers.deletePeriodLevelSection)
+router.get   ('/period/:perId', periodLevelSectionControllers.getOnePeriodLevelSectionByPerId)
 
 
 

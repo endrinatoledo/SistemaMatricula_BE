@@ -199,11 +199,82 @@ const deletePeriodLevelSection =  async (req, res, next) =>{
 
 }
 
+//get All PeriodLevelSection by Id
+const getOnePeriodLevelSectionByPerId =  async (req, res, next) =>{
+
+  PeriodLevelSectionModel.findAll({
+    include: [
+      {
+        model: PeriodsModel,
+        as: 'period',
+        require: true
+      }
+      ,{
+        model: LevelsModel,
+        as: 'level',
+        require: true
+      },{
+        model: SectionsModel,
+        as: 'section',
+        require: true
+      }
+  ],
+      where: {
+        perId: req.params.perId
+      }
+      // ,group: 'levId'
+    })
+    .then((periodLevelSection) => {
+      let levels = []
+      if(periodLevelSection.length > 0){
+        periodLevelSection.forEach(element => {
+
+          if(levels.length > 0){
+            let resultLevels = ''
+            resultLevels = levels.find( item => item.level.levName === element.level.levName)
+            if (resultLevels === undefined){
+
+              let secctions = []
+              periodLevelSection.forEach(sections => {
+                if(sections.level.levId === element.level.levId){
+                  secctions.push({section : sections.section, pls:sections.plsId })
+                }
+              })
+              levels.push({level: element.level, sections: secctions})
+            }
+          }else{
+            let secctions = []
+              periodLevelSection.forEach(sections => {
+                if(sections.level.levId === element.level.levId){
+                  secctions.push({section : sections.section, pls:sections.plsId })
+                }
+              })
+              levels.push({level: element.level, sections: secctions})
+          }
+        })
+
+        const data = {
+          levels : levels,
+          periodLevelSection: periodLevelSection
+        }
+        res.status(StatusCodes.OK).json({ok: true, data: data})
+      }else{
+       res.status(StatusCodes.OK).json({ok: true, data: []})
+      }    
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+}
+
 
 module.exports = {
     addPeriodLevelSection,
     getAllPeriodLevelSection,
     getOnePeriodLevelSectionById,
     updatePeriodLevelSection,
-    deletePeriodLevelSection
+    deletePeriodLevelSection,
+    getOnePeriodLevelSectionByPerId
 }
