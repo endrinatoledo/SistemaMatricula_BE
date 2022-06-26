@@ -5,6 +5,23 @@ const db = require("../models");
 
 const PeriodsModel = db.periodsModel
 
+//consultar periodo activo
+const getOneActivePeriod =  async (req, res,next) =>{
+
+  PeriodsModel.findOne({
+    where: {
+      perStatus: 1
+    }
+  })
+  .then((period) => {
+    return res.status(StatusCodes.OK).json({ok: true, data:period})
+
+  }, (err) => {
+    
+    return res.status(StatusCodes.OK).json({ok: false, message: 'Error al consultar periodo activo'})
+
+    })
+}
 //Add period
 
 const addPeriod =  async (req, res,next) =>{
@@ -160,11 +177,13 @@ const getAllActivePeriods =  async (req, res, next) =>{
     })
 
 }
+
 module.exports = {
     addPeriod,
     getAllPeriods,
     getOnePeriodById,
     updatePeriod,
     deletePeriod,
-    getAllActivePeriods
+    getAllActivePeriods,
+    getOneActivePeriod
 }

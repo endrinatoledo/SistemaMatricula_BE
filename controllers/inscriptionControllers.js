@@ -12,6 +12,7 @@ const StudentModel = db.studentModel
 const FamilyModel = db.familyModel
 const LevelsModel = db.levelsModel
 const SectionsModel = db.sectionsModel
+const {getOneActivePeriod} = require("./periodControllers")
 
 
 //Add Inscription
@@ -230,11 +231,53 @@ const deleteInscription =  async (req, res, next) =>{
 
 }
 
+//get All Inscription by Id
+const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
+
+  const students = req.body.students
+
+  if(students.length > 0){
+
+    var promises = students.map(function(element){
+      return InscriptionsModel.findAll({
+        where: {
+          perId: req.body.period.perId,
+          perId: element.stuId
+        }
+      })
+      .then((student) => {
+        if(student.length === 0 ){
+          let insert = {
+            stuFirstName : element.stuFirstName,
+            stuIdentificationNumber : element.stuIdentificationNumber,
+            stuSurname : element.stuSurname,
+          }
+          return insert
+        }
+      }, (err) => {
+        console.log('error',err) 
+        return 'error'
+      })
+    })
+
+    Promise.all(promises).then(function(result){
+      return res.status(StatusCodes.OK).json({ok: true, data: result}) 
+
+    })
+
+  }else{
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message:'No hay estudiantes para mostrar'})
+  }
+  
+
+}
 
 module.exports = {
     addInscription,
     getAllInscriptions,
     getOneInscriptionById,
     updateInscription,
-    deleteInscription
+    deleteInscription,
+    getOneInscriptionByStudentByPeriod
+
 }
