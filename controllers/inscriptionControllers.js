@@ -6,20 +6,17 @@ const db = require("../models");
 
 const InscriptionsModel = db.inscriptionsModel
 const PeriodLevelSectionModel = db.periodLevelSectionModel
-const RepresentativeStudentModel = db.representativeStudentModel
 const PeriodsModel = db.periodsModel
 const StudentModel = db.studentModel
 const FamilyModel = db.familyModel
 const LevelsModel = db.levelsModel
 const SectionsModel = db.sectionsModel
-const {getOneActivePeriod} = require("./periodControllers")
-
 
 //Add Inscription
 
 const addInscription =  async (req, res, next) =>{
 
-    if ( !req.body.famId|| !req.body.plsId || !req.body.stuId ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if ( !req.body.famId|| !req.body.plsId || !req.body.stuId || !req.body.perId ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let idExists = await InscriptionsModel.findOne({
@@ -263,7 +260,15 @@ const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
     })
 
     Promise.all(promises).then(function(result){
-      return res.status(StatusCodes.OK).json({ok: true, data: result}) 
+
+      
+      if(result.length > 0){
+        const endData = result.filter((item) => item !== undefined)
+        return res.status(StatusCodes.OK).json({ok: true, data: endData}) 
+      }else{
+        return res.status(StatusCodes.OK).json({ok: true, data: result}) 
+      }
+      
 
     })
 
