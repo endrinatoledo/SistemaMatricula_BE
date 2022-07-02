@@ -191,7 +191,6 @@ const updateInscription =  async (req, res, next) =>{
             }
           }).then((inscription) => {
                 inscription.update({
-                  // rstId: (req.body.rstId != null) ? req.body.rstId : inscription.rstId,
                   plsId: (req.body.plsId != null) ? req.body.plsId : inscription.plsId,
                   insObservation: (req.body.insObservation != null) ? req.body.insObservation : inscription.insObservation,
 
