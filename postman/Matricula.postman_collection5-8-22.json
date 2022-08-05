@@ -3412,6 +3412,322 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "getAllPayments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "addPayments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "payId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "paymAmount",
+									"value": "200.00",
+									"type": "text"
+								},
+								{
+									"key": "paymReference",
+									"value": "12569",
+									"type": "text"
+								},
+								{
+									"key": "paymDate",
+									"value": "05-08-2022",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPayments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPaymentsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/payments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePaymentsById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "payId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "paymAmount",
+									"value": "3000.00",
+									"type": "text"
+								},
+								{
+									"key": "paymReference",
+									"value": "1111111",
+									"type": "text"
+								},
+								{
+									"key": "paymDate",
+									"value": "05-06-2022",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/payments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePaymentsById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/payments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"payments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PaymentsConceptsStudents",
+			"item": [
+				{
+					"name": "getAllPaymentsConceptsStudents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentsConceptsStudents",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentsConceptsStudents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addPaymentsConceptsStudents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "spsId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentsConceptsStudents",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentsConceptsStudents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPaymentsConceptsStudentsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentsConceptsStudents/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentsConceptsStudents",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePaymentsConceptsStudentsById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "spsId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentsConceptsStudents/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentsConceptsStudents",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePaymentsConceptsStudentsById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentsConceptsStudents/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentsConceptsStudents",
+								"2"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

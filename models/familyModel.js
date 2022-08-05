@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
 
     const familyModel = sequelize.define("familyModel", {
-        famId: {
+      famId: {
           type: DataTypes.BIGINT,
           allowNull: false,
           primaryKey: true,
@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
         })
         familyModel.hasMany(models.representativeStudentModel, {
           as: 'fam_repstu',
+          foreignKey: 'famId'
+        })
+        familyModel.hasMany(models.paymentsConceptsStudentsModel, {
+          as: 'fam_paymentsConceptsStudents',
           foreignKey: 'famId'
         })
       }
