@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'ico_pco',
           foreignKey: 'icoId'
         })
+        invoiceConceptsModel.hasMany(models.studentPaymentSchemeModel, {
+          as: 'invoiceConcepts_studentPaymentScheme',
+          foreignKey: 'icoId'
+        })
       }
     return invoiceConceptsModel
 }

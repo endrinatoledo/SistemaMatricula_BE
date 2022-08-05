@@ -1,0 +1,3419 @@
+{
+	"info": {
+		"_postman_id": "5e39b49e-744e-44a9-bd2a-a323685043ef",
+		"name": "Matricula",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "getUserById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "first_name",
+									"value": "Sophia",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Toledo",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "11111",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuName",
+									"value": "endrina",
+									"type": "text"
+								},
+								{
+									"key": "usuLastName",
+									"value": "toledo",
+									"type": "text"
+								},
+								{
+									"key": "usuEmail",
+									"value": "endrx12@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "usuPassword",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "usuStatus",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "rolId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "ciudad",
+									"value": "Valencia",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "usuName",
+									"value": "Endrina",
+									"type": "text"
+								},
+								{
+									"key": "usuLastName",
+									"value": "Toledo",
+									"type": "text"
+								},
+								{
+									"key": "usuEmail",
+									"value": "endrx12@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "usuPassword",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "usuStatus",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "rolId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUserById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuName",
+									"value": "Endri1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "usuLastName",
+									"value": "Tole1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "usuEmail",
+									"value": "endrx124@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "usuPassword",
+									"value": "1234tole",
+									"type": "text"
+								},
+								{
+									"key": "usuStatus",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUserById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Access",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/access/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"access",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "getAllRoles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/roles/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"roles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addRol",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "rolName",
+									"value": "rol 1",
+									"type": "text"
+								},
+								{
+									"key": "rolStatus",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/roles/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"roles",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRolById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/roles/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRolById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "rolName",
+									"value": "rol Editado",
+									"type": "text"
+								},
+								{
+									"key": "rolStatus",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/roles/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRolById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/roles/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"roles",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActiveRoles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/roles/allRoles/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"roles",
+								"allRoles",
+								"active"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Families",
+			"item": [
+				{
+					"name": "addFamily",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "famName",
+									"value": "familia prueba",
+									"type": "text"
+								},
+								{
+									"key": "famStatus",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/families/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"families",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllFamilies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/families/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"families",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFamilyById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/families/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"families",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateFamilyById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "familia Editada",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/families/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"families",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "familia editada",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteFamilyById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/families/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"families",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Levels",
+			"item": [
+				{
+					"name": "addLevel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "levName",
+									"value": "Segundo Grado",
+									"type": "text"
+								},
+								{
+									"key": "levStatus",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/levels/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"levels",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllLevels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/levels/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"levels",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateLevelById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Rol actualizado",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/levels/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"levels",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActiveLevels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/levels/allLevels/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"levels",
+								"allLevels",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getLevelById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/levels/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"levels",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteLevelById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/levels/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"levels",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sections",
+			"item": [
+				{
+					"name": "addSection",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "secName",
+									"value": "A",
+									"type": "text"
+								},
+								{
+									"key": "secStatus",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/sections/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sections",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllSections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/sections/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sections",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSectionById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/sections/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sections",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateSectionById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "seccion actualizada",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/sections/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sections",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActiveSections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/sections/allSections/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sections",
+								"allSections",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteSectionById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/sections/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sections",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "getCountryById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/countries/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"countries",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCountries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/countries/300",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"countries",
+								"300"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PaymentMethodos",
+			"item": [
+				{
+					"name": "addPaymentMethod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "forma 3",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentmethod/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentmethod",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPaymentMethods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentmethod/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentmethod",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPaymentMethodById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentmethod/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentmethod",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePaymentpethodById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "forma actualizada",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentmethod/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentmethod",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePaymentMethodById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentmethod/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentmethod",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActivePaymentMethods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentmethod/allpaymentMethods/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentmethod",
+								"allpaymentMethods",
+								"active"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Professions",
+			"item": [
+				{
+					"name": "getAllProfessions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/professions/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"professions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProfessionById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/professions/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"professions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Periods",
+			"item": [
+				{
+					"name": "addPeriod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "perStartYear",
+									"value": "2022",
+									"type": "text"
+								},
+								{
+									"key": "perStatus",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/periods/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periods",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActivePeriods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periods/allPeriods/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periods",
+								"allPeriods",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPeriods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periods/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periods",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPeriodsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periods/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periods",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePeriodById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "startYear",
+									"value": "2030",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/periods/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periods",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePeriodsById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periods/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periods",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FederalEntities",
+			"item": [
+				{
+					"name": "getAllfederalEntities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/federalEntities/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"federalEntities",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFederalEntityById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/federalEntities/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"federalEntities",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFederalEntityByIdCountry",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/federalEntities/country/232",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"federalEntities",
+								"country",
+								"232"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SchoolData",
+			"item": [
+				{
+					"name": "getSchoolData",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/schoolData/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"schoolData",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ExchangeRates",
+			"item": [
+				{
+					"name": "addExchangeRate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "excAmount",
+									"value": "44.60",
+									"type": "text"
+								},
+								{
+									"key": "excDate",
+									"value": "2022-04-23",
+									"type": "text"
+								},
+								{
+									"key": "excShift",
+									"value": "Tarde",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/exchangeRate/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"exchangeRate",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllExchangeRates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/exchangeRate/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"exchangeRate",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getExchangeRateById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/exchangeRate/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"exchangeRate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateExchangeRateById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "amount",
+									"value": "4.61",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2022-04-23",
+									"type": "text"
+								},
+								{
+									"key": "shift",
+									"value": "tarde",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/exchangeRate/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"exchangeRate",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteExchangeRateById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/exchangeRate/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"exchangeRate",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "addStudent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stuFirstName",
+									"value": "Sophia2",
+									"type": "text"
+								},
+								{
+									"key": "stuSecondName",
+									"value": "N",
+									"type": "text"
+								},
+								{
+									"key": "stuSurname",
+									"value": "Gallardo2",
+									"type": "text"
+								},
+								{
+									"key": "stuSecondSurname",
+									"value": "T",
+									"type": "text"
+								},
+								{
+									"key": "stuIdType",
+									"value": "v",
+									"type": "text"
+								},
+								{
+									"key": "stuIdentificationNumber",
+									"value": "235645836",
+									"type": "text"
+								},
+								{
+									"key": "stuDdateOfBirth",
+									"value": "2017-05-30",
+									"type": "text"
+								},
+								{
+									"key": "stuSex",
+									"value": "f",
+									"type": "text"
+								},
+								{
+									"key": "couId",
+									"value": "232",
+									"type": "text"
+								},
+								{
+									"key": "fedId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "stuPhoto",
+									"value": "image.jpg",
+									"type": "text"
+								},
+								{
+									"key": "stuStatus",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/students/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"students",
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "stuSecondSurname",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "stuIdType",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "stuIdentificationNumber",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "stuDdateOfBirth",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "stuSex",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllStudents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/students/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"students",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getStudentById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/students/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"students",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActiveStudents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/students/allStudents/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"students",
+								"allStudents",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateStudentById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stuFirstName",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "stuSecondName",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "stuSurname",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "stuSecondSurname",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "stuIdType",
+									"value": "v",
+									"type": "text"
+								},
+								{
+									"key": "stuIdentificationNumber",
+									"value": "235645833",
+									"type": "text"
+								},
+								{
+									"key": "stuDdateOfBirth",
+									"value": "2022-05-03",
+									"type": "text"
+								},
+								{
+									"key": "stuSex",
+									"value": "f",
+									"type": "text"
+								},
+								{
+									"key": "couId",
+									"value": "225",
+									"type": "text"
+								},
+								{
+									"key": "fedId",
+									"value": "26",
+									"type": "text"
+								},
+								{
+									"key": "stuPhoto",
+									"value": "actualizado.jpg",
+									"type": "text"
+								},
+								{
+									"key": "stuStatus",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/students/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"students",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteStudentById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/students/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"students",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Representative",
+			"item": [
+				{
+					"name": "addRepresentative",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "repFirstName",
+									"value": "prueba23",
+									"type": "text"
+								},
+								{
+									"key": "repSecondName",
+									"value": "prueba23",
+									"type": "text"
+								},
+								{
+									"key": "repSurname",
+									"value": "prueba23",
+									"type": "text"
+								},
+								{
+									"key": "repSecondSurname",
+									"value": "prueba23",
+									"type": "text"
+								},
+								{
+									"key": "repIdType",
+									"value": "e",
+									"type": "text"
+								},
+								{
+									"key": "repIdentificationNumber",
+									"value": "235645823",
+									"type": "text"
+								},
+								{
+									"key": "repDateOfBirth",
+									"value": "1992-12-02",
+									"type": "text"
+								},
+								{
+									"key": "repSex",
+									"value": "f",
+									"type": "text"
+								},
+								{
+									"key": "repAddress",
+									"value": "Valencia",
+									"type": "text"
+								},
+								{
+									"key": "proId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "repPhones",
+									"value": "04244561922,042612345678",
+									"type": "text"
+								},
+								{
+									"key": "repEmail",
+									"value": "endrx12@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "repCivilStatus",
+									"value": "soltera",
+									"type": "text"
+								},
+								{
+									"key": "couId",
+									"value": "232",
+									"type": "text"
+								},
+								{
+									"key": "fedId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "repPhoto",
+									"value": "endrina.jpg",
+									"type": "text"
+								},
+								{
+									"key": "repStatus",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "repBond",
+									"value": "madre",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllRepresentative",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRepresentativeById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRepresentativeById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "repFirstName",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "repSecondName",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "repSurname",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "repSecondSurname",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "repIdType",
+									"value": "v",
+									"type": "text"
+								},
+								{
+									"key": "repIdentificationNumber",
+									"value": "23564582",
+									"type": "text"
+								},
+								{
+									"key": "repDateOfBirth",
+									"value": "2092-05-26",
+									"type": "text"
+								},
+								{
+									"key": "repSex",
+									"value": "m",
+									"type": "text"
+								},
+								{
+									"key": "repAddress",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "proId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "repPhones",
+									"value": "04244561922",
+									"type": "text"
+								},
+								{
+									"key": "repEmail",
+									"value": "actualizado@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "repCivilStatus",
+									"value": "soltera",
+									"type": "text"
+								},
+								{
+									"key": "couId",
+									"value": "232",
+									"type": "text"
+								},
+								{
+									"key": "fedId",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "repPhoto",
+									"value": "endr.jpg",
+									"type": "text"
+								},
+								{
+									"key": "repStatus",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActivesRepresentatives",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/allRepresentatives/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								"allRepresentatives",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRepresentativeById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRepresentativeByIdentification",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "repIdType",
+									"value": "v",
+									"type": "text"
+								},
+								{
+									"key": "repIdentificationNumber",
+									"value": "2356458235",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/representatives/byIdentification",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representatives",
+								"byIdentification"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "InvoiceConcepts",
+			"item": [
+				{
+					"name": "addInvoiceConcept",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "icoName",
+									"value": "sdfesdf",
+									"type": "text"
+								},
+								{
+									"key": "icoDescription",
+									"value": "xdfgdfg",
+									"type": "text"
+								},
+								{
+									"key": "icoStatus",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/invoiceConcepts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"invoiceConcepts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllInvoiceConcepts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/invoiceConcepts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"invoiceConcepts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getInvoiceConceptById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/invoiceConcepts/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"invoiceConcepts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllActivesInvoiceConcepts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/invoiceConcepts/allInvoiceConcepts/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"invoiceConcepts",
+								"allInvoiceConcepts",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateInvoiceConceptById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "icoName",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "icoDescription",
+									"value": "sdfdsf",
+									"type": "text"
+								},
+								{
+									"key": "icoStatus",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/invoiceConcepts/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"invoiceConcepts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteInvoiceConceptById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/invoiceConcepts/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"invoiceConcepts",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RepresentativeStudent",
+			"item": [
+				{
+					"name": "getAllRepresentativeStudent",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representativeStudent/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representativeStudent",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addRepresentativeStudent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "repId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "stuId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/representativeStudent/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representativeStudent",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRepresentativeStudent",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "repId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "stuId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/representativeStudent/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representativeStudent",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRepresentativeStudentById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representativeStudent/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representativeStudent",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRepresentativeStudentById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/representativeStudent/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"representativeStudent",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PeriodLevelSection",
+			"item": [
+				{
+					"name": "addPeriodLevelSection",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "perId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "levId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "secId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/periodLevelSection/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periodLevelSection",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPeriodLevelSection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periodLevelSection/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periodLevelSection",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPeriodLevelSectionById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periodLevelSection/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periodLevelSection",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePeriodLevelSectionById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "perId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "levId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "secId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/periodLevelSection/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periodLevelSection",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePeriodLevelSectionById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/periodLevelSection/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"periodLevelSection",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inscriptions",
+			"item": [
+				{
+					"name": "addInscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "plsId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "famId",
+									"value": "9",
+									"type": "text"
+								},
+								{
+									"key": "insObservation",
+									"value": "inscripcion prueba",
+									"type": "text"
+								},
+								{
+									"key": "stuId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "perId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/inscriptions/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"inscriptions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllInscriptions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/inscriptions/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"inscriptions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getInscriptionsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/inscriptions/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"inscriptions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteInscriptionsById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/inscriptions/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"inscriptions",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateInscription",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "rstId",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "plsId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "insObservation",
+									"value": "ob actualizada",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/inscriptions/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"inscriptions",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "paymentSchema",
+			"item": [
+				{
+					"name": "getPymentSchema",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchema",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchema"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addPaymentSchema",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "pscName",
+									"value": "mensualidad primaria full2",
+									"type": "text"
+								},
+								{
+									"key": "pscDescription",
+									"value": "mensualidad primaria full descripcion2",
+									"type": "text"
+								},
+								{
+									"key": "pscStatus",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchema",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchema"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPaymentSchemaById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchema/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchema",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePaymentSchemaById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "pscName",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "pscDescription",
+									"value": "actualizado",
+									"type": "text"
+								},
+								{
+									"key": "pscStatus",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchema/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchema",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPaymentSchemaActive",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchema/allPaymentScheme/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchema",
+								"allPaymentScheme",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePaymentSchemaById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchema/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchema",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "paymentSchemeConcepts",
+			"item": [
+				{
+					"name": "getAllPaymentSchemeConcepts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchemeConcepts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchemeConcepts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addPaymentSchemeConcepts",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "pscId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "plsId",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "icoId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pcoAmount",
+									"value": "200.50",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchemeConcepts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchemeConcepts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPaymentSchemeConceptsById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchemeConcepts/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchemeConcepts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePaymentSchemeConceptsById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "pscId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "plsId",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "icoId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pcoAmount",
+									"value": "3000.50",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchemeConcepts/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchemeConcepts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePaymentSchemeConcepts",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/paymentSchemeConcepts/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"paymentSchemeConcepts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "StudentPaymentScheme",
+			"item": [
+				{
+					"name": "getAllStudentPaymentScheme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/studentPaymentScheme",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"studentPaymentScheme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addStudentPaymentScheme",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stuId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pcoId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pscId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "plsId",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "icoId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "spsAmount",
+									"value": "200.00",
+									"type": "text"
+								},
+								{
+									"key": "spsAmountPaid",
+									"value": "100.00",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/studentPaymentScheme",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"studentPaymentScheme"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getStudentPaymentSchemeById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/studentPaymentScheme/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"studentPaymentScheme",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateStudentPaymentSchemeById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stuId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pcoId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pscId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "plsId",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "icoId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "spsAmount",
+									"value": "3000.00",
+									"type": "text"
+								},
+								{
+									"key": "spsAmountPaid",
+									"value": "1000.00",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/studentPaymentScheme/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"studentPaymentScheme",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteStudentPaymentScheme",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/studentPaymentScheme/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"studentPaymentScheme",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
