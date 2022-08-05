@@ -32,11 +32,10 @@ module.exports = (sequelize, DataTypes) => {
           })
     
           paymentSchemeModel.associate = function (models) {
-    
-            // paymentSchemeModel.hasMany(models.usersModel, {
-            //   as: 'psc_user',
-            //   foreignKey: 'rolId'
-            // })
+            paymentSchemeModel.hasMany(models.paymentSchemeConceptsModel, {
+              as: 'psc_pco',
+              foreignKey: 'pscId'
+            })
           }
         return paymentSchemeModel
     }

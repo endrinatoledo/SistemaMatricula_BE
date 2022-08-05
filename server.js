@@ -31,6 +31,7 @@ const representativeStudentRoutes = require('./routes/representativeStudentRoute
 const periodLevelSectionRoutes = require('./routes/periodLevelSectionRoutes')
 const inscriptionRoutes = require('./routes/inscriptionRoutes')
 const paymentSchemaRoutes = require('./routes/paymentSchemaRoutes')
+const paymentSchemeConceptsRoutes = require('./routes/paymentSchemeConceptsRoutes')
 
 
 app.use('/api/users',routerUser)
@@ -53,6 +54,8 @@ app.use('/api/representativeStudent',representativeStudentRoutes)
 app.use('/api/periodLevelSection',periodLevelSectionRoutes)
 app.use('/api/inscriptions',inscriptionRoutes)
 app.use('/api/paymentSchema',paymentSchemaRoutes)
+app.use('/api/paymentSchemeConcepts',paymentSchemeConceptsRoutes)
+
 
 
 //testing api

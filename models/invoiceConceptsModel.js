@@ -34,10 +34,10 @@ module.exports = (sequelize, DataTypes) => {
 
       invoiceConceptsModel.associate = function (models) {
 
-        // invoiceConceptsModel.hasMany(models.usersModel, {
-        //   as: 'ico_user',
-        //   foreignKey: 'icoId'
-        // })
+        invoiceConceptsModel.hasMany(models.paymentSchemeConceptsModel, {
+          as: 'ico_pco',
+          foreignKey: 'icoId'
+        })
       }
     return invoiceConceptsModel
 }

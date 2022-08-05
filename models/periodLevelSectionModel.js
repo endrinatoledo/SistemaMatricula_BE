@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'inscriptionP',
           foreignKey: 'insId'
         }) 
+        periodLevelSectionModel.hasMany(models.paymentSchemeConceptsModel, {
+          as: 'psc_pco',
+          foreignKey: 'plsId'
+        })
 
       }
 
