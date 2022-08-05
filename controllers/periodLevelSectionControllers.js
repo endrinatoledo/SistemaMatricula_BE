@@ -11,40 +11,103 @@ const SectionsModel = db.sectionsModel
 
 //Add PeriodLevelSection
 
+const add = async (perId,levId,secId) => {
+
+  try {
+    await PeriodLevelSectionModel.create({
+      perId,
+      levId,
+      secId 
+    }).then(() => {
+  }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+  } catch (error) {
+    console.log('error al inserta nuevo periodo, causa: ',error)
+    throw err; 
+  }
+
+}
+
+
+const searchIdSection = (sections, section) => {
+
+  const result = sections.find(item => item.secName === section)
+  return result
+}
+
 const addPeriodLevelSection =  async (req, res, next) =>{
 
-    if (!req.body.perId || !req.body.levId) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (!req.body.startYear) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
-        let idExists = await PeriodLevelSectionModel.findOne({
-            where: { 
-              perId: req.body.perId,
-              levId: req.body.levId,
-              secId: req.body.secId,
-             }
-          }).catch((err) => {
-            throw err; 
-          });
-
-          if (idExists){
-            return res.status(StatusCodes.OK).json({ok: false, message: 'Registro ya existe'})
-          }else{
-
-            PeriodLevelSectionModel.create({
-              perId: req.body.perId,
-              levId: req.body.levId,
-              secId: req.body.secId
+            const sections = await SectionsModel.findAll({
+              where: { secStatus: 1  }
             })
-            .then((periodLevelSection) => {
-
-                message = 'Registro creado con éxito';
-                res.status(StatusCodes.OK).json({ok: true,data: periodLevelSection, message})
-              }, (err) => {
-                message = 'Error de conexión'
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
-                next(err)
-              })
-          }
+          
+            PeriodsModel.create({
+              perStartYear: Number(req.body.startYear),
+              perEndYear: (Number(req.body.startYear) + 1),
+              perStatus: 1
+          })
+          .then((period) => {
+          
+            const data = req.body.data
+          
+            data.forEach(element => {
+              if(element.a){
+                const sectionRes = searchIdSection(sections,'A')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.b){
+                const sectionRes = searchIdSection(sections,'B')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.c){
+                const sectionRes = searchIdSection(sections,'C')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.d){
+                const sectionRes = searchIdSection(sections,'D')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.e){
+                const sectionRes = searchIdSection(sections,'E')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.f){
+                const sectionRes = searchIdSection(sections,'F')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.g){
+                const sectionRes = searchIdSection(sections,'G')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.h){
+                const sectionRes = searchIdSection(sections,'H')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.i){
+                const sectionRes = searchIdSection(sections,'I')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.j){
+                const sectionRes = searchIdSection(sections,'J')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.k){
+                const sectionRes = searchIdSection(sections,'K')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.l){
+                const sectionRes = searchIdSection(sections,'L')
+                add(period.perId,element.levId, sectionRes.secId)
+              }else if(element.m){
+                const sectionRes = searchIdSection(sections,'M')
+                add(period.perId,element.levId, sectionRes.secId)
+              }
+            });
+          
+              message = 'Periodo creado con éxito';
+              res.status(StatusCodes.OK).json({ok: true, message})
+            }, (err) => {
+              message = 'Error al crear Periodo'
+              res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
+              next(err)
+            })
+          
     } catch (err) {
         message = err;
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
@@ -70,7 +133,8 @@ const getAllPeriodLevelSection =  async (req, res, next) =>{
         as: 'section',
         require: true
       }
-    ]
+    ],
+    group: "perId",
     })
     .then((periodsLevelsSections) => {
         res.status(StatusCodes.OK).json({ok: true, data: periodsLevelsSections})

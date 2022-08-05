@@ -8,9 +8,6 @@ router.get   ('/onePeriod/active', periodController.getOneActivePeriod)
 router.put   ('/:perId', periodController.updatePeriod)
 router.delete('/:perId', periodController.deletePeriod)
 router.get   ('/allPeriods/active', periodController.getAllActivePeriods)
-
-
-
-
+router.get   ('/startYear/:perStartYear', periodController.getOnePeriodByStartYear)
 
 module.exports = router
