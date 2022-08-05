@@ -30,6 +30,7 @@ const invoiceConceptRoutes = require('./routes/invoiceConceptRoutes')
 const representativeStudentRoutes = require('./routes/representativeStudentRoutes')
 const periodLevelSectionRoutes = require('./routes/periodLevelSectionRoutes')
 const inscriptionRoutes = require('./routes/inscriptionRoutes')
+const paymentSchemaRoutes = require('./routes/paymentSchemaRoutes')
 
 
 app.use('/api/users',routerUser)
@@ -51,7 +52,7 @@ app.use('/api/invoiceConcepts',invoiceConceptRoutes)
 app.use('/api/representativeStudent',representativeStudentRoutes)
 app.use('/api/periodLevelSection',periodLevelSectionRoutes)
 app.use('/api/inscriptions',inscriptionRoutes)
-
+app.use('/api/paymentSchema',paymentSchemaRoutes)
 
 
 //testing api

@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {    
     
     // esquema de pagos
-        const paymentScheme = sequelize.define("paymentScheme", {
+        const paymentSchemeModel = sequelize.define("paymentSchemeModel", {
             pscId: {
               type: DataTypes.BIGINT,
               allowNull: false,
@@ -31,12 +31,12 @@ module.exports = (sequelize, DataTypes) => {
             timestamps: false
           })
     
-          paymentScheme.associate = function (models) {
+          paymentSchemeModel.associate = function (models) {
     
-            // paymentScheme.hasMany(models.usersModel, {
+            // paymentSchemeModel.hasMany(models.usersModel, {
             //   as: 'psc_user',
             //   foreignKey: 'rolId'
             // })
           }
-        return paymentScheme
+        return paymentSchemeModel
     }

@@ -52,7 +52,7 @@ db.inscriptionsModel =  require('./inscriptionsModel')(sequelize,DataTypes)
 db.familyModel =  require('./familyModel')(sequelize,DataTypes)
 db.studentModel =  require('./studentModel')(sequelize,DataTypes)
 db.representativeModel =  require('./representativeModel')(sequelize,DataTypes)
-
+db.paymentSchemeModel =  require('./paymentSchemeModel')(sequelize,DataTypes)
 
 
 Object.keys(db).forEach(modelName => {
