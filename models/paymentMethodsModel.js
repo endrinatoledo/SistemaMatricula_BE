@@ -28,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
 
       paymentMethodsModel.associate = function (models) {
 
-        // paymentMethodsModel.hasMany(models.usersModel, {
-        //   as: 'pay_user',
-        //   foreignKey: 'payId'
-        // })
+        paymentMethodsModel.hasMany(models.paymentsModel, {
+          as: 'paymentMethods_payments',
+          foreignKey: 'payId'
+        })
       }
     return paymentMethodsModel
 }
