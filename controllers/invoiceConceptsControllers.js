@@ -50,7 +50,18 @@ const getAllInvoiceConcepts =  async (req, res, next) =>{
 
     InvoiceConceptsModel.findAll({})
     .then((invoiceConcepts) => {
-        res.status(StatusCodes.OK).json({ok: true, data: invoiceConcepts})
+
+      if(invoiceConcepts.length > 0){
+
+        const lookup = invoiceConcepts.reduce(function(acc, cur) {
+          acc[cur.icoId] = cur.icoName;
+          return acc;
+        }, {})
+  
+        res.status(StatusCodes.OK).json({ok: true, data: invoiceConcepts, lookup})
+      }else{
+        res.status(StatusCodes.OK).json({ok: true, data: invoiceConcepts, lookup:null})
+      }
     }, (err) => {
         message = err
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})

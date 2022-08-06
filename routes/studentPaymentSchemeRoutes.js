@@ -7,5 +7,6 @@ router.get   ('/', studentPaymentSchemeController.getAllStudentPaymentScheme)
 router.get   ('/:spsId', studentPaymentSchemeController.getOneStudentPaymentSchemeById)
 router.put   ('/:spsId', studentPaymentSchemeController.updateStudentPaymentScheme)
 router.delete('/:spsId', studentPaymentSchemeController.deleteStudentPaymentScheme)
+router.get   ('/inscription/:insId', studentPaymentSchemeController.getOneStudentPaymentSchemeByIdInscription)
 
 module.exports = router

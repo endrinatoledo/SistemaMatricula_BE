@@ -9,12 +9,16 @@ const PaymentSchemeConceptsModel = db.paymentSchemeConceptsModel
 
 const addPaymentSchemeConcepts =  async (req, res,next) =>{
 
-    if (req.body.pscId === null || req.body.plsId === null || req.body.icoId === null || req.body.pcoAmount === null) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (
+      // req.body.pscId === null || req.body.plsId === null ||
+      req.body.insId === null ||
+       req.body.icoId === null || req.body.pcoAmount === null) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
             PaymentSchemeConceptsModel.create({
-              pscId: req.body.pscId,
-              plsId: req.body.plsId,
+              // pscId: req.body.pscId,
+              // plsId: req.body.plsId,
+              insId: req.body.insId,
               icoId: req.body.icoId,
               pcoAmount : req.body.pcoAmount
             })
@@ -74,8 +78,9 @@ const updatePaymentSchemeConcepts =  async (req, res, next) =>{
           }).then((paymentSchemeConcepts) => {
             paymentSchemeConcepts.update({
 
-              pscId: (req.body.pscId != null) ? req.body.pscId : paymentSchemeConcepts.pscId,
-              plsId: (req.body.plsId != null) ? req.body.plsId : paymentSchemeConcepts.plsId,
+              // pscId: (req.body.pscId != null) ? req.body.pscId : paymentSchemeConcepts.pscId,
+              // plsId: (req.body.plsId != null) ? req.body.plsId : paymentSchemeConcepts.plsId,
+              insId: (req.body.insId != null) ? req.body.insId : paymentSchemeConcepts.insId,
               icoId: (req.body.icoId != null) ? req.body.icoId : paymentSchemeConcepts.icoId,
               pcoAmount: (req.body.pcoAmount != null) ? req.body.pcoAmount : paymentSchemeConcepts.pcoAmount
 

@@ -10,26 +10,26 @@ module.exports = (sequelize, DataTypes) => {
               autoIncrement: true,
               field: 'sps_id'
             },   
-            stuId: {
-                type: DataTypes.BIGINT,
-                allowNull: false,
-              field: 'stu_id'
-            },   
-            pcoId: {
-              type: DataTypes.BIGINT,
-              allowNull: false,
-              field: 'pco_id'
-            },
-            pscId: {
-             type: DataTypes.BIGINT,
-             allowNull: false,
-             field: 'psc_id'
-            },
-            plsId: {
-             type: DataTypes.BIGINT,
-             allowNull: false,
-             field: 'pls_id'
-            },
+            // stuId: {
+            //     type: DataTypes.BIGINT,
+            //     allowNull: false,
+            //   field: 'stu_id'
+            // },   
+            // pcoId: {
+            //   type: DataTypes.BIGINT,
+            //   allowNull: false,
+            //   field: 'pco_id'
+            // },
+            // pscId: {
+            //  type: DataTypes.BIGINT,
+            //  allowNull: false,
+            //  field: 'psc_id'
+            // },
+            // plsId: {
+            //  type: DataTypes.BIGINT,
+            //  allowNull: false,
+            //  field: 'pls_id'
+            // },
             icoId: {
              type: DataTypes.BIGINT,
              allowNull: false,
@@ -37,14 +37,19 @@ module.exports = (sequelize, DataTypes) => {
             },
             spsAmount: {
              type: DataTypes.FLOAT,
-             allowNull: false,
+             allowNull: true,
              field: 'sps_amount'
             },
             spsAmountPaid: {
              type: DataTypes.FLOAT,
-             allowNull: false,
+             allowNull: true,
              field: 'sps_amount_paid'
-            }
+            },
+            insId:{
+            type: DataTypes.BIGINT,
+            allowNull: false,
+            field: 'ins_id'
+          }
     
         }, {
             tableName: 'student_payment_scheme',
@@ -52,22 +57,22 @@ module.exports = (sequelize, DataTypes) => {
           })
     
           studentPaymentSchemeModel.associate = function (models) {
-            studentPaymentSchemeModel.belongsTo(models.studentModel, {
-              as: 'students',
-              foreignKey: 'stuId'
-            })
-            studentPaymentSchemeModel.belongsTo(models.paymentSchemeConceptsModel, {
-                as: 'paymentSchemeConcepts',
-                foreignKey: 'pscId'
-            })
-            studentPaymentSchemeModel.belongsTo(models.paymentSchemeModel, {
-                as: 'paymentScheme',
-                foreignKey: 'pcoId'
-            })
-            studentPaymentSchemeModel.belongsTo(models.periodLevelSectionModel, {
-                as: 'periodLevelSection',
-                foreignKey: 'plsId'
-            })
+            // studentPaymentSchemeModel.belongsTo(models.studentModel, {
+            //   as: 'students',
+            //   foreignKey: 'stuId'
+            // })
+            // studentPaymentSchemeModel.belongsTo(models.paymentSchemeConceptsModel, {
+            //     as: 'paymentSchemeConcepts',
+            //     foreignKey: 'pscId'
+            // })
+            // studentPaymentSchemeModel.belongsTo(models.paymentSchemeModel, {
+            //     as: 'paymentScheme',
+            //     foreignKey: 'pcoId'
+            // })
+            // studentPaymentSchemeModel.belongsTo(models.periodLevelSectionModel, {
+            //     as: 'periodLevelSection',
+            //     foreignKey: 'plsId'
+            // })
             studentPaymentSchemeModel.belongsTo(models.invoiceConceptsModel, {
                 as: 'invoiceConcepts',
                 foreignKey: 'icoId'
@@ -76,6 +81,10 @@ module.exports = (sequelize, DataTypes) => {
               as: 'stuPaySch_payConStu',
               foreignKey: 'spsId'
             })
+            studentPaymentSchemeModel.belongsTo(models.inscriptionsModel, {
+              as: 'inscriptions',
+              foreignKey: 'insId'
+          })
           }
         return studentPaymentSchemeModel
     }

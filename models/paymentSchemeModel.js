@@ -32,14 +32,14 @@ module.exports = (sequelize, DataTypes) => {
           })
     
           paymentSchemeModel.associate = function (models) {
-            paymentSchemeModel.hasMany(models.paymentSchemeConceptsModel, {
-              as: 'psc_pco',
-              foreignKey: 'pscId'
-            })
-            paymentSchemeModel.hasMany(models.studentPaymentSchemeModel, {
-              as: 'paymentScheme_studentPaymentScheme',
-              foreignKey: 'pscId'
-            })
+            // paymentSchemeModel.hasMany(models.paymentSchemeConceptsModel, {
+            //   as: 'psc_pco',
+            //   foreignKey: 'pscId'
+            // })
+            // paymentSchemeModel.hasMany(models.studentPaymentSchemeModel, {
+            //   as: 'paymentScheme_studentPaymentScheme',
+            //   foreignKey: 'pscId'
+            // })
           }
         return paymentSchemeModel
     }

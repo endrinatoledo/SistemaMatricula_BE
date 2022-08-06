@@ -46,14 +46,14 @@ module.exports = (sequelize, DataTypes) => {
           as: 'inscriptionP',
           foreignKey: 'insId'
         }) 
-        periodLevelSectionModel.hasMany(models.paymentSchemeConceptsModel, {
-          as: 'psc_pco',
-          foreignKey: 'plsId'
-        })
-        periodLevelSectionModel.hasMany(models.studentPaymentSchemeModel, {
-          as: 'periodLevelSection_studentPaymentScheme',
-          foreignKey: 'plsId'
-        })
+        // periodLevelSectionModel.hasMany(models.paymentSchemeConceptsModel, {
+        //   as: 'psc_pco',
+        //   foreignKey: 'plsId'
+        // })
+        // periodLevelSectionModel.hasMany(models.studentPaymentSchemeModel, {
+        //   as: 'periodLevelSection_studentPaymentScheme',
+        //   foreignKey: 'plsId'
+        // })
 
       }
 

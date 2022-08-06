@@ -9,17 +9,18 @@ const StudentPaymentSchemeModel = db.studentPaymentSchemeModel
 
 const addStudentPaymentScheme =  async (req, res,next) =>{
 
-    if (req.body.stuId === null || req.body.pcoId === null || req.body.pscId === null || req.body.plsId === null        || req.body.icoId === null || req.body.spsAmount === null || req.body.spsAmountPaid === null) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (req.body.icoId === null || req.body.insId === null) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
             StudentPaymentSchemeModel.create({
-              stuId: req.body.stuId,
-              pcoId: req.body.pcoId,
-              pscId: req.body.pscId,
-              plsId: req.body.plsId,
+              // stuId: req.body.stuId,
+              // pcoId: req.body.pcoId,
+              // pscId: req.body.pscId,
+              // plsId: req.body.plsId,
               icoId: req.body.icoId,
               spsAmount: req.body.spsAmount,
               spsAmountPaid: req.body.spsAmountPaid,
+              insId: req.body.insId,
             })
             .then((studentPaymentSchema) => {
                 message = 'Esquema de Pago de Estudiante creado con éxito';
@@ -76,13 +77,14 @@ const updateStudentPaymentScheme =  async (req, res, next) =>{
             }
           }).then((studentPaymentSchema) => {
             studentPaymentSchema.update({
-              stuId: (req.body.stuId != null) ? req.body.stuId : studentPaymentSchema.stuId,
-              pcoId: (req.body.pcoId != null) ? req.body.pcoId : studentPaymentSchema.pcoId,
-              pscId: (req.body.pscId != null) ? req.body.pscId : studentPaymentSchema.pscId,
-              plsId: (req.body.plsId != null) ? req.body.plsId : studentPaymentSchema.plsId,
+              // stuId: (req.body.stuId != null) ? req.body.stuId : studentPaymentSchema.stuId,
+              // pcoId: (req.body.pcoId != null) ? req.body.pcoId : studentPaymentSchema.pcoId,
+              // pscId: (req.body.pscId != null) ? req.body.pscId : studentPaymentSchema.pscId,
+              // plsId: (req.body.plsId != null) ? req.body.plsId : studentPaymentSchema.plsId,
               icoId: (req.body.icoId != null) ? req.body.icoId : studentPaymentSchema.icoId,
               spsAmount: (req.body.spsAmount != null) ? req.body.spsAmount : studentPaymentSchema.spsAmount,
               spsAmountPaid: (req.body.spsAmountPaid != null) ? req.body.spsAmountPaid : studentPaymentSchema.spsAmountPaid,
+              insId: (req.body.insId != null) ? req.body.insId : studentPaymentSchema.insId,
             })
                 .then((studentPaymentSchema) => {
                   message = 'Esquema de Pago de Estudiante actualizado con éxito';
@@ -120,10 +122,29 @@ const deleteStudentPaymentScheme =  async (req, res, next) =>{
 
 }
 
+//get All PaymentSchema by Id
+const getOneStudentPaymentSchemeByIdInscription =  async (req, res, next) =>{
+  
+  StudentPaymentSchemeModel.findAll({
+      where: {
+        insId: req.params.insId
+      }
+    })
+    .then((studentPaymentSchema) => {
+      res.status(StatusCodes.OK).json({ok: true, data: studentPaymentSchema})
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    })
+
+}
+
 module.exports = {
     addStudentPaymentScheme,
     getAllStudentPaymentScheme,
     getOneStudentPaymentSchemeById,
     updateStudentPaymentScheme,
     deleteStudentPaymentScheme,
+    getOneStudentPaymentSchemeByIdInscription,
   }
