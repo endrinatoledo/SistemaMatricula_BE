@@ -1,4 +1,5 @@
 const {  StatusCodes } = require('http-status-codes')
+const {LowercaseString, FirstCapitalLetter} = require('../utils/functions')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
@@ -12,8 +13,10 @@ const addInvoiceConcept =  async (req, res,next) =>{
     if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
+      const icoNameTrim = FirstCapitalLetter(((req.body.icoName).trimStart()).trimEnd())
+
         let invoiceConceptExists = await InvoiceConceptsModel.findOne({
-            where: { icoName: req.body.icoName }
+            where: { icoName: icoNameTrim }
       
           }).catch((err) => {
             throw err; 
@@ -23,8 +26,8 @@ const addInvoiceConcept =  async (req, res,next) =>{
             return res.status(StatusCodes.OK).json({ok: false, message: 'Concepto ya se encuentra registrado'})
           }else{
             InvoiceConceptsModel.create({
-                icoName: req.body.icoName,
-                icoDescription: (req.body.icoDescription)?req.body.icoDescription : '',
+                icoName: icoNameTrim,
+                icoDescription: (req.body.icoDescription)?FirstCapitalLetter(req.body.icoDescription) : '',
                 icoStatus: req.body.icoStatus
             })
             .then((invoiceConcept) => {
