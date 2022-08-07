@@ -140,6 +140,42 @@ const getOneStudentPaymentSchemeByIdInscription =  async (req, res, next) =>{
 
 }
 
+//get All PaymentSchema by Id
+const deleteOneStudentPaymentSchemeByIdInscription =  async (req, res, next) =>{
+  
+  StudentPaymentSchemeModel.findOne({
+    where: {
+      spsId: req.params.spsId
+    }
+  })
+  .then((result) => {
+
+    if (result.spsAmountPaid === null){
+      StudentPaymentSchemeModel.destroy({ 
+        where: {
+          spsId: req.params.spsId
+        }
+      })
+      .then((studentPaymentSchema) => {
+        console.log('esto traeeeee',studentPaymentSchema)
+        res.status(StatusCodes.OK).json({ok: true,message:'Eliminado con exito', data: studentPaymentSchema})
+      }, (err) => {
+        message = err
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+        next(err)
+      })
+
+    }else{
+      res.status(StatusCodes.OK).json({ok: false, data: [], message: 'Concepto tiene un pago asociado'})
+    }
+  }, (err) => {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+    next(err)
+  })
+
+}
+
 module.exports = {
     addStudentPaymentScheme,
     getAllStudentPaymentScheme,
@@ -147,4 +183,5 @@ module.exports = {
     updateStudentPaymentScheme,
     deleteStudentPaymentScheme,
     getOneStudentPaymentSchemeByIdInscription,
+    deleteOneStudentPaymentSchemeByIdInscription,
   }
