@@ -148,7 +148,18 @@ const getAllActivePaymentMethods =  async (req, res, next) =>{
       }
   })
   .then((paymentMethods) => {
-      res.status(StatusCodes.OK).json({ok: true, data: paymentMethods})
+    if(paymentMethods.length > 0){
+
+      const lookup = paymentMethods.reduce(function(acc, cur) {
+        acc[cur.payId] = cur.payName;
+        return acc;
+      }, {})
+
+      res.status(StatusCodes.OK).json({ok: true, data: paymentMethods, lookup})
+    }else{
+      res.status(StatusCodes.OK).json({ok: true, data: paymentMethods, lookup:null})
+    }
+
   }, (err) => {
       message = err
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
