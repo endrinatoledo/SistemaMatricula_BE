@@ -36,7 +36,9 @@ const addExchangeRate =  async (req, res,next) =>{
 //get All exchangeRate
 const getAllExchangeRates =  async (req, res, next) =>{
 
-    ExchangeRatesModel.findAll({})
+    ExchangeRatesModel.findAll({
+      order:[['exc_id','DESC']],
+    })
     .then((exchangeRates) => {
         res.status(StatusCodes.OK).json({ok: true, data: exchangeRates})
     }, (err) => {
@@ -112,10 +114,25 @@ const deleteExchangeRate =  async (req, res, next) =>{
 
 }
 
+const latestExchangeRate = async (req, res, next) =>{
+  ExchangeRatesModel.findOne({
+    order:[['exc_id','DESC']],
+    limit: 1,
+  })
+  .then((exchangeRate) => {
+    res.status(StatusCodes.OK).json({ok: true, data: exchangeRate})
+  }, (err) => {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+    next(err)
+  })
+}
+
 module.exports = {
     addExchangeRate,
     getAllExchangeRates,
     getOneExchangeRateById,
     updateExchangeRate,
-    deleteExchangeRate
+    deleteExchangeRate,
+    latestExchangeRate,
 }
