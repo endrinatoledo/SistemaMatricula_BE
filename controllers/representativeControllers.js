@@ -121,6 +121,7 @@ const getAllRepresentatives = async (req, res, next) => {
 //get All Representative by Id
 const getOneRepresentativeById = async (req, res, next) => {
 
+
   RepresentativeModel.findOne({
     where: {
       repId: req.params.repId
@@ -329,50 +330,88 @@ const getRepresentativeByIdentification = async (req, res, next) => {
 
 const getRepresentativePayments = async (req, res, next) => {
 
-  console.log('***************************',req.params.repId)
+  console.log('***************************', req.params.repId)
   if (!req.params.repId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
 
-  try { 
+  try {
 
-      StudentPaymentSchemeModel.findAll({
-        include: [{
-          model: InscriptionsModel,
-          as: 'inscriptions',
-          require: true,
-          include: [
-            {
-              model: FamilyModel,
-              as: 'family',
-              require: true,
-              // include: [
-              //   {
-              //     model: RepresentativeStudentModel,
-              //     as: 'fam_repstu',
-              //     require: true,
-              //     where: {repId: req.params.repId}
-              //   }
-              // ]
-            }
-          ]
-        },{
-          model: InvoiceConceptsModel,
-          as: 'invoiceConcepts',
-          require: true,
-        }
-        ]
-      }).then((resul) => {
-        console.log('resultttttttttttttttttttttttttttt',resul)
-        if (resul === null) {
-          res.status(StatusCodes.OK).json({ ok: true, data: [] })
-        } else {
-          res.status(StatusCodes.OK).json({ ok: true, data: resul })
-        }
-      }, (err) => {
-        // message = err
-        message = 'Error de conexión'
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
-        next(err)
-      })
+    RepresentativeStudentModel.findAll({
+      where: {repId: req.params.repId},
+      group: "famId",
+    }).then((repStu) => {
+
+     }, (err) => {
+      // message = err
+      message = 'Error de conexión al cosultar representante'
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+      next(err)
+    })
+
+    // RepresentativeStudentModel.findOne({
+    //   repId: req.params.repId
+    // }).then((repStu) => {
+    //   console.log('***********************************************', repStu)
+    //   if (repStu !== null && repStu !== undefined) {
+
+    //     FamilyModel.findOne({
+    //       famId: repStu.famId
+    //     }).then((family) => {
+    //       console.log('###################################', family)
+    //       if (repStu !== null && repStu !== undefined) {
+
+    //         StudentPaymentSchemeModel.findAll({
+    //           include: [{
+    //             model: InscriptionsModel,
+    //             as: 'inscriptions',
+    //             require: true,
+    //             where:{
+    //               famId: family.famId
+    //             }
+    //           }, {
+    //             model: InvoiceConceptsModel,
+    //             as: 'invoiceConcepts',
+    //             require: true,
+    //           }
+    //           ]
+    //         }).then((resul) => {
+    //           console.log('resultttttttttttttttttttttttttttt', resul)
+    //           if (resul === null) {
+    //             res.status(StatusCodes.OK).json({ ok: true, data: [] })
+    //           } else {
+    //             res.status(StatusCodes.OK).json({ ok: true, data: resul })
+    //           }
+    //         }, (err) => {
+    //           // message = err
+    //           message = 'Error de conexión'
+    //           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+    //           next(err)
+    //         })
+
+
+    //         // res.status(StatusCodes.OK).json({ ok: true, data: [] })
+    //       } else {
+    //         res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'Representante no encontrado' })
+
+    //       }
+    //     }, (err) => {
+    //       console.log(err)
+    //       message = 'Error al consultar familia'
+    //       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+    //       next(err)
+    //     })
+
+    //   } else {
+    //     res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'Representante no encontrado' })
+    //   }
+    // }, (err) => {
+    //   console.log(err)
+    //   message = 'Error de conexión'
+    //   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+    //   next(err)
+    // })
+
+
+
 
   } catch (error) {
     message = 'Error de conexión'

@@ -11,6 +11,7 @@ router.put   ('/:rstId', representativeStudentControllers.updateRepresentativeSt
 router.delete('/:rstId', representativeStudentControllers.deleteRepresentativeStudent)
 router.put   ('/status/representative/:rstId', representativeStudentControllers.updateStatusRepresentative)
 router.put   ('/status/student/:rstId', representativeStudentControllers.updateStatusStudent)
+router.get   ('/family/representativeId/:repId', representativeStudentControllers.getRepresentativeStudentByIdRepresentative)
 
 
 
