@@ -50,10 +50,10 @@ module.exports = (sequelize, DataTypes) => {
         //   as: 'psc_pco',
         //   foreignKey: 'plsId'
         // })
-        // periodLevelSectionModel.hasMany(models.studentPaymentSchemeModel, {
-        //   as: 'periodLevelSection_studentPaymentScheme',
-        //   foreignKey: 'plsId'
-        // })
+        periodLevelSectionModel.hasMany(models.studentPaymentSchemeModel, {
+          as: 'periodLevelSection_studentPaymentScheme',
+          foreignKey: 'plsId'
+        })
 
       }
 

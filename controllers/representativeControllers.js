@@ -332,7 +332,7 @@ const getRepresentativePayments = async (req, res, next) => {
   console.log('***************************',req.params.repId)
   if (!req.params.repId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
 
-  try {
+  try { 
 
       StudentPaymentSchemeModel.findAll({
         include: [{
