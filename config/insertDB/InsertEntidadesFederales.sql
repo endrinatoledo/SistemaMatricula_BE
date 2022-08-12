@@ -1,4 +1,4 @@
-use matricula;
+use matriculaoficial;
 select * from federal_entities;
 INSERT INTO `federal_entities` (`fed_id`, `fed_name`, `cou_id`) VALUES
 (1, 'Amazonas'  , 232),

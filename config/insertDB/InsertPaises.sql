@@ -1,4 +1,4 @@
-use matricula;
+use matriculaoficial;
 select * from countries;
 INSERT INTO `countries` VALUES(1, 'Afganistán');
 INSERT INTO `countries` VALUES(2, 'Islas Gland');
