@@ -269,25 +269,20 @@ const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
       })
     })
 
-    Promise.all(promises).then(function(result){
-
-      
+    Promise.all(promises).then(function(result){ 
       if(result.length > 0){
         const endData = result.filter((item) => item !== undefined)
         return res.status(StatusCodes.OK).json({ok: true, data: endData}) 
       }else{
         return res.status(StatusCodes.OK).json({ok: true, data: result}) 
       }
-      
-
     })
-
   }else{
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message:'No hay estudiantes para mostrar'})
   }
-  
-
 }
+
+
 
 module.exports = {
     addInscription,
@@ -295,6 +290,6 @@ module.exports = {
     getOneInscriptionById,
     updateInscription,
     deleteInscription,
-    getOneInscriptionByStudentByPeriod
+    getOneInscriptionByStudentByPeriod,
 
 }

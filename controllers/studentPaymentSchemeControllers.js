@@ -176,6 +176,55 @@ const deleteOneStudentPaymentSchemeByIdInscription =  async (req, res, next) =>{
 
 }
 
+//get All Inscription by Id
+const getStudentPaymentByFamId =  async (req, res, next) =>{
+
+  console.log('aquiiiiiiiiiiiiiii',req.params)
+  try {
+    StudentPaymentSchemeModel.findAll({
+      include: [{
+        model: invoiceConceptsModel,
+        as: 'invoiceConcepts',
+        require: true
+      }]
+      // include: [
+      //   model: InscriptionsModel,
+      //   as: 'inscriptions',
+      //   require: true,
+      //   // include: [
+      //   //   {
+      //   //     model: FamilyModel,
+      //   //     as: 'family',
+      //   //     require: true,
+      //   //     where: {famId: req.params.famId}
+      //   //   }
+      //   // ]
+      // }
+      // {
+      //   model: InvoiceConceptsModel,
+      //   as: 'invoiceConcepts',
+      //   require: true,
+      // }
+      // ]
+    }).then((resul) => {
+      console.log('resultttttttttttttttttttttttttttt',resul)
+      if (resul === null) {
+        res.status(StatusCodes.OK).json({ ok: true, data: [] })
+      } else {
+        res.status(StatusCodes.OK).json({ ok: true, data: resul })
+      }
+    }, (err) => {
+      // message = err
+      message = 'Error de conexión'
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+      next(err)
+    })
+  } catch (error) {
+    
+  }
+
+}
+
 module.exports = {
     addStudentPaymentScheme,
     getAllStudentPaymentScheme,
@@ -184,4 +233,5 @@ module.exports = {
     deleteStudentPaymentScheme,
     getOneStudentPaymentSchemeByIdInscription,
     deleteOneStudentPaymentSchemeByIdInscription,
+    getStudentPaymentByFamId,
   }
