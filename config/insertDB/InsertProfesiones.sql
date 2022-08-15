@@ -1,4 +1,4 @@
-use matricula;
+use matriculaoficial;
 -- select * from professions;
 INSERT INTO `professions` VALUES(1,'Abogado (a)');
 INSERT INTO `professions` VALUES(2,'Académico (a)');

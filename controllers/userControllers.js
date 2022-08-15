@@ -11,8 +11,11 @@ const RolesModel = db.rolesModel
 
 const addUser =  async (req, res, next) =>{
 
+  console.log('esto llegoooooooooooooooooooo',req.body)
 
-    if (!req.body.usuName || !req.body.usuLastName || !req.body.usuEmail ||  !req.body.usuStatus|| !req.body.rolId) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    if (!req.body.usuName || !req.body.usuLastName || 
+      !req.body.usuEmail ||  !req.body.usuStatus|| 
+      !req.body.rolId) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let mailExists = await UserModel.findOne({
@@ -23,18 +26,18 @@ const addUser =  async (req, res, next) =>{
           });
 
           if (mailExists){
-
+            console.log('paso por aqui')
             return res.status(StatusCodes.OK).json({ok: false, message: 'Email ya se encuentra registrado'})
           }else{
-
+            console.log('paso por alla')
             UserModel.create({
                 usuName: req.body.usuName,
                 usuLastName: req.body.usuLastName,
                 usuEmail: req.body.usuEmail,
-                // usuPassword: encbcrypt.encryptPWD(req.body.password),
-                usuPassword: encbcrypt.encryptPWD('1234'),
-                usuStatus: req.body.usuStatus,
-                rolId: req.body.rolId,
+                usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
+                // usuPassword: encbcrypt.encryptPWD('1234'),
+                usuStatus: 1,
+                rolId: Number(req.body.rolId),
             })
             .then((user) => {
 
@@ -48,6 +51,8 @@ const addUser =  async (req, res, next) =>{
               })
           }
     } catch (err) {
+      console.log('······#########################',err)
+
         message = err;
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
         next(err);
@@ -114,7 +119,7 @@ const updateUser =  async (req, res, next) =>{
                   usuName: (req.body.usuName != null) ? req.body.usuName : user.usuName,
                   usuLastName: (req.body.usuLastName != null) ? req.body.usuLastName : user.usuLastName,
                   usuEmail: (req.body.usuEmail != null) ? req.body.usuEmail : user.usuEmail,
-                  usuPassword: (req.body.usuPassword != null) ? req.body.usuPassword : user.usuPassword,
+                  usuPassword: (req.body.usuPassword != null) ? encbcrypt.encryptPWD(req.body.usuPassword) : user.usuPassword,
                   usuStatus: (req.body.usuStatus != null) ? req.body.usuStatus : user.usuStatus,
                   rolId: (req.body.rolId != null) ? req.body.rolId : user.rolId
                 })
