@@ -26,7 +26,8 @@ const addRepresentative = async (req, res, next) => {
   if (!req.body.repFirstName || !req.body.repSurname || !req.body.repIdType ||
     !req.body.repIdentificationNumber || !req.body.repDateOfBirth ||
     !req.body.repSex || !req.body.repAddress ||
-    !req.body.repPhones || !req.body.repEmail 
+    !req.body.repPhones 
+    // || !req.body.repEmail 
     // || !req.body.couId 
     || !req.body.repBond
     //  ||  !req.body.famId 
@@ -57,7 +58,7 @@ const addRepresentative = async (req, res, next) => {
         repAddress: FirstCapitalLetter(LowercaseString(req.body.repAddress)),
         proId: req.body.proId ? req.body.proId : 260,
         repPhones: req.body.repPhones,
-        repEmail: LowercaseString(req.body.repEmail),
+        repEmail: req.body.repEmail? LowercaseString(req.body.repEmail) : null,
         repCivilStatus: (req.body.repCivilStatus) ? req.body.repCivilStatus : '',
         couId: 232,
         fedId:7,
