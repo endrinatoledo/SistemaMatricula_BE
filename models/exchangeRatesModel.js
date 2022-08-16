@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         excShift: {
           type: DataTypes.STRING(6),
-          allowNull: false,
+          allowNull: true,
           field: 'exc_shift'
         }
 
