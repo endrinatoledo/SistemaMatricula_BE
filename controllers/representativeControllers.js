@@ -24,12 +24,12 @@ const InvoiceConceptsModel = db.invoiceConceptsModel
 const addRepresentative = async (req, res, next) => {
 
   if (!req.body.repFirstName || !req.body.repSurname || !req.body.repIdType ||
-    !req.body.repIdentificationNumber || !req.body.repDateOfBirth ||
+    !req.body.repIdentificationNumber ||  !req.body.repBond ||
     !req.body.repSex || !req.body.repAddress ||
     !req.body.repPhones 
+    // !req.body.repDateOfBirth ||
     // || !req.body.repEmail 
     // || !req.body.couId 
-    || !req.body.repBond
     //  ||  !req.body.famId 
   ) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
   try {
@@ -53,7 +53,7 @@ const addRepresentative = async (req, res, next) => {
         repSecondSurname: (req.body.repSecondSurname) ? FirstCapitalLetter(LowercaseString(req.body.repSecondSurname)) : '',
         repIdType: req.body.repIdType,
         repIdentificationNumber: req.body.repIdentificationNumber,
-        repDateOfBirth: req.body.repDateOfBirth,
+        // repDateOfBirth: req.body.repDateOfBirth,
         repSex: req.body.repSex,
         repAddress: FirstCapitalLetter(LowercaseString(req.body.repAddress)),
         proId: req.body.proId ? req.body.proId : 260,
@@ -191,7 +191,7 @@ const updateRepresentative = async (req, res, next) => {
             repSecondSurname: (req.body.repSecondSurname != null) ? FirstCapitalLetter(LowercaseString(req.body.repSecondSurname)) : representative.repSecondSurname,
             repIdType: (req.body.repIdType != null) ? req.body.repIdType : representative.repIdType,
             repIdentificationNumber: (req.body.repIdentificationNumber != null) ? req.body.repIdentificationNumber : representative.repIdentificationNumber,
-            repDateOfBirth: (req.body.repDateOfBirth != null) ? req.body.repDateOfBirth : representative.repDateOfBirth,
+            // repDateOfBirth: (req.body.repDateOfBirth != null) ? req.body.repDateOfBirth : representative.repDateOfBirth,
             repSex: (req.body.repSex != null) ? req.body.repSex : representative.repSex,
             repAddress: (req.body.repAddress) ? FirstCapitalLetter(LowercaseString(req.body.repAddress)) : representative.repAddress,
             proId: (req.body.proId) ? req.body.proId : representative.proId,
