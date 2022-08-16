@@ -25,7 +25,7 @@ const addRepresentative = async (req, res, next) => {
 
   if (!req.body.repFirstName || !req.body.repSurname || !req.body.repIdType ||
     !req.body.repIdentificationNumber || !req.body.repDateOfBirth ||
-    !req.body.repSex || !req.body.repAddress || !req.body.proId ||
+    !req.body.repSex || !req.body.repAddress ||
     !req.body.repPhones || !req.body.repEmail ||
     !req.body.couId || !req.body.repBond
     //  ||  !req.body.famId 
@@ -54,7 +54,7 @@ const addRepresentative = async (req, res, next) => {
         repDateOfBirth: req.body.repDateOfBirth,
         repSex: req.body.repSex,
         repAddress: FirstCapitalLetter(LowercaseString(req.body.repAddress)),
-        proId: req.body.proId,
+        proId: req.body.proId ? req.body.proId : 260,
         repPhones: req.body.repPhones,
         repEmail: LowercaseString(req.body.repEmail),
         repCivilStatus: (req.body.repCivilStatus) ? req.body.repCivilStatus : '',
@@ -97,7 +97,8 @@ const getAllRepresentatives = async (req, res, next) => {
       model: FederalEntityModel,
       as: 'federalEntity',
       require: true
-    }, {
+    }
+    , {
       model: ProfessionsModel,
       as: 'professions',
       require: true
@@ -135,7 +136,8 @@ const getOneRepresentativeById = async (req, res, next) => {
       model: FederalEntityModel,
       as: 'federalEntity',
       require: true
-    }, {
+    }
+    , {
       model: ProfessionsModel,
       as: 'professions',
       require: true
@@ -258,7 +260,8 @@ const getAllActiveRepresentatives = async (req, res, next) => {
       model: FederalEntityModel,
       as: 'federalEntity',
       require: true
-    }, {
+    }
+    , {
       model: ProfessionsModel,
       as: 'professions',
       require: true

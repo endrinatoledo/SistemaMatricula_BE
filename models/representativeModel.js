@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         repDateOfBirth:{
             type: DataTypes.DATEONLY,
-            allowNull: false,
+            allowNull: true,
             field: 'rep_date_of_birth' 
         },
         repSex:{
@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         proId: {
             type: DataTypes.BIGINT,
-            allowNull: false,
+            allowNull: true,
             field: 'pro_id'
         },
         repPhones:{
@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         repEmail:{
             type: DataTypes.STRING(200),
-            allowNull: false,
+            allowNull: true,
             field: 'rep_email' 
         },
         couId: {
@@ -85,7 +85,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         repPhoto:{
             type: DataTypes.STRING(200),
-            allowNull: false,
+            allowNull: true,
             field: 'rep_photo' 
         },        
         repStatus:{

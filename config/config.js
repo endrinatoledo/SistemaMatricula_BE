@@ -2,7 +2,7 @@ module.exports = {
     HOST : 'localhost',
     USER : 'root',
     PASSWORD : '',
-    DB : 'matriculaoficial',
+    DB : 'matricula',
     DIALECT : 'mysql',
 
     POOL : {
