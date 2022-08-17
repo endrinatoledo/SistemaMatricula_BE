@@ -30,12 +30,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         stuIdType:{
             type: DataTypes.STRING(1),
-            allowNull: false,
+            allowNull: true,
             field: 'stu_id_type'
         },
         stuIdentificationNumber:{
             type: DataTypes.STRING(45),
-            allowNull: false,
+            allowNull: true,
             field: 'stu_identification_number' 
         },
         stuDateOfBirth:{
@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         stuPhoto:{
             type: DataTypes.STRING(200),
-            allowNull: false,
+            allowNull: true,
             field: 'stu_photo' 
         },        
         stuStatus:{
