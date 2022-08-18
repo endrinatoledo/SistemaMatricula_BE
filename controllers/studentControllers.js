@@ -300,18 +300,26 @@ const getAllActiveStudents = async (req, res, next) => {
 
 }
 const getStudentByIdentification = async (req, res, next) => {
-  if (!req.body.stuIdType || !req.body.stuIdentificationNumber) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
-
+  // if (!req.body.stuIdType || !req.body.stuIdentificationNumber) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
+  
+  let where = {}
+  if(req.body.stuIdType){ where.stuIdType= req.body.stuIdType}
+  if(req.body.stuIdentificationNumber){ where.stuIdentificationNumber= req.body.stuIdentificationNumber}
+  if(req.body.stuFirstName){ where.stuFirstName= req.body.stuFirstName}
+  if(req.body.stuSecondName){ where.stuSecondName= req.body.stuSecondName}
+  if(req.body.stuSurname){ where.stuSurname= req.body.stuSurname}
+  if(req.body.stuSecondSurname){ where.stuSecondSurname= req.body.stuSecondSurname}
   try {
-    StudentModel.findOne({
-      where: {
-        stuIdentificationNumber: req.body.stuIdentificationNumber,
-        stuIdType: req.body.stuIdType
-      }
+    StudentModel.findAll({
+      where: where
+      // {
+      //   stuIdentificationNumber: req.body.stuIdentificationNumber,
+      //   stuIdType: req.body.stuIdType
+      // }
     }).then((student) => {
 
-      if (student === null) {
-        res.status(StatusCodes.OK).json({ ok: true, data: 'noRegistrado', message: 'Identificación no Registrada' })
+      if (student.length === 0) {
+        res.status(StatusCodes.OK).json({ ok: true, data: 'noRegistrado', message: 'Estudiante no Registrado' })
       } else {
         res.status(StatusCodes.OK).json({ ok: true, result: student, data: 'registrado', message: 'Identificación ya Registrada' })
       }
