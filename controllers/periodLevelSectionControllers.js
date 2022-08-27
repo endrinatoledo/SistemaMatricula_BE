@@ -323,7 +323,7 @@ const getOnePeriodLevelSectionByPerId =  async (req, res, next) =>{
         }
         res.status(StatusCodes.OK).json({ok: true, data: data})
       }else{
-       res.status(StatusCodes.OK).json({ok: true, data: []})
+       res.status(StatusCodes.OK).json({ok: true, data: undefined})
       }    
     }, (err) => {
       message = err
