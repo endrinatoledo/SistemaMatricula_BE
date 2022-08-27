@@ -21,14 +21,19 @@ module.exports = (sequelize, DataTypes) => {
               field: 'paym_amount'
             },
             paymReference: {
-              type: DataTypes.STRING(100),
-              allowNull: false,
+              type: DataTypes.STRING(250),
+              allowNull: true,
               field: 'paym_reference'
             },
             paymDate: {
               type: DataTypes.STRING(100),
               allowNull: false,
               field: 'paym_date'
+            },
+            paymDescription: {
+              type: DataTypes.STRING(250),
+              allowNull: true,
+              field: 'paym_description'
             }
     
         }, {
