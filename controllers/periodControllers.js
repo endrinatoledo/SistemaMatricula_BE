@@ -9,6 +9,7 @@ const PeriodsModel = db.periodsModel
 const getOneActivePeriod =  async (req, res,next) =>{
 
   PeriodsModel.findOne({
+    order:[['per_id','DESC']],
     where: {
       perStatus: 1
     }
