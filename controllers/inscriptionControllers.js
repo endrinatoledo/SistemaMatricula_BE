@@ -58,48 +58,66 @@ const addInscription =  async (req, res, next) =>{
 //get All inscription
 const getAllInscriptions =  async (req, res, next) =>{
 
-  const date = new Date();
-    InscriptionsModel.findAll({
-      include: [{
-        model: PeriodLevelSectionModel,
-        as: 'periodLevelSectionI',
-        require: true,
-        include:[
-          {
-            model: LevelsModel,
-            as: 'level',
-            require: true
-          },{
-            model: SectionsModel,
-            as: 'section',
-            require: true
-          }
-        ]
-      }
-      ,{
-        model: StudentModel,
-        as: 'student',
-        require: true
-      },{
-        model: FamilyModel,
-        as: 'family',
-        require: true
-      }
-      ,{
-        model: PeriodsModel,
-        as: 'period',
-        require: true,
-        where:{ perStartYear : date.getFullYear()}
-      }  
-    ]
-    })
-    .then((inscriptions) => {
-        res.status(StatusCodes.OK).json({ok: true, data: inscriptions})
-    }, (err) => {
-        message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-        next(err)
+  try {
+    let lastPeriod = await PeriodsModel.findOne({ order:[['per_id','DESC']], where: { perStatus: 1 } }).catch((err) => {
+      throw err; 
+    });
+
+    if(lastPeriod !== undefined && lastPeriod !== null){
+      // const date = new Date();
+      InscriptionsModel.findAll({
+        where:{ perId : lastPeriod.perId},
+        include: [{
+          model: PeriodLevelSectionModel,
+          as: 'periodLevelSectionI',
+          require: true,
+          include:[
+            {
+              model: LevelsModel,
+              as: 'level',
+              require: true
+            },{
+              model: SectionsModel,
+              as: 'section',
+              require: true
+            }
+          ]
+        }
+        ,{
+          model: StudentModel,
+          as: 'student',
+          require: true
+        },{
+          model: FamilyModel,
+          as: 'family',
+          require: true
+        }
+        ,{
+          model: PeriodsModel,
+          as: 'period',
+          require: true,
+        }  
+      ]
       })
+      .then((inscriptions) => {
+          res.status(StatusCodes.OK).json({ok: true, data: inscriptions})
+      }, (err) => {
+          message = err
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+          next(err)
+        })
+    }else{
+      message = 'No hay un periodo configurado'
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      next(err)
+    }    
+  } catch (error) {
+    
+  }
+
+
+
+
 
 }
 //get All Inscription by Id
