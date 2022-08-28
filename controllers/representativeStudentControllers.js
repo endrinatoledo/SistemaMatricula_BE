@@ -335,14 +335,11 @@ const updateRepresentativeStudent = async (req, res, next) => {
 
     representatives.forEach(elementR => {
       students.forEach(elementE => {
-        RepresentativeStudentModel.findOne({
+        RepresentativeStudentModel.findAll({
           where: {
             repId: elementR.repId,
             stuId: elementE.stuId,
             famId: family.famId,
-            rstId: {
-              [Op.ne]: parseInt(req.params.rstId)
-            }
           },
           include: [{
             model: StudentModel,
@@ -362,25 +359,24 @@ const updateRepresentativeStudent = async (req, res, next) => {
           ]
         })
           .then((representativeStudent) => {
-
-            if (representativeStudent) {
+            if (representativeStudent.length > 1) {
               return res.status(StatusCodes.OK).json({ ok: false, message: 'Vínculo ya se encuentra registrado' })
             } else {
               RepresentativeStudentModel.findOne({
                 where: {
-                  rstId: req.params.rstId
+                  rstId: representativeStudent[0].rstId
                 }
-              }).then((representativeStudent) => {
-                representativeStudent.update({
-                  repId: (elementR.repId != null) ? elementR.repId : representativeStudent.repId,
-                  stuId: (elementE.stuId != null) ? elementE.stuId : representativeStudent.stuId,
-                  famId: (family.famId != null) ? family.famId : representativeStudent.famId,
-                  rstRepSta: (elementR.rstRepSta != null) ? elementR.rstRepSta : representativeStudent.rstRepSta,
-                  rstStaStu: (elementR.rstStaStu != null) ? elementE.rstStaStu : representativeStudent.rstStaStu
+              }).then((representativeStudent2) => {
+                representativeStudent2.update({
+                  repId: (elementR.repId != null) ? elementR.repId : representativeStudent2.repId,
+                  stuId: (elementE.stuId != null) ? elementE.stuId : representativeStudent2.stuId,
+                  famId: (family.famId != null) ? family.famId : representativeStudent2.famId,
+                  rstRepSta: (elementR.rstRepSta != null) ? elementR.rstRepSta : representativeStudent2.rstRepSta,
+                  rstStaStu: (elementR.rstStaStu != null) ? elementE.rstStaStu : representativeStudent2.rstStaStu
                 })
-                  .then((representativeStudent) => {
-                    message = 'Vínculo actualizado con éxito';
-                    res.status(StatusCodes.OK).json({ ok: true, data: representativeStudent, message })
+                  .then((representativeStudent3) => {
+                    message = 'Familia actualizada con éxito';
+                    res.status(StatusCodes.OK).json({ ok: true, data: representativeStudent3, message })
                   }, (err) => {
                     message = err
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
@@ -465,7 +461,6 @@ const updateStatusStudent = async (req, res, next) => {
         famId: req.body.famId,
       }
     }).then((representativeStudent) => {
-
       representativeStudent.forEach(element => {
 
         result.push(element.update({
