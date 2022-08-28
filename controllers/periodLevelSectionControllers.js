@@ -100,6 +100,7 @@ const addPeriodLevelSection =  async (req, res, next) =>{
 const getAllPeriodLevelSection =  async (req, res, next) =>{
 
     PeriodLevelSectionModel.findAll({
+      order:[['per_id','DESC']],
       include: [{
         model: PeriodsModel,
         as: 'period',
@@ -248,6 +249,7 @@ const deletePeriodLevelSection =  async (req, res, next) =>{
 const getOnePeriodLevelSectionByPerId =  async (req, res, next) =>{
 
   PeriodLevelSectionModel.findAll({
+    order:[['per_id','DESC']],
     include: [
       {
         model: PeriodsModel,

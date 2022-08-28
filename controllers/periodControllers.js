@@ -66,7 +66,9 @@ const addPeriod =  async (req, res,next) =>{
 //get All period
 const getAllPeriods =  async (req, res, next) =>{
 
-    PeriodsModel.findAll({})
+    PeriodsModel.findAll({
+      order:[['per_id','DESC']],
+    })
     .then((periods) => {
         res.status(StatusCodes.OK).json({ok: true, data: periods})
     }, (err) => {
@@ -97,7 +99,6 @@ const getOnePeriodById =  async (req, res, next) =>{
 //get All period by Id
 const getOnePeriodByStartYear =  async (req, res, next) =>{
 
-  console.log('auqi llego')
   PeriodsModel.findOne({
       where: {
         perStartYear: req.params.perStartYear
@@ -191,6 +192,7 @@ const deletePeriod =  async (req, res, next) =>{
 const getAllActivePeriods =  async (req, res, next) =>{
 
   PeriodsModel.findAll({
+    order:[['per_id','DESC']],
     where: {
       perStatus: 1
       }
