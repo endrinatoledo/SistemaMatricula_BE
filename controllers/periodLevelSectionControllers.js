@@ -61,41 +61,22 @@ const addPeriodLevelSection =  async (req, res, next) =>{
               if(element.a){
                 const sectionRes = searchIdSection(sections,'A')
                 add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.b){
+              }
+              if(element.b){
                 const sectionRes = searchIdSection(sections,'B')
                 add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.c){
+              }
+              if(element.c){
                 const sectionRes = searchIdSection(sections,'C')
                 add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.d){
+              }
+               if(element.d){
+                
                 const sectionRes = searchIdSection(sections,'D')
                 add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.e){
+              }
+               if(element.e){
                 const sectionRes = searchIdSection(sections,'E')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.f){
-                const sectionRes = searchIdSection(sections,'F')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.g){
-                const sectionRes = searchIdSection(sections,'G')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.h){
-                const sectionRes = searchIdSection(sections,'H')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.i){
-                const sectionRes = searchIdSection(sections,'I')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.j){
-                const sectionRes = searchIdSection(sections,'J')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.k){
-                const sectionRes = searchIdSection(sections,'K')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.l){
-                const sectionRes = searchIdSection(sections,'L')
-                add(period.perId,element.levId, sectionRes.secId)
-              }else if(element.m){
-                const sectionRes = searchIdSection(sections,'M')
                 add(period.perId,element.levId, sectionRes.secId)
               }
             });
