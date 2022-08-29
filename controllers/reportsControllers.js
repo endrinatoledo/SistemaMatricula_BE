@@ -12,15 +12,94 @@ const LevelsModel = db.levelsModel
 const SectionsModel = db.sectionsModel
 
 const reportByLevelAndSection =  async (req, res, next) =>{
-    console.log('reportByLevelAndSection')
-    console.log('req',req.body)
-    let where = {
-        perId: req.body.periodo.perId,
-        levId: req.body.level.levId
+
+    try {
+        
+        let where = {
+            perId: req.body.periodo.perId,
+            levId: req.body.level.levId
+        }
+        if(req.body.section){
+            where.secId = req.body.section.secId
+        }
+
+        let resultPerLevSec = await PeriodLevelSectionModel.findAll(
+            { 
+                where: where,
+                attributes: ['pls_id']
+            }
+            ).catch((err) => {
+            throw err; 
+          });
+
+        if(resultPerLevSec.length > 0){
+
+            let arrayId = []
+
+            resultPerLevSec.forEach(element => {
+                arrayId.push(element.dataValues.pls_id)
+            });
+
+            InscriptionsModel.findAll({
+                where: {
+                  pls_id: {
+                    [Op.in]:arrayId
+                  }
+                },
+                include: [
+                    {
+                        model: StudentModel,
+                        as: 'student',
+                        require: true
+                    },{
+                    model: PeriodLevelSectionModel,
+                    as: 'periodLevelSectionI',
+                    require: true,
+                    include:[
+                        {
+                          model: LevelsModel,
+                          as: 'level',
+                          order:[['lev_id','ASC']],
+                          require: true
+                        },{
+                          model: SectionsModel,
+                          as: 'section',
+                          order:[['sec_id','ASC']],
+                          require: true
+                        }
+                      ]
+                  }]
+              }).then((inscriptions)=>{
+
+                if(inscriptions.length > 0){
+
+                    const result = inscriptions.map((item)=>{
+                        console.log('*.*.*.*.*.*.*.*.',item)
+                    })
+
+                }else{
+                    message = 'Sin inscripciones para mostrar';
+                    res.status(StatusCodes.OK).json({ ok: false, message })
+                }
+
+              }, (err) => {
+                message = err
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+                next(err)
+              })
+            
+        }else{
+            message = 'Sin resultados para mostrar';
+            res.status(StatusCodes.OK).json({ ok: false, message })
+        }
+
+    } catch (error) {
+        message = err
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+        next(err)
     }
-    if(req.body.section){
-        secId:req.body.section.secId
-    }
+
+
 
 }
 
