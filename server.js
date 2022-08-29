@@ -35,6 +35,7 @@ const paymentSchemeConceptsRoutes = require('./routes/paymentSchemeConceptsRoute
 const studentPaymentSchemeRoutes = require('./routes/studentPaymentSchemeRoutes')
 const paymentsRoutes = require('./routes/paymentsRoutes')
 const paymentsConceptsStudentsRoutes = require('./routes/paymentsConceptsStudentsRoutes')
+const reportsRoutes = require('./routes/reportsRoutes')
 
 app.use('/api/users',routerUser)
 app.use('/api/access',routerAccess) 
@@ -60,6 +61,7 @@ app.use('/api/paymentSchemeConcepts',paymentSchemeConceptsRoutes)
 app.use('/api/studentPaymentScheme',studentPaymentSchemeRoutes)
 app.use('/api/payments',paymentsRoutes)
 app.use('/api/paymentsConceptsStudents',paymentsConceptsStudentsRoutes)
+app.use('/api/reports',reportsRoutes)
 
 
 //testing api
