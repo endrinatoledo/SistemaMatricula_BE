@@ -176,12 +176,12 @@ const familyPayroll = async (req, res, next) => {
                 return element.dataValues.famId
             })
 
-            const familyFormateada = resultFamily.map((element) => {
-                return { family: element.family.dataValues, representatives: [], students: [] }
-            })
+            // const familyFormateada = resultFamily.map((element) => {
+            //     return { family: element.family.dataValues, representatives: [], students: [] }
+            // })
 
             const arraySinDuplicados = eliminarElementosRepetidos(arrayIdFamily)
-            const familasSinDuplicados = eliminarElementosRepetidos(familyFormateada)
+            // const familasSinDuplicados = eliminarElementosRepetidos(familyFormateada)
 
             let resultRepresentatives = await RepresentativeStudentModel.findAll({
                 where: {
@@ -199,35 +199,80 @@ const familyPayroll = async (req, res, next) => {
                   group:'repId'
             })
 
-            for (let index = 0; index < familasSinDuplicados.length; index++) {
+            // for (let index = 0; index < familasSinDuplicados.length; index++) {
+            //     for (let index2 = 0; index2 < resultRepresentatives.length; index2++) {
+            //         if(resultRepresentatives[index2].dataValues.famId === familasSinDuplicados[index].family.famId){
+            //             familasSinDuplicados[index].representatives.push(resultRepresentatives[index2].dataValues.representative.dataValues)
+            //         }
+            //     }
+            // }
+
+            // for (let indexF = 0; indexF < familasSinDuplicados.length; indexF++) {
+            //     for (let indexE = 0; indexE < resultFamily.length; indexE++) {
+            //         if(resultFamily[indexE].dataValues.famId === familasSinDuplicados[indexF].family.famId){
+            //             const student = {
+            //                 ...resultFamily[0].dataValues.student.dataValues,
+            //                 level: resultFamily[0].dataValues.periodLevelSectionI.dataValues.level.dataValues,
+            //                 section: resultFamily[0].dataValues.periodLevelSectionI.dataValues.section.dataValues
+            //             }
+            //             familasSinDuplicados[indexF].students.push(student)
+            //         }
+            //     }
+            // }
+
+            // --------------------------------formato nuevo--------------------------------
+
+            const familyFormateada2 = resultFamily.map((element) => {
+                
+                return {famId:element.family.dataValues.famId, family:`${element.family.dataValues.famCode} - ${element.family.dataValues.famName}` ,IdentificationRep: '', representatives: '',IdentificationStu: '', students:'', level:''}
+            })
+
+            const familasSinDuplicados2 = eliminarElementosRepetidos(familyFormateada2)
+
+            for (let index = 0; index < familasSinDuplicados2.length; index++) {
                 for (let index2 = 0; index2 < resultRepresentatives.length; index2++) {
-                    if(resultRepresentatives[index2].dataValues.famId === familasSinDuplicados[index].family.famId){
-                        familasSinDuplicados[index].representatives.push(resultRepresentatives[index2].dataValues.representative.dataValues)
+
+                    if(resultRepresentatives[index2].dataValues.famId === familasSinDuplicados2[index].famId){
+                        if(familasSinDuplicados2[index].IdentificationRep === ''){
+                            familasSinDuplicados2[index].IdentificationRep = `${resultRepresentatives[index2].dataValues.representative.dataValues.repIdType} - ${resultRepresentatives[index2].dataValues.representative.dataValues.repIdentificationNumber}`
+                            familasSinDuplicados2[index].representatives = `${resultRepresentatives[index2].dataValues.representative.dataValues.repFirstName} ${resultRepresentatives[index2].dataValues.representative.dataValues.repSurname}`
+                            }else{
+                            familasSinDuplicados2[index].IdentificationRep = `${familasSinDuplicados2[index].IdentificationRep} \n
+ ${resultRepresentatives[index2].dataValues.representative.dataValues.repIdType} - ${resultRepresentatives[index2].dataValues.representative.dataValues.repIdentificationNumber}`
+                            familasSinDuplicados2[index].representatives = `${familasSinDuplicados2[index].representatives} \n
+ ${resultRepresentatives[index2].dataValues.representative.dataValues.repFirstName} ${resultRepresentatives[index2].dataValues.representative.dataValues.repSurname}`
+                        }
                     }
                 }
             }
 
-            for (let indexF = 0; indexF < familasSinDuplicados.length; indexF++) {
+            for (let indexF = 0; indexF < familasSinDuplicados2.length; indexF++) {
                 for (let indexE = 0; indexE < resultFamily.length; indexE++) {
-                    if(resultFamily[indexE].dataValues.famId === familasSinDuplicados[indexF].family.famId){
-                        const student = {
-                            ...resultFamily[0].dataValues.student.dataValues,
-                            level: resultFamily[0].dataValues.periodLevelSectionI.dataValues.level.dataValues,
-                            section: resultFamily[0].dataValues.periodLevelSectionI.dataValues.section.dataValues
+                    if(resultFamily[indexE].dataValues.famId === familasSinDuplicados2[indexF].famId){
+                        if(familasSinDuplicados2[indexF].IdentificationStu === ''){
+                            familasSinDuplicados2[indexF].IdentificationStu = `${(resultFamily[indexE].dataValues.student.dataValues.stuIdType)?resultFamily[indexE].dataValues.student.dataValues.stuIdType : ''} - ${(resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber)?resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber : ''}`
+                            familasSinDuplicados2[indexF].students = `${resultFamily[indexE].dataValues.student.dataValues.stuFirstName} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondName)?resultFamily[indexE].dataValues.student.dataValues.stuSecondName : ''} ${resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname)?resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname : ''}`
+                            familasSinDuplicados2[indexF].level = `${resultFamily[indexE].dataValues.periodLevelSectionI.level.dataValues.levName}`
+                        }else{
+                            familasSinDuplicados2[indexF].IdentificationStu = `${familasSinDuplicados2[indexF].IdentificationStu} \n 
+${(resultFamily[indexE].dataValues.student.dataValues.stuIdType)?resultFamily[indexE].dataValues.student.dataValues.stuIdType : ''} - ${(resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber)?resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber : ''}`
+                            familasSinDuplicados2[indexF].students = `${familasSinDuplicados2[indexF].students} \n 
+${resultFamily[indexE].dataValues.student.dataValues.stuFirstName} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondName)?resultFamily[indexE].dataValues.student.dataValues.stuSecondName : ''} ${resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname)?resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname : ''}`
+                            familasSinDuplicados2[indexF].level = `${familasSinDuplicados2[indexF].level} \n 
+${resultFamily[indexE].dataValues.periodLevelSectionI.level.dataValues.levName}`
                         }
-                        familasSinDuplicados[indexF].students.push(student)
                     }
                 }
             }
-            res.status(StatusCodes.OK).json({ ok: true, data: familasSinDuplicados })
+            res.status(StatusCodes.OK).json({ ok: true, data: familasSinDuplicados2 })
         } else {
             message = 'Sin resultados para mostrar';
             res.status(StatusCodes.OK).json({ ok: false, message })
         }
     } catch (error) {
-        message = err
+        message = error
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-        next(err)
+        next(error)
     }
 }
 
