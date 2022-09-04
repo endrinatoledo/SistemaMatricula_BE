@@ -122,8 +122,64 @@ const reportByLevelAndSection = async (req, res, next) => {
 }
 
 const reportStatistics = async (req, res, next) => {
-    console.log('reportStatistics')
-    console.log('req', req.body)
+    
+    try {
+
+        let levels = await LevelsModel.findAll({})
+
+        let resultInscription = await InscriptionsModel.findAll({
+            where: {
+                perId: req.body.periodo.perId
+            },
+            include: [
+                {
+                    model: StudentModel,
+                    as: 'student',
+                    require: true
+                },{
+                    model: PeriodLevelSectionModel,
+                    as: 'periodLevelSectionI',
+                    require: true,
+                    include:[
+                      {
+                        model: LevelsModel,
+                        as: 'level',
+                        require: true
+                      }
+                    ]
+                  }
+            ],
+        })
+
+        if(levels.length > 0 && resultInscription.length > 0) {
+
+            const levelsFormat = levels.map((element) => {
+                return {levId:element.dataValues.levId, levName:element.dataValues.levName, students:0,boys: 0, girls:0}
+            })
+    
+            for (let index = 0; index < levelsFormat.length; index++) {
+                for (let index2 = 0; index2 < resultInscription.length; index2++) {
+                    if(levelsFormat[index].levId === resultInscription[index2].dataValues.periodLevelSectionI.levId){
+                        levelsFormat[index].students = levelsFormat[index].students + 1
+                        if(resultInscription[index2].dataValues.student.dataValues.stuSex === 'f'){
+                            levelsFormat[index].girls = levelsFormat[index].girls + 1
+                        }else{
+                            levelsFormat[index].boys = levelsFormat[index].boys + 1
+                        }
+                    }
+                }
+    
+            }
+            res.status(StatusCodes.OK).json({ ok: true, data: levelsFormat })
+
+        }else{
+            res.status(StatusCodes.OK).json({ ok: false, data: null, message: 'Sin datos para mostrar' })
+        }
+    } catch (error) {
+        message = error
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+        next(error)
+    }
 }
 
 const eliminarElementosRepetidos = (dataArray) => {
