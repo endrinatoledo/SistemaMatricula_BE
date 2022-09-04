@@ -274,16 +274,17 @@ const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
         if(student.length === 0 ){
           let insert = {
             stuId: element.stuId,
-            stuIdType: element.stuIdType,
+            stuIdType: (element.stuIdType) ? element.stuIdType : '',
             stuFirstName : element.stuFirstName,
-            stuIdentificationNumber : element.stuIdentificationNumber,
+            stuIdentificationNumber : (element.stuIdentificationNumber) ? element.stuIdentificationNumber : '',
             stuSurname : element.stuSurname,
           }
           return insert
         }
       }, (err) => {
-        console.log('error',err) 
-        return 'error'
+          message = 'Error al consultar inscripcion'
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+          next(err)
       })
     })
 
