@@ -333,7 +333,8 @@ const updateRepresentativeStudent = async (req, res, next) => {
     const students = req.body.students
     const family = req.body.family
 
-    representatives.forEach(elementR => {
+    let result = []
+    result.push(representatives.forEach(elementR => {
       students.forEach(elementE => {
         RepresentativeStudentModel.findAll({
           where: {
@@ -359,52 +360,42 @@ const updateRepresentativeStudent = async (req, res, next) => {
           ]
         })
           .then((representativeStudent) => {
-            if (representativeStudent.length > 1) {
-              return res.status(StatusCodes.OK).json({ ok: false, message: 'Vínculo ya se encuentra registrado' })
-            } else {
-              RepresentativeStudentModel.findOne({
-                where: {
-                  rstId: representativeStudent[0].rstId
-                }
-              }).then((representativeStudent2) => {
-                representativeStudent2.update({
-                  repId: (elementR.repId != null) ? elementR.repId : representativeStudent2.repId,
-                  stuId: (elementE.stuId != null) ? elementE.stuId : representativeStudent2.stuId,
-                  famId: (family.famId != null) ? family.famId : representativeStudent2.famId,
-                  rstRepSta: (elementR.rstRepSta != null) ? elementR.rstRepSta : representativeStudent2.rstRepSta,
-                  rstStaStu: (elementR.rstStaStu != null) ? elementE.rstStaStu : representativeStudent2.rstStaStu
-                })
-                  .then((representativeStudent3) => {
-                    message = 'Familia actualizada con éxito';
-                    res.status(StatusCodes.OK).json({ ok: true, data: representativeStudent3, message })
-                  }, (err) => {
-                    message = err
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-                    next(err)
-                  })
-              }, (err) => {
-                message = err
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-                next(err)
+            if (representativeStudent.length === 0) { // no existe y se procede a crear
+              RepresentativeStudentModel.create({
+                repId: elementR.repId,
+                stuId: elementE.stuId,
+                rstRepSta: 1,
+                rstStaStu: 1,
+                famId: family.famId
               })
+                .then((representativeStudent1) => {
+                  return representativeStudent1
+                }, (err) => {
+                  console.log('error al crear registro',err)
+                  message = 'Error de conexión'
+                  return 'error'
+                })
+            }else{
+              return null
             }
-          }, (err) => {
-            message = err
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-            next(err)
+          }, (error) => {
+            console.log('error al consultar si el estudiante esta registrado ',error)
+            message = error
+            return null
+            // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+            // next(err)
           })
-
       })
-
     })
-
+    )
+    message = 'Familia creada con éxito';
+    res.status(StatusCodes.OK).json({ ok: true, data: result, message })
   } catch (error) {
-
+    console.log('-----------------------------error al actualizar', error)
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    next(err)
   }
-
-
-
-
 }
 
 const updateStatusRepresentative = async (req, res, next) => {
@@ -531,12 +522,12 @@ const getRepresentativeStudentByIdRepresentative = async (req, res, next) => {
   })
     .then((representativeStudent) => {
 
-      if(representativeStudent.length > 0){
+      if (representativeStudent.length > 0) {
         res.status(StatusCodes.OK).json({ ok: true, data: representativeStudent })
-      }else{
+      } else {
         res.status(StatusCodes.OK).json({ ok: false, data: representativeStudent, message: 'Representante no asociado a una familia' })
       }
-      
+
     }, (err) => {
       message = err
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
