@@ -301,7 +301,28 @@ const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
   }
 }
 
+//get All Inscription by IdFam
+const getInscriptionsByFamId =  async (req, res, next) =>{
 
+  try {
+    InscriptionsModel.findAll({
+        where: {
+          famId: req.params.famId
+        }
+      })
+      .then((inscription) => {
+        res.status(StatusCodes.OK).json({ok: true, data: inscription})
+      }, (err) => {
+        message = err
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+        next(err)
+      })
+  } catch (error) {
+    message = err;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
+    next(err);
+  }
+}
 
 module.exports = {
     addInscription,
@@ -310,5 +331,6 @@ module.exports = {
     updateInscription,
     deleteInscription,
     getOneInscriptionByStudentByPeriod,
+    getInscriptionsByFamId,
 
 }
