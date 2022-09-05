@@ -47,7 +47,8 @@ const reportByLevelAndSection = async (req, res, next) => {
                 where: {
                     pls_id: {
                         [Op.in]: arrayId
-                    }
+                    },
+                    insStatus : 1
                 },
                 include: [
                     {
@@ -129,7 +130,8 @@ const reportStatistics = async (req, res, next) => {
 
         let resultInscription = await InscriptionsModel.findAll({
             where: {
-                perId: req.body.periodo.perId
+                perId: req.body.periodo.perId,
+                insStatus : 1
             },
             include: [
                 {
@@ -196,7 +198,8 @@ const familyPayroll = async (req, res, next) => {
 
         let resultFamily = await InscriptionsModel.findAll({
             where: {
-                perId: req.body.periodo.perId
+                perId: req.body.periodo.perId,
+                insStatus : 1
             },
             include: [
                 {

@@ -1,5 +1,5 @@
 // const { default: ModelManager } = require("sequelize/types/model-manager");
-const {  StatusCodes } = require('http-status-codes')
+const { StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
@@ -14,105 +14,107 @@ const SectionsModel = db.sectionsModel
 
 //Add Inscription
 
-const addInscription =  async (req, res, next) =>{
+const addInscription = async (req, res, next) => {
 
-    if ( !req.body.famId|| !req.body.plsId || !req.body.stuId || !req.body.perId ) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
-    try {
+  if (!req.body.famId || !req.body.plsId || !req.body.stuId || !req.body.perId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
+  try {
 
-        let idExists = await InscriptionsModel.findOne({
-            where: { 
-              stuId: req.body.stuId,
-              perId : req.body.perId
-            }
-          }).catch((err) => {
-            throw err; 
-          });
-          if (idExists){
-            return res.status(StatusCodes.OK).json({ok: false, message: 'Alumno ya inscrito en este periodo'})
-          }else{
-
-            InscriptionsModel.create({
-              plsId: req.body.plsId,
-              famId: req.body.famId,
-              insObservation: req.body.insObservation,
-              stuId: req.body.stuId,
-              perId : req.body.perId
-            })
-            .then((inscription) => {
-
-                message = 'Inscripción creada con éxito';
-                res.status(StatusCodes.OK).json({ok: true,data: inscription, message})
-              }, (err) => {
-                message = 'Error de conexión'
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data: [], message})
-                next(err)
-              })
-          }
-    } catch (err) {
-        message = err;
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
-        next(err);
+    let idExists = await InscriptionsModel.findOne({
+      where: {
+        stuId: req.body.stuId,
+        perId: req.body.perId,
+        insStatus: 1
       }
+    }).catch((err) => {
+      throw err;
+    });
+    if (idExists) {
+      return res.status(StatusCodes.OK).json({ ok: false, message: 'Alumno posee una inscripción activa en este periodo' })
+    } else {
+
+      InscriptionsModel.create({
+        plsId: req.body.plsId,
+        famId: req.body.famId,
+        insObservation: req.body.insObservation,
+        stuId: req.body.stuId,
+        perId: req.body.perId,
+        insStatus: 1
+      })
+        .then((inscription) => {
+
+          message = 'Inscripción creada con éxito';
+          res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
+        }, (err) => {
+          message = 'Error de conexión'
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+          next(err)
+        })
+    }
+  } catch (err) {
+    message = err;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
+    next(err);
+  }
 
 }
 //get All inscription
-const getAllInscriptions =  async (req, res, next) =>{
+const getAllInscriptions = async (req, res, next) => {
 
   try {
-    let lastPeriod = await PeriodsModel.findOne({ order:[['per_id','DESC']], where: { perStatus: 1 } }).catch((err) => {
-      throw err; 
+    let lastPeriod = await PeriodsModel.findOne({ order: [['per_id', 'DESC']], where: { perStatus: 1 } }).catch((err) => {
+      throw err;
     });
 
-    if(lastPeriod !== undefined && lastPeriod !== null){
+    if (lastPeriod !== undefined && lastPeriod !== null) {
       // const date = new Date();
       InscriptionsModel.findAll({
-        where:{ perId : lastPeriod.perId},
+        where: { perId: lastPeriod.perId, insStatus : 1 },
         include: [{
           model: PeriodLevelSectionModel,
           as: 'periodLevelSectionI',
           require: true,
-          include:[
+          include: [
             {
               model: LevelsModel,
               as: 'level',
               require: true
-            },{
+            }, {
               model: SectionsModel,
               as: 'section',
               require: true
             }
           ]
         }
-        ,{
+          , {
           model: StudentModel,
           as: 'student',
           require: true
-        },{
+        }, {
           model: FamilyModel,
           as: 'family',
           require: true
         }
-        ,{
+          , {
           model: PeriodsModel,
           as: 'period',
           require: true,
-        }  
-      ]
+        }
+        ]
       })
-      .then((inscriptions) => {
-          res.status(StatusCodes.OK).json({ok: true, data: inscriptions})
-      }, (err) => {
+        .then((inscriptions) => {
+          res.status(StatusCodes.OK).json({ ok: true, data: inscriptions })
+        }, (err) => {
           message = err
-          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
           next(err)
         })
-    }else{
+    } else {
       message = 'No hay un periodo configurado'
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
       next(err)
-    }    
+    }
   } catch (error) {
-    
+
   }
 
 
@@ -121,200 +123,181 @@ const getAllInscriptions =  async (req, res, next) =>{
 
 }
 //get All Inscription by Id
-const getOneInscriptionById =  async (req, res, next) =>{
+const getOneInscriptionById = async (req, res, next) => {
 
-    InscriptionsModel.findOne({
-      include: [{
-        model: PeriodLevelSectionModel,
-        as: 'periodLevelSectionI',
-        require: true,
-        include:[
-          {
-            model: LevelsModel,
-            as: 'level',
-            require: true
-          },{
-            model: SectionsModel,
-            as: 'section',
-            require: true
-          }
-        ]
-      }
-      ,{
-        model: StudentModel,
-        as: 'student',
-        require: true
-      },{
-        model: FamilyModel,
-        as: 'family',
-        require: true
-      },{
-        model: PeriodsModel,
-        as: 'period',
-        require: true
-      }  
-      ],
-        where: {
-          insId: req.params.insId
+  InscriptionsModel.findOne({
+    include: [{
+      model: PeriodLevelSectionModel,
+      as: 'periodLevelSectionI',
+      require: true,
+      include: [
+        {
+          model: LevelsModel,
+          as: 'level',
+          require: true
+        }, {
+          model: SectionsModel,
+          as: 'section',
+          require: true
         }
-      })
-      .then((inscription) => {
-        res.status(StatusCodes.OK).json({ok: true, data: inscription})
-      }, (err) => {
-        message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-        next(err)
-      })
+      ]
+    }
+      , {
+      model: StudentModel,
+      as: 'student',
+      require: true
+    }, {
+      model: FamilyModel,
+      as: 'family',
+      require: true
+    }, {
+      model: PeriodsModel,
+      as: 'period',
+      require: true
+    }
+    ],
+    where: {
+      insId: req.params.insId
+    }
+  })
+    .then((inscription) => {
+      res.status(StatusCodes.OK).json({ ok: true, data: inscription })
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+      next(err)
+    })
 
 }
 //Update Inscription
-const updateInscription =  async (req, res, next) =>{
+const updateInscription = async (req, res, next) => {
 
+  if (!req.params.insId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
+
+
+  try {
     InscriptionsModel.findOne({
-        where: {
-          stuId: req.body.stuId,
-          perId : req.body.perId,
-          insId: {
-            [Op.ne]: req.params.insId
+      where: {
+        insId: req.params.insId,
+        insStatus: 1
+      }
+    }).then((inscription) => {
+      if (inscription.length > 0) {
+        let status = null
+        if (req.body.insStatus) {
+          if (req.body.insStatus === 'Activa') {
+            status = 2
           }
-        },
-        include: [{
-          model: PeriodLevelSectionModel,
-          as: 'periodLevelSectionI',
-          require: true
         }
-        ,{
-          model: StudentModel,
-          as: 'student',
-          require: true
-        },{
-          model: FamilyModel,
-          as: 'family',
-          require: true
-        },{
-          model: PeriodsModel,
-          as: 'period',
-          require: true
-        }  
-      ]
-      })
-      .then((inscription) => {
-
-        if(inscription){
-          return res.status(StatusCodes.OK).json({ok: false, message: 'Inscripción ya se encuentra registrada'})
-        }else{    
-            InscriptionsModel.findOne({
-            where: {
-              insId: req.params.insId          
-            }
-          }).then((inscription) => {
-                inscription.update({
-                  plsId: (req.body.plsId != null) ? req.body.plsId : inscription.plsId,
-                  insObservation: (req.body.insObservation != null) ? req.body.insObservation : inscription.insObservation,
-
-                })
-                .then((inscription) => {
-                  message = 'Inscripción actualizada con éxito';
-                  res.status(StatusCodes.OK).json({ok: true, data:inscription, message})
-                }, (err) => {
-                  message = err
-                  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-                  next(err)
-                })
-              }, (err) => {
-                message = err
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-                next(err)
-              })    
-        }
-      }, (err) => {
-        message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
-        next(err)
-      })
-
+        inscription.update({
+          plsId: (req.body.plsId != null) ? req.body.plsId : inscription.plsId,
+          insObservation: (req.body.insObservation != null) ? req.body.insObservation : inscription.insObservation,
+          insStatus: (status) ? status : inscription.insStatus,
+        })
+          .then((inscription) => {
+            message = 'Inscripción actualizada con éxito';
+            res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
+          }, (err) => {
+            message = err
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+            next(err)
+          })
+      } else {
+        message = 'Inscripción no encontrada';
+        res.status(StatusCodes.OK).json({ ok: false, data: inscription, message })
+      }
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+      next(err)
+    })
+  } catch (error) {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    next(err)
+  }
 }
 
 //Delete Inscription
-const deleteInscription =  async (req, res, next) =>{
+const deleteInscription = async (req, res, next) => {
 
-    InscriptionsModel.destroy({      
-        where: {
-          insId: req.params.insId
-          }        
-        }).then((rowsDeleted) => {  
-        if(rowsDeleted > 0) {
-          return res.status(StatusCodes.OK).json({ok: true, message: `Inscripción eliminada con éxito`})  
-        }else{
-          return res.status(StatusCodes.OK).json({ok: false, message: `Error al eliminar Inscripción`})  
-        }
-      }, (err) => {
-        message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,message})
-        next(err)
-      })    
+  InscriptionsModel.destroy({
+    where: {
+      insId: req.params.insId
+    }
+  }).then((rowsDeleted) => {
+    if (rowsDeleted > 0) {
+      return res.status(StatusCodes.OK).json({ ok: true, message: `Inscripción eliminada con éxito` })
+    } else {
+      return res.status(StatusCodes.OK).json({ ok: false, message: `Error al eliminar Inscripción` })
+    }
+  }, (err) => {
+    message = err
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    next(err)
+  })
 
 }
 
 //get All Inscription by Id
-const getOneInscriptionByStudentByPeriod =  async (req, res, next) =>{
+const getOneInscriptionByStudentByPeriod = async (req, res, next) => {
 
   const students = req.body.students
 
-  if(students.length > 0){
+  if (students.length > 0) {
 
-    var promises = students.map(function(element){
+    var promises = students.map(function (element) {
       return InscriptionsModel.findAll({
         where: {
           perId: req.body.period.perId,
           perId: element.stuId
         }
       })
-      .then((student) => {
-        if(student.length === 0 ){
-          let insert = {
-            stuId: element.stuId,
-            stuIdType: (element.stuIdType) ? element.stuIdType : '',
-            stuFirstName : element.stuFirstName,
-            stuIdentificationNumber : (element.stuIdentificationNumber) ? element.stuIdentificationNumber : '',
-            stuSurname : element.stuSurname,
+        .then((student) => {
+          if (student.length === 0) {
+            let insert = {
+              stuId: element.stuId,
+              stuIdType: (element.stuIdType) ? element.stuIdType : '',
+              stuFirstName: element.stuFirstName,
+              stuIdentificationNumber: (element.stuIdentificationNumber) ? element.stuIdentificationNumber : '',
+              stuSurname: element.stuSurname,
+            }
+            return insert
           }
-          return insert
-        }
-      }, (err) => {
+        }, (err) => {
           message = 'Error al consultar inscripcion'
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
           next(err)
-      })
+        })
     })
 
-    Promise.all(promises).then(function(result){ 
-      if(result.length > 0){
+    Promise.all(promises).then(function (result) {
+      if (result.length > 0) {
         const endData = result.filter((item) => item !== undefined)
-        return res.status(StatusCodes.OK).json({ok: true, data: endData}) 
-      }else{
-        return res.status(StatusCodes.OK).json({ok: true, data: result}) 
+        return res.status(StatusCodes.OK).json({ ok: true, data: endData })
+      } else {
+        return res.status(StatusCodes.OK).json({ ok: true, data: result })
       }
     })
-  }else{
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message:'No hay estudiantes para mostrar'})
+  } else {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'No hay estudiantes para mostrar' })
   }
 }
 
 //get All Inscription by IdFam
-const getInscriptionsByFamId =  async (req, res, next) =>{
+const getInscriptionsByFamId = async (req, res, next) => {
 
   try {
     InscriptionsModel.findAll({
-        where: {
-          famId: req.params.famId
-        }
-      })
+      where: {
+        famId: req.params.famId
+      }
+    })
       .then((inscription) => {
-        res.status(StatusCodes.OK).json({ok: true, data: inscription})
+        res.status(StatusCodes.OK).json({ ok: true, data: inscription })
       }, (err) => {
         message = err
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
         next(err)
       })
   } catch (error) {
@@ -325,12 +308,12 @@ const getInscriptionsByFamId =  async (req, res, next) =>{
 }
 
 module.exports = {
-    addInscription,
-    getAllInscriptions,
-    getOneInscriptionById,
-    updateInscription,
-    deleteInscription,
-    getOneInscriptionByStudentByPeriod,
-    getInscriptionsByFamId,
+  addInscription,
+  getAllInscriptions,
+  getOneInscriptionById,
+  updateInscription,
+  deleteInscription,
+  getOneInscriptionByStudentByPeriod,
+  getInscriptionsByFamId,
 
 }

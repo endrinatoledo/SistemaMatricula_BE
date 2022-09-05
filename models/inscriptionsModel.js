@@ -32,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.BIGINT,
             allowNull: false,
             field: 'per_id'
+        },
+        insStatus: {
+          type: DataTypes.INTEGER(11),
+          allowNull: false,
+          field: 'ins_status'
         }
       
     }, {
