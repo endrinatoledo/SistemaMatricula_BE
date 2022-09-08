@@ -90,7 +90,7 @@ const reportByLevelAndSection = async (req, res, next) => {
                             stuIdType: (student.stuIdType) ? student.stuIdType : '',
                             stuIdentificationNumber: (student.stuIdentificationNumber) ? student.stuIdentificationNumber : '',
                             stuDateOfBirth: student.stuDateOfBirth,
-                            stuSex: student.stuSex,
+                            stuSex: student.stuSex === 'f' ? 'Femenino' : 'Masculino'  ,
                             levelName: level.dataValues.levName,
                             sectionName: section.dataValues.secName,
                         })
