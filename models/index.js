@@ -63,10 +63,10 @@ Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
       db[modelName].associate(db);
     }
-  });
+  }); 
 //    
- db.sequelize.sync({ alter: false }).then(() => {
-    // console.log('yes re-sync done!')
+ db.sequelize.sync({ alter: false }).then(() => { 
+    // console.log('yes re-sync done!') 
 })
 
 module.exports = db

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         insStatus: {
           type: DataTypes.INTEGER(11),
-          allowNull: false,
+          allowNull: true,
           field: 'ins_status'
         }
       
@@ -73,3 +73,8 @@ module.exports = (sequelize, DataTypes) => {
 
     return inscriptionsModel
 }
+
+
+// ALTER TABLE matriculaoficial2.inscriptions ADD ins_status INTEGER NULL;
+// UPDATE matriculaoficial2.inscriptions
+//SET ins_status=1

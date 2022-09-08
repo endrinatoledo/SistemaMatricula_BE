@@ -60,6 +60,9 @@ const addInscription = async (req, res, next) => {
 //get All inscription
 const getAllInscriptions = async (req, res, next) => {
 
+
+  
+
   try {
     let lastPeriod = await PeriodsModel.findOne({ order: [['per_id', 'DESC']], where: { perStatus: 1 } }).catch((err) => {
       throw err;
@@ -114,7 +117,7 @@ const getAllInscriptions = async (req, res, next) => {
       next(err)
     }
   } catch (error) {
-
+    console.log('eor3...............................................',error)
   }
 
 
