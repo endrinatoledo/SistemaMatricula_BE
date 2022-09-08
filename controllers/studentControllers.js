@@ -15,6 +15,8 @@ const CountriesModel = db.countriesModel
 
 const addStudent = async (req, res, next) => {
 
+  console.log('entro por aqui')
+
   if (!req.body.stuFirstName || !req.body.stuSurname ||
     !req.body.stuDateOfBirth || !req.body.stuSex ||
     !req.body.couId
@@ -35,8 +37,10 @@ const addStudent = async (req, res, next) => {
         throw err;
       });
 
-      if (idExists) {
+      console.log('entro por aqui -------')
 
+      if (idExists) {
+        console.log('entro por aqui existeeeeeee-------')
         return res.status(StatusCodes.OK).json({ ok: false, message: 'Identificación ya se encuentra registrada' })
       } else {
 
@@ -56,10 +60,14 @@ const addStudent = async (req, res, next) => {
         })
           .then((student) => {
 
+            console.log('entro por aqui existeeeeeee-------',student)
+
+
             message = 'Estudiante creado con éxito';
             res.status(StatusCodes.OK).json({ ok: true, data: student, message })
           }, (err) => {
             // message = err
+            console.log('errorrrrrr4',err)
             message = 'Error de conexión'
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
             next(err)
@@ -82,17 +90,20 @@ const addStudent = async (req, res, next) => {
         stuStatus: 1,
       })
         .then((student) => {
-
+          console.log('linea 93',student)
           message = 'Estudiante creado con éxito';
           res.status(StatusCodes.OK).json({ ok: true, data: student, message })
         }, (err) => {
           // message = err
+          console.log('linea 98',err)
           message = 'Error de conexión'
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
           next(err)
         })
     }
   } catch (err) {
+
+    console.log('linea 106',err)
     message = err;
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
     next(err);

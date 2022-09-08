@@ -107,3 +107,7 @@ module.exports = (sequelize, DataTypes) => {
 
     return studentModel
 }
+
+
+// ALTER TABLE matriculaoficial2.students MODIFY COLUMN stu_id_type varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;
+// ALTER TABLE matriculaoficial2.students MODIFY COLUMN stu_identification_number varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL;

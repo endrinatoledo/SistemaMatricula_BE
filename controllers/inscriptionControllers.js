@@ -177,7 +177,7 @@ const updateInscription = async (req, res, next) => {
 
   if (!req.params.insId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
 
-
+console.log('ENTRO A ACTUALIZAD body',req.body)
   try {
     InscriptionsModel.findOne({
       where: {
@@ -185,7 +185,9 @@ const updateInscription = async (req, res, next) => {
         insStatus: 1
       }
     }).then((inscription) => {
-      if (inscription.length > 0) {
+
+      console.log('---********************************************---inscription 189',inscription)
+      if (inscription !== undefined && inscription !== null) {
         let status = null
         if (req.body.insStatus) {
           if (req.body.insStatus === 'Activa') {
@@ -198,6 +200,9 @@ const updateInscription = async (req, res, next) => {
           insStatus: (status) ? status : inscription.insStatus,
         })
           .then((inscription) => {
+
+            console.log('resultado de buscar inscripcion',inscription)
+
             message = 'Inscripción actualizada con éxito';
             res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
           }, (err) => {
@@ -206,15 +211,21 @@ const updateInscription = async (req, res, next) => {
             next(err)
           })
       } else {
+        console.log('-------------Inscripción no encontrada')
         message = 'Inscripción no encontrada';
         res.status(StatusCodes.OK).json({ ok: false, data: inscription, message })
       }
     }, (err) => {
+
+      console.log('-------------LINEA 219',err)
+
       message = err
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
       next(err)
     })
   } catch (error) {
+    console.log('-------------LINEA 226',err)
+
     message = err
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
     next(err)
