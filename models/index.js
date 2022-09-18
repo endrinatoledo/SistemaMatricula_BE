@@ -57,6 +57,7 @@ db.paymentSchemeConceptsModel =  require('./paymentSchemeConceptsModel')(sequeli
 db.studentPaymentSchemeModel =  require('./studentPaymentSchemeModel')(sequelize,DataTypes)
 db.paymentsModel =  require('./paymentsModel')(sequelize,DataTypes)
 db.paymentsConceptsStudentsModel =  require('./paymentsConceptsStudentsModel')(sequelize,DataTypes)
+db.monthlyPaymentModel =  require('./monthlyPaymentModel')(sequelize,DataTypes)
 
 
 Object.keys(db).forEach(modelName => {
