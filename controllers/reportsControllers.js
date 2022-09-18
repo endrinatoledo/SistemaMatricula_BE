@@ -235,12 +235,7 @@ const familyPayroll = async (req, res, next) => {
                 return element.dataValues.famId
             })
 
-            // const familyFormateada = resultFamily.map((element) => {
-            //     return { family: element.family.dataValues, representatives: [], students: [] }
-            // })
-
             const arraySinDuplicados = eliminarElementosRepetidos(arrayIdFamily)
-            // const familasSinDuplicados = eliminarElementosRepetidos(familyFormateada)
 
             let resultRepresentatives = await RepresentativeStudentModel.findAll({
                 where: {
@@ -310,13 +305,13 @@ const familyPayroll = async (req, res, next) => {
                     if(resultFamily[indexE].dataValues.famId === familasSinDuplicados2[indexF].famId){
                         if(familasSinDuplicados2[indexF].IdentificationStu === ''){
                             familasSinDuplicados2[indexF].IdentificationStu = `${(resultFamily[indexE].dataValues.student.dataValues.stuIdType)?resultFamily[indexE].dataValues.student.dataValues.stuIdType : ''} - ${(resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber)?resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber : ''}`
-                            familasSinDuplicados2[indexF].students = `${resultFamily[indexE].dataValues.student.dataValues.stuFirstName} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondName)?resultFamily[indexE].dataValues.student.dataValues.stuSecondName : ''} ${resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname)?resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname : ''}`
+                            familasSinDuplicados2[indexF].students = `${resultFamily[indexE].dataValues.student.dataValues.stuFirstName} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondName !== null && resultFamily[indexE].dataValues.student.dataValues.stuSecondName !== '')?resultFamily[indexE].dataValues.student.dataValues.stuSecondName : ''} ${resultFamily[indexE].dataValues.student.dataValues.stuSurname} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname !== null && resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname !== '')?resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname : ''}`
                             familasSinDuplicados2[indexF].level = `${resultFamily[indexE].dataValues.periodLevelSectionI.level.dataValues.levName}`
                         }else{
                             familasSinDuplicados2[indexF].IdentificationStu = `${familasSinDuplicados2[indexF].IdentificationStu} \n 
 ${(resultFamily[indexE].dataValues.student.dataValues.stuIdType)?resultFamily[indexE].dataValues.student.dataValues.stuIdType : ''} - ${(resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber)?resultFamily[indexE].dataValues.student.dataValues.stuIdentificationNumber : ''}`
                             familasSinDuplicados2[indexF].students = `${familasSinDuplicados2[indexF].students} \n 
-${resultFamily[indexE].dataValues.student.dataValues.stuFirstName} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondName)?resultFamily[indexE].dataValues.student.dataValues.stuSecondName : ''} ${resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname)?resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname : ''}`
+${resultFamily[indexE].dataValues.student.dataValues.stuFirstName} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondName !== null && resultFamily[indexE].dataValues.student.dataValues.stuSecondName !== '')?resultFamily[indexE].dataValues.student.dataValues.stuSecondName : ''} ${resultFamily[indexE].dataValues.student.dataValues.stuSurname} ${(resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname !== null && resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname !== '')?resultFamily[indexE].dataValues.student.dataValues.stuSecondSurname : ''}`
                             familasSinDuplicados2[indexF].level = `${familasSinDuplicados2[indexF].level} \n 
 ${resultFamily[indexE].dataValues.periodLevelSectionI.level.dataValues.levName}`
                         }
@@ -334,10 +329,105 @@ ${resultFamily[indexE].dataValues.periodLevelSectionI.level.dataValues.levName}`
         next(error)
     }
 }
+const schoolInsurance = async (req, res, next) => {
 
+    try {
+        let resultInscription = await InscriptionsModel.findAll({
+            where: {
+                perId: req.body.periodo.perId,
+                insStatus : 1
+            },
+            include: [
+                {
+                    model: FamilyModel,
+                    as: 'family',
+                    require: true,
+                },
+                {
+                    model: StudentModel,
+                    as: 'student',
+                    require: true
+                },{
+                    model: PeriodLevelSectionModel,
+                    as: 'periodLevelSectionI',
+                    require: true,
+                    include:[
+                      {
+                        model: LevelsModel,
+                        as: 'level',
+                        require: true
+                      },{
+                        model: SectionsModel,
+                        as: 'section',
+                        require: true
+                      }
+                    ]
+                  }
+            ],
+        })
+
+        if (resultInscription.length > 0) {
+            const data = resultInscription.map((element)=>{
+                var date = new Date(element.dataValues.student.dataValues.stuDateOfBirth);
+                const day =`${(date.getDate())}`.padStart(2,'0');
+                const month = `${(date.getMonth()+1)}`.padStart(2,'0');
+                const year = date.getFullYear();
+                const formatted_date = `${day}/${month}/${year}`
+
+                return {
+                    famId: element.dataValues.family.dataValues.famId,
+                    identificationNumberStu : element.dataValues.student.dataValues.stuIdentificationNumber ? element.dataValues.student.dataValues.stuIdentificationNumber : '',
+                    surnameStu : element.dataValues.student.dataValues.stuSurname,
+                    secondSurnameStu : element.dataValues.student.dataValues.stuSecondSurname ? element.dataValues.student.dataValues.stuSecondSurname : '',
+                    firstNameStu: element.dataValues.student.dataValues.stuFirstName,
+                    secondNameStu: element.dataValues.student.dataValues.stuSecondName? element.dataValues.student.dataValues.stuSecondName : '',
+                    dateOfBirthStu : formatted_date,
+                    sexStu: (element.dataValues.student.dataValues.stuSex).toUpperCase(),
+                    levelSection: element.dataValues.periodLevelSectionI.dataValues.level.dataValues.levName,
+                }
+            })
+
+            const arrayIdFamily = resultInscription.map((element)=>{
+                return element.dataValues.famId
+            })
+            const arraySinDuplicados = eliminarElementosRepetidos(arrayIdFamily)
+
+            const resultRepresentatives = await RepresentativeStudentModel.findAll({
+                where: {
+                    fam_id: {
+                        [Op.in]: arraySinDuplicados
+                    }
+                },
+                include: [
+                    {
+                    model: RepresentativeModel,
+                    as: 'representative',
+                    require: true
+                  }
+                  ],
+                  group:'repId'
+            })             
+            for (let indexF = 0; indexF < data.length; indexF++) {
+                for (let indexE = 0; indexE < resultRepresentatives.length; indexE++) {
+                    if(resultRepresentatives[indexE].dataValues.famId === data[indexF].famId){
+                            data[indexF].repIdentificationNumber = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repIdentificationNumber}`
+                            data[indexF].surnamesRep = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repSurname} ${resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondSurname ? resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondSurname : ''}`
+                            data[indexF].namesRep = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repFirstName} ${resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondName ? resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondName : ''}`
+                    }
+                }
+            }
+            res.status(StatusCodes.OK).json({ ok: true, data: data })
+        }
+    } catch (error) {
+        message = error
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+        next(error)
+    }
+}
 module.exports = {
     reportByLevelAndSection,
     reportStatistics,
     familyPayroll,
+    schoolInsurance,
 
 }

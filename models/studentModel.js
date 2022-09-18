@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         stuSecondSurname:{
             type: DataTypes.STRING(45),
             allowNull: true,
-            field: 'stu_second_name' 
+            field: 'stu_second_surname' 
         },
         stuIdType:{
             type: DataTypes.STRING(1),
