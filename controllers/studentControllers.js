@@ -15,8 +15,6 @@ const CountriesModel = db.countriesModel
 
 const addStudent = async (req, res, next) => {
 
-  console.log('entro por aqui')
-
   if (!req.body.stuFirstName || !req.body.stuSurname ||
     !req.body.stuDateOfBirth || !req.body.stuSex ||
     !req.body.couId

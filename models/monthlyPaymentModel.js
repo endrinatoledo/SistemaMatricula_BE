@@ -75,6 +75,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'student',
           foreignKey: 'famId'
         })
+        monthlyPaymentModel.hasMany(models.paymentDetailModel, {
+              as: 'mon_pay',
+              foreignKey: 'mopId'
+        })
 
       }
 
