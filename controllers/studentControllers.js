@@ -174,30 +174,30 @@ const getOneStudentById = async (req, res, next) => {
 //Update student
 const updateStudent = async (req, res, next) => {
 
-  StudentModel.findOne({
-    where: {
-      stuIdentificationNumber: req.body.stuIdentificationNumber,
-      stuIdType: req.body.stuIdType,
-      stuId: {
-        [Op.ne]: req.params.stuId
-      }
-    },
-    include: [{
-      model: CountriesModel,
-      as: 'countries',
-      require: true
-    }
-      , {
-      model: FederalEntityModel,
-      as: 'federalEntity',
-      require: true
-    }
-    ]
-  })
-    .then((student) => {
-      if (student) {
-        return res.status(StatusCodes.OK).json({ ok: false, message: 'Estudiante ya se encuentra registrado' })
-      } else {
+  // StudentModel.findOne({
+  //   where: {
+  //     stuIdentificationNumber: req.body.stuIdentificationNumber,
+  //     stuIdType: req.body.stuIdType,
+  //     stuId: {
+  //       [Op.ne]: req.params.stuId
+  //     }
+  //   },
+  //   include: [{
+  //     model: CountriesModel,
+  //     as: 'countries',
+  //     require: true
+  //   }
+  //     , {
+  //     model: FederalEntityModel,
+  //     as: 'federalEntity',
+  //     require: true
+  //   }
+  //   ]
+  // })
+  //   .then((student) => {
+  //     if (student) {
+  //       return res.status(StatusCodes.OK).json({ ok: false, message: 'Estudiante ya se encuentra registrado' })
+  //     } else {
         StudentModel.findOne({
           where: {
             stuId: req.params.stuId
@@ -232,12 +232,12 @@ const updateStudent = async (req, res, next) => {
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
           next(err)
         })
-      }
-    }, (err) => {
-      message = err
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-      next(err)
-    })
+    //   }
+    // }, (err) => {
+    //   message = err
+    //   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    //   next(err)
+    // })
 
 }
 

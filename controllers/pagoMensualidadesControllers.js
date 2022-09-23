@@ -3,8 +3,6 @@ const {  StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
-const meses = ['Enero','Febrero','Marzo','Abril','Mayo', 'Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
-
 const MonthlyPaymentModel = db.monthlyPaymentModel
 const PeriodsModel = db.periodsModel
 const InscriptionsModel = db.inscriptionsModel
@@ -19,25 +17,33 @@ const agregarPagosMensuales =  async (objData) =>{
 
     let arrayRespuestas = []
 
-    meses.forEach(async element => {
-
         arrayRespuestas.push(await MonthlyPaymentModel.create({
             perId: objData.perId,
-            mopMonth: element,
             stuId: objData.stuId,
             famId: objData.famId,
-            mopStatus: 2,
             levId: objData.levId,
             secId: objData.secId,
+            mopEne: 'NO PAGADO',
+            mopFeb: 'NO PAGADO',
+            mopMar: 'NO PAGADO',
+            mopAbr: 'NO PAGADO',
+            mopMay: 'NO PAGADO',
+            mopJun: 'NO PAGADO',
+            mopJul: 'NO PAGADO',
+            mopAgo: 'NO PAGADO',
+            mopSep: 'NO PAGADO',
+            mopOct: 'NO PAGADO',
+            mopNov: 'NO PAGADO',
+            mopDic: 'NO PAGADO',
+
         })
         .then((res) => {
-            messageRes = `Se agrego mes ${element} del estudiante ${objData.student}`;
+            messageRes = `Se agrego pago de mensualidades del estudiante ${objData.student}`;
             return {messge: messageRes}
           }, (err) => {
-            messageRes = `Error al cargar mes ${element} del estudiante ${objData.student}`;
+            messageRes = `Error al cargar pago de mensualidades del estudiante ${objData.student}`;
             return {messge: messageRes}
           }))
-    });
  }
 
 const validarTodosEstudiantes =  async () =>{
