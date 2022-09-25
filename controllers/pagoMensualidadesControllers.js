@@ -88,20 +88,39 @@ const validarTodosEstudiantes =  async () =>{
           ]
       }).then((inscripciones) => {
 
+        console.log('---inscripciones--------------------------',inscripciones.length)
         if(inscripciones.length > 0){
 
-            inscripciones.forEach(async element => {
+            inscripciones.forEach(async (element,index) => {
                 
-                const objData = {
-                    perId : element.dataValues.perId,
-                    stuId : element.dataValues.stuId,
-                    famId : element.dataValues.famId,
-                    levId : element.dataValues.periodLevelSectionI.dataValues.levId,
-                    secId : element.dataValues.periodLevelSectionI.dataValues.secId,
-                    student :`CI: ${element.dataValues.student.dataValues.stuIdType}-${element.dataValues.student.dataValues.stuIdentificationNumber}: ${element.dataValues.student.dataValues.stuFirstName} ${element.dataValues.student.dataValues.stuSecondName} ${element.dataValues.student.dataValues.stuSurname} ${element.dataValues.student.dataValues.stuSecondSurname}` 
+              let existsMonthlyPayment = await MonthlyPaymentModel.findAll({
+                where: {
+                  stuId: element.dataValues.stuId,
+                  perId: element.dataValues.perId,
                 }
+              }).catch((err) => {
+                throw err;
+              });
+
+
+              if(existsMonthlyPayment.length === 0){
+                const objData = {
+                  perId : element.dataValues.perId,
+                  stuId : element.dataValues.stuId,
+                  famId : element.dataValues.famId,
+                  levId : element.dataValues.periodLevelSectionI.dataValues.levId,
+                  secId : element.dataValues.periodLevelSectionI.dataValues.secId,
+                  student :`CI: ${element.dataValues.student.dataValues.stuIdType}-${element.dataValues.student.dataValues.stuIdentificationNumber}: ${element.dataValues.student.dataValues.stuFirstName} ${element.dataValues.student.dataValues.stuSecondName} ${element.dataValues.student.dataValues.stuSurname} ${element.dataValues.student.dataValues.stuSecondSurname}` 
+              }
+              
+              const respPagoMensualidades = await agregarPagosMensuales(objData)
+
+              }else{
+                console.log('---inscripciones---------------index-----------',index)
+              }
+
+
                 
-                const respPagoMensualidades = await agregarPagosMensuales(objData)
 
             });
             

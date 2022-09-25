@@ -44,72 +44,91 @@ const addInscription = async (req, res, next) => {
         .then(async (inscription) => {
           if(inscription.dataValues.plsId){
 
-            let levelSection = await PeriodLevelSectionModel.findOne({
-              include: [{
-                model: PeriodsModel,
-                as: 'period',
-                require: true
+
+            let existsMonthlyPayment = await MonthlyPaymentModel.findAll({
+              where: {
+                stuId: req.body.stuId,
+                perId: req.body.perId,
               }
-              ,{
-                model: LevelsModel,
-                as: 'level',
-                require: true
-              },{
-                model: SectionsModel,
-                as: 'section',
-                require: true
-              }
-            ],
-                where: {
-                  plsId: inscription.dataValues.plsId
-                }
             }).catch((err) => {
               throw err;
             });
 
-            if(levelSection.dataValues.plsId){
+            if(existsMonthlyPayment.length === 0){
 
-              MonthlyPaymentModel.create({
-                perId: levelSection.dataValues.perId,
-                stuId: inscription.dataValues.stuId,
-                famId: inscription.dataValues.famId,
-                levId: levelSection.dataValues.levId,
-                secId: levelSection.dataValues.secId,
-                mopEne: 'NO PAGADO',
-                mopFeb: 'NO PAGADO',
-                mopMar: 'NO PAGADO',
-                mopAbr: 'NO PAGADO',
-                mopMay: 'NO PAGADO',
-                mopJun: 'NO PAGADO',
-                mopJul: 'NO PAGADO',
-                mopAgo: 'NO PAGADO',
-                mopSep: 'NO PAGADO',
-                mopOct: 'NO PAGADO',
-                mopNov: 'NO PAGADO',
-                mopDic: 'NO PAGADO',
-      
-            })
-            .then((respuesta) => {
-              if(respuesta?.dataValues?.mopId){
-                message = 'Inscripción creada con éxito';
-                res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
-              }else{
-                const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
-                console.log('Se elimino inscripcion',resEliminar)
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
-
-              }
-              }, (err) => {
-                console.log('error al registrar mensualidades: ',err)
-                const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
-                console.log('Se elimino inscripcion',resEliminar)
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+              let levelSection = await PeriodLevelSectionModel.findOne({
+                include: [{
+                  model: PeriodsModel,
+                  as: 'period',
+                  require: true
+                }
+                ,{
+                  model: LevelsModel,
+                  as: 'level',
+                  require: true
+                },{
+                  model: SectionsModel,
+                  as: 'section',
+                  require: true
+                }
+              ],
+                  where: {
+                    plsId: inscription.dataValues.plsId
+                  }
+              }).catch((err) => {
+                throw err;
+              });
+  
+              if(levelSection.dataValues.plsId){
+  
+                MonthlyPaymentModel.create({
+                  perId: levelSection.dataValues.perId,
+                  stuId: inscription.dataValues.stuId,
+                  famId: inscription.dataValues.famId,
+                  levId: levelSection.dataValues.levId,
+                  secId: levelSection.dataValues.secId,
+                  mopEne: 'NO PAGADO',
+                  mopFeb: 'NO PAGADO',
+                  mopMar: 'NO PAGADO',
+                  mopAbr: 'NO PAGADO',
+                  mopMay: 'NO PAGADO',
+                  mopJun: 'NO PAGADO',
+                  mopJul: 'NO PAGADO',
+                  mopAgo: 'NO PAGADO',
+                  mopSep: 'NO PAGADO',
+                  mopOct: 'NO PAGADO',
+                  mopNov: 'NO PAGADO',
+                  mopDic: 'NO PAGADO',
+        
               })
+              .then((respuesta) => {
+                if(respuesta?.dataValues?.mopId){
+                  message = 'Inscripción creada con éxito';
+                  res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
+                }else{
+                  const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+                  console.log('Se elimino inscripcion',resEliminar)
+                  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+  
+                }
+                }, (err) => {
+                  console.log('error al registrar mensualidades: ',err)
+                  const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+                  console.log('Se elimino inscripcion',resEliminar)
+                  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+                })
+              }else{
+              const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+              console.log('Se elimino inscripcion',resEliminar)
+              res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+              }  
+
             }else{
-            const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
-            console.log('Se elimino inscripcion',resEliminar)
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
-            }            
+              message = 'Inscripción creada con éxito';
+              res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
+            }
+
+          
           }else{
             const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
             console.log('Se elimino inscripcion',resEliminar)
