@@ -3,7 +3,6 @@ const { StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
-
 const InscriptionsModel = db.inscriptionsModel
 const PeriodLevelSectionModel = db.periodLevelSectionModel
 const PeriodsModel = db.periodsModel
@@ -11,6 +10,8 @@ const StudentModel = db.studentModel
 const FamilyModel = db.familyModel
 const LevelsModel = db.levelsModel
 const SectionsModel = db.sectionsModel
+const MonthlyPaymentModel = db.monthlyPaymentModel
+
 
 //Add Inscription
 
@@ -40,10 +41,80 @@ const addInscription = async (req, res, next) => {
         perId: req.body.perId,
         insStatus: 1
       })
-        .then((inscription) => {
+        .then(async (inscription) => {
+          if(inscription.dataValues.plsId){
 
-          message = 'Inscripción creada con éxito';
-          res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
+            let levelSection = await PeriodLevelSectionModel.findOne({
+              include: [{
+                model: PeriodsModel,
+                as: 'period',
+                require: true
+              }
+              ,{
+                model: LevelsModel,
+                as: 'level',
+                require: true
+              },{
+                model: SectionsModel,
+                as: 'section',
+                require: true
+              }
+            ],
+                where: {
+                  plsId: inscription.dataValues.plsId
+                }
+            }).catch((err) => {
+              throw err;
+            });
+
+            if(levelSection.dataValues.plsId){
+
+              MonthlyPaymentModel.create({
+                perId: levelSection.dataValues.perId,
+                stuId: inscription.dataValues.stuId,
+                famId: inscription.dataValues.famId,
+                levId: levelSection.dataValues.levId,
+                secId: levelSection.dataValues.secId,
+                mopEne: 'NO PAGADO',
+                mopFeb: 'NO PAGADO',
+                mopMar: 'NO PAGADO',
+                mopAbr: 'NO PAGADO',
+                mopMay: 'NO PAGADO',
+                mopJun: 'NO PAGADO',
+                mopJul: 'NO PAGADO',
+                mopAgo: 'NO PAGADO',
+                mopSep: 'NO PAGADO',
+                mopOct: 'NO PAGADO',
+                mopNov: 'NO PAGADO',
+                mopDic: 'NO PAGADO',
+      
+            })
+            .then((respuesta) => {
+              if(respuesta?.dataValues?.mopId){
+                message = 'Inscripción creada con éxito';
+                res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
+              }else{
+                const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+                console.log('Se elimino inscripcion',resEliminar)
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+
+              }
+              }, (err) => {
+                console.log('error al registrar mensualidades: ',err)
+                const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+                console.log('Se elimino inscripcion',resEliminar)
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+              })
+            }else{
+            const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+            console.log('Se elimino inscripcion',resEliminar)
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+            }            
+          }else{
+            const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
+            console.log('Se elimino inscripcion',resEliminar)
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
+          }
         }, (err) => {
           message = 'Error de conexión'
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
@@ -51,7 +122,7 @@ const addInscription = async (req, res, next) => {
         })
     }
   } catch (err) {
-    message = err;
+    message = 'Error de conexion al registrar inscripcion';
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
     next(err);
   }
@@ -118,12 +189,11 @@ const getAllInscriptions = async (req, res, next) => {
     }
   } catch (error) {
     console.log('eor3...............................................',error)
+      message = 'Error de conexion al consultar inscripciones'
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+      next(err)
+    
   }
-
-
-
-
-
 }
 //get All Inscription by Id
 const getOneInscriptionById = async (req, res, next) => {
@@ -230,6 +300,31 @@ console.log('ENTRO A ACTUALIZAD body',req.body)
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
     next(err)
   }
+}
+
+const eliminarInscripcion = async(insId) =>{
+
+  try {
+    InscriptionsModel.destroy({
+      where: {
+        insId: insId
+      }
+    }).then((rowsDeleted) => {
+      if (rowsDeleted > 0) {
+        return { ok: true, message: `Inscripción eliminada con éxito` }
+      } else {
+        return { ok: false, message: `Error al eliminar Inscripción` }
+      }
+    }, (err) => {
+      message = err
+      return { ok: false, message: 'Error al eliminar inscripcion:  '+err }
+    })
+  } catch (error) {
+    return { ok: false, message: 'Error al eliminar inscripcion:  '+error }
+  }
+
+  
+
 }
 
 //Delete Inscription
