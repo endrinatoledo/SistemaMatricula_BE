@@ -117,11 +117,7 @@ const validarTodosEstudiantes =  async () =>{
 
               }else{
                 console.log('---inscripciones---------------index-----------',index)
-              }
-
-
-                
-
+              } 
             });
             
         }else{
@@ -146,18 +142,90 @@ const validarTodosEstudiantes =  async () =>{
 
 }
 
-const consultarTablaPagoMensualidades = async() => {
+const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
+
+  try {
+    MonthlyPaymentModel.findAll({
+      where: {
+          famId: req.params.famId
+      },
+      include: [
+        {
+          model: StudentModel,
+          as: 'student',
+          require: true
+        }
+      ]
+    })
+    .then((monthlyPayment) => {
+
+      if(monthlyPayment.length > 0){
+        const dataForm = monthlyPayment.map(item =>{
+
+          const student = item.dataValues.student.dataValues
+          return {
+            mopId : item.dataValues.mopId,
+            student : `${student.stuFirstName} ${student.stuSecondName ? student.stuSecondName : ''} ${student.stuSurname} ${student.stuSecondSurname ? student.stuSecondSurname : ''}`,          
+            ene : item.dataValues.mopEne === 'NO PAGADO' ? 2 : 1,
+            feb : item.dataValues.mopFeb === 'NO PAGADO' ? 2 : 1,
+            mar : item.dataValues.mopMar === 'NO PAGADO' ? 2 : 1,
+            abr : item.dataValues.mopAbr === 'NO PAGADO' ? 2 : 1,
+            may : item.dataValues.mopMay === 'NO PAGADO' ? 2 : 1,
+            jun : item.dataValues.mopJun === 'NO PAGADO' ? 2 : 1,
+            jul : item.dataValues.mopJul === 'NO PAGADO' ? 2 : 1,
+            ago : item.dataValues.mopAgo === 'NO PAGADO' ? 2 : 1,
+            sep : item.dataValues.mopSep === 'NO PAGADO' ? 2 : 1,
+            oct : item.dataValues.mopOct === 'NO PAGADO' ? 2 : 1,
+            nov : item.dataValues.mopNov === 'NO PAGADO' ? 2 : 1,
+            dic : item.dataValues.mopDic === 'NO PAGADO' ? 2 : 1
+          }
+        })
+
+        res.status(StatusCodes.OK).json({ok: true, data: dataForm})
+      }else{
+        res.status(StatusCodes.OK).json({ok: false, data: [], message:'Sin mensualidades para mostrar'})
+      }
+      
+    }, (err) => {
+      console.log('Error al consultar mensualidades por familia: ',err)
+      message = 'Error al consultar mensualidades por familia'
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
+    })
+
+  } catch (error) {
+    console.log('Error al consultar mensualidades por familia: ',error)
+    message = 'Error de conexión al consultar mensualidades por familia'
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
+  }
 
 }
-const consultarTablaPagoMensualidadesPorEstudiante = async() => {
+const getTablaPagoMensualidadesPorEstudiante = async(req, res) => {
+  
+  try {
+    MonthlyPaymentModel.findAll({
+      where: {
+          stuId: req.params.stuId
+      }
+    })
+    .then((monthlyPayment) => {
+      res.status(StatusCodes.OK).json({ok: true, data: monthlyPayment})
+    }, (err) => {
+      console.log('Error al consultar mensualidades por estudiante: ',err)
+      message = 'Error al consultar mensualidades por estudiante'
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
+    })
+
+  } catch (error) {
+    console.log('Error al consultar mensualidades por estudiante: ',error)
+    message = 'Error de conexión al consultar mensualidades por estudiante'
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
+  }
 
 }
 
-validarTodosEstudiantes()
+// validarTodosEstudiantes()
 
-module.export = {
-    agregarPagosMensuales,
-    validarTodosEstudiantes,
-    consultarTablaPagoMensualidades,
-    consultarTablaPagoMensualidadesPorEstudiante,
+module.exports = {
+    getTablaPagoMensualidadesPorFamilia,
+    getTablaPagoMensualidadesPorEstudiante,
 }
