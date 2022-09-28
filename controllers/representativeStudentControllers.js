@@ -333,6 +333,28 @@ const updateRepresentativeStudent = async (req, res, next) => {
     const students = req.body.students
     const family = req.body.family
 
+    if(family){
+      FamilyModel.findOne({
+        where: {
+          famId: family.famId          
+        }
+      }).then((familyres) => {
+        familyres.update({
+            famName: (family.famName != null) ? family.famName : familyres.famName,
+            })
+            .then((family) => {
+              console.log('-------------Familia actualizada con exito:')
+              // res.status(StatusCodes.OK).json({ok: true, data:family, message})
+            }, (err) => {
+              console.log('--------------error al actualizar familia:', err)
+            })
+          }, (err) => {
+            console.log('------------------error al actualizar familia:', err)
+          })   
+    }else{
+      console.log('no entro a actualizar familia')
+    }
+
     let result = []
     result.push(representatives.forEach(elementR => {
       students.forEach(elementE => {
@@ -371,7 +393,7 @@ const updateRepresentativeStudent = async (req, res, next) => {
                 .then((representativeStudent1) => {
                   return representativeStudent1
                 }, (err) => {
-                  console.log('error al crear registro',err)
+                  console.log('error al actualizar registro',err)
                   message = 'Error de conexión'
                   return 'error'
                 })
@@ -388,7 +410,7 @@ const updateRepresentativeStudent = async (req, res, next) => {
       })
     })
     )
-    message = 'Familia creada con éxito';
+    message = 'Familia actualizada con éxito';
     res.status(StatusCodes.OK).json({ ok: true, data: result, message })
   } catch (error) {
     console.log('-----------------------------error al actualizar', error)
