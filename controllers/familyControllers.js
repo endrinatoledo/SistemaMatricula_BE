@@ -106,36 +106,64 @@ const updateFamily =  async (req, res, next) =>{
 const deleteFamily =  async (req, res, next) =>{
 
   try {
-    RepresentativeStudentModel.destroy({
+    
+    FamilyModel.findOne({
       where: {
-        famId: req.params.famId
-      } 
-    }).then((rowsDeleted) => {  
-        FamilyModel.destroy({      
-          where: {
-              famId: req.params.famId
-            }        
-          }).then((eliminada) => {  
-          if(eliminada > 0) {
-            return res.status(StatusCodes.OK).json({ok: true, message: `Familia eliminada con éxito`})  
-          }else{
-            return res.status(StatusCodes.OK).json({ok: false, message: `Error al eliminar Familia`})  
-          }
+        famId: req.params.famId          
+      }
+    }).then((family) => {
+      family.update({
+          famStatus: 2
+          })
+          .then((family) => {
+            res.status(StatusCodes.OK).json({ok: true, message: `Familia eliminada con éxito`})
+          }, (err) => {
+            message = err
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message: `Error al eliminar Familia`})
+            next(err)
+          })
         }, (err) => {
           message = err
-          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,message})
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
           next(err)
-        }) 
-    }, (err) => {
-      message = err
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,message})
-      next(err)
-    })  
+        })   
+
   } catch (error) {
-    message = err;
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
-    next(err);
+    
   }
+
+
+  // try {
+  //   RepresentativeStudentModel.destroy({
+  //     where: {
+  //       famId: req.params.famId
+  //     } 
+  //   }).then((rowsDeleted) => {  
+  //       FamilyModel.destroy({      
+  //         where: {
+  //             famId: req.params.famId
+  //           }        
+  //         }).then((eliminada) => {  
+  //         if(eliminada > 0) {
+  //           return res.status(StatusCodes.OK).json({ok: true, message: `Familia eliminada con éxito`})  
+  //         }else{
+  //           return res.status(StatusCodes.OK).json({ok: false, message: `Error al eliminar Familia`})  
+  //         }
+  //       }, (err) => {
+  //         message = err
+  //         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,message})
+  //         next(err)
+  //       }) 
+  //   }, (err) => {
+  //     message = err
+  //     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,message})
+  //     next(err)
+  //   })  
+  // } catch (error) {
+  //   message = err;
+  //   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
+  //   next(err);
+  // }
 
   
 
