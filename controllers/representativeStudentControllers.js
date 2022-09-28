@@ -121,7 +121,10 @@ const getAllRepresentativeStudentGroupByFamily = async (req, res, next) => {
     {
       model: FamilyModel,
       as: 'families',
-      require: true
+      require: true,
+      where:{
+        famStatus:1
+      }
     }
     ],
     group: ["famId"]
@@ -207,6 +210,8 @@ const getOneRepresentativeStudentByFamId = async (req, res, next) => {
           if (students.length > 0) { //verifica si el array tiene elementos
             let resultEstudent = ''
             resultEstudent = students.find(item => item.stuId === element.student.stuId)
+
+
             if (resultEstudent === undefined) {
               let insert = {
                 couId: element.student.couId,
@@ -247,6 +252,7 @@ const getOneRepresentativeStudentByFamId = async (req, res, next) => {
             }
             students.push(insert)
           }
+
           if (representatives.length > 0) {
 
             let resultRepresentative

@@ -378,7 +378,8 @@ const getOneInscriptionByStudentByPeriod = async (req, res, next) => {
       return InscriptionsModel.findAll({
         where: {
           perId: req.body.period.perId,
-          perId: element.stuId
+          stuId: element.stuId,
+          insStatus:1
         }
       })
         .then((student) => {
@@ -418,7 +419,8 @@ const getInscriptionsByFamId = async (req, res, next) => {
   try {
     InscriptionsModel.findAll({
       where: {
-        famId: req.params.famId
+        famId: req.params.famId,
+        insStatus:1
       }
     })
       .then((inscription) => {
