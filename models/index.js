@@ -60,6 +60,7 @@ db.paymentsConceptsStudentsModel =  require('./paymentsConceptsStudentsModel')(s
 db.monthlyPaymentModel =  require('./monthlyPaymentModel')(sequelize,DataTypes)
 db.paymentDetailModel =  require('./paymentDetailModel')(sequelize,DataTypes)
 db.banksModel =  require('./banksModel')(sequelize,DataTypes)
+db.costoMensualidadesModel = require('./costoMensualidadesModel')(sequelize, DataTypes)
 
 
 
