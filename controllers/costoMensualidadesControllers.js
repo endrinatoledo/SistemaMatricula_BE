@@ -1,9 +1,9 @@
 const { StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const db = require("../models");
+const db = require("../models"); 
 
-const CostoMesualidadesModel = db.costoMesualidadesModel
+const CostoMensualidadesModel = db.costoMensualidadesModel
 
 //Add exchangeRate
 
@@ -11,9 +11,9 @@ const addCostoMensualidad = async (req, res, next) => {
 
     if (req.body.cmeAmount === '') return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
     try {
-        CostoMesualidadesModel.create({
+        CostoMensualidadesModel.create({
             cmeAmount: (parseFloat(req.body.cmeAmount)).toFixed(2),
-            cmeDate: new Date().toISOString().split('T')[0]
+            cmeDate: req.body.cmeDate
         })
             .then((costoMensualidad) => {
                 message = 'Costo de mensualidad creada con éxito';
@@ -35,7 +35,7 @@ const addCostoMensualidad = async (req, res, next) => {
 //get All exchangeRate
 const getAllCostoMensualidades = async (req, res, next) => {
 
-    CostoMesualidadesModel.findAll({
+    CostoMensualidadesModel.findAll({
         order: [['cme_id', 'DESC']],
     })
         .then((costoMensualidades) => {
@@ -50,7 +50,7 @@ const getAllCostoMensualidades = async (req, res, next) => {
 //get All exchangeRate by Id
 const getOneCostoMensualidadById = async (req, res, next) => {
 
-    CostoMesualidadesModel.findOne({
+    CostoMensualidadesModel.findOne({
         where: {
             cmeId: req.params.cmeId
         }
@@ -68,7 +68,7 @@ const getOneCostoMensualidadById = async (req, res, next) => {
 //Delete exchangeRate
 const deleteCostoMensualidad = async (req, res, next) => {
 
-    CostoMesualidadesModel.destroy({
+    CostoMensualidadesModel.destroy({
         where: {
             cmeId: req.params.cmeId
         }
@@ -87,7 +87,7 @@ const deleteCostoMensualidad = async (req, res, next) => {
 }
 
 const latestCostoMensualidad = async (req, res, next) => {
-    CostoMesualidadesModel.findOne({
+    CostoMensualidadesModel.findOne({
         order: [['cme_id', 'DESC']],
         limit: 1,
     })
