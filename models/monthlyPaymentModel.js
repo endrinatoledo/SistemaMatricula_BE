@@ -23,76 +23,41 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           field: 'fam_id'
         },
-        levId:{
+        insId: {
+          type: DataTypes.BIGINT,
+          allowNull: false,
+          field: 'ins_id'
+        },
+        levId: {
           type: DataTypes.BIGINT,
           allowNull: false,
           field: 'lev_id'
         },
-        secId:{
+        secId: {
           type: DataTypes.BIGINT,
           allowNull: false,
           field: 'sec_id'
         },
-        mopEne:{
+        mopMonth:{
           type: DataTypes.STRING(100),
           allowNull: false,
-          field: 'mop_ene'
+          field: 'mop_month'
         },
-        mopFeb:{
-          type: DataTypes.STRING(100),
+        mopAmount:{
+          type: DataTypes.FLOAT,
           allowNull: false,
-          field: 'mop_feb'
+          field: 'mop_amount'
         },
-        mopMar:{
-          type: DataTypes.STRING(100),
+        mopAmountPaid:{
+          type: DataTypes.FLOAT,
           allowNull: false,
-          field: 'mop_mar'
+          field: 'mop_amount_paid'
         },
-        mopAbr:{
-          type: DataTypes.STRING(100),
+        mopStatus:{
+          type: DataTypes.INTEGER(11),
           allowNull: false,
-          field: 'mop_abr'
-        },
-        mopMay:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_may'
-        },
-        mopJun:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_jun'
-        },
-        mopJul:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_jul'
-        },
-        mopAgo:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_ago'
-        },
-        mopSep:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_sep'
-        },
-        mopOct:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_oct'
-        },
-        mopNov:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_nov'
-        },
-        mopDic:{
-          type: DataTypes.STRING(100),
-          allowNull: false,
-          field: 'mop_dic'
-        },      
+          field: 'mop_status'
+        }
     }, {
         tableName: 'monthly_payment',
         timestamps: false
@@ -122,6 +87,10 @@ module.exports = (sequelize, DataTypes) => {
         monthlyPaymentModel.hasMany(models.paymentDetailModel, {
               as: 'mon_pay',
               foreignKey: 'mopId'
+        })
+        monthlyPaymentModel.belongsTo(models.inscriptionsModel, {
+          as: 'inscriptionMonthly',
+          foreignKey: 'insId'
         })
 
       }
