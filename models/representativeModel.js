@@ -129,11 +129,15 @@ module.exports = (sequelize, DataTypes) => {
           representativeModel.hasMany(models.representativeStudentModel, {
             as: 'representativeStu',
             foreignKey: 'repId'
-          })  
-          representativeModel.hasMany(models.paymentDetailModel, {
-            as: 'paymentDetail',
+          }) 
+          representativeModel.hasMany(models.invoiceHeaderModel, {
+            as: 'representativeInv',
             foreignKey: 'repId'
-          })  
+          })   
+        //   representativeModel.hasMany(models.paymentDetailModel, {
+        //     as: 'paymentDetail',
+        //     foreignKey: 'repId'
+        //   })  
 
       }
 

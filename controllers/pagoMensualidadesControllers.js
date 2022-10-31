@@ -52,6 +52,7 @@ const agregarPagosMensuales =  async (objData) =>{
 
 const validarTodosEstudiantes =  async () =>{
 
+  console.log('entroooooooooooooooooooooo')
   try {
     
     PeriodsModel.findOne({
@@ -122,10 +123,10 @@ const validarTodosEstudiantes =  async () =>{
 
               const respPagoMensualidades = await agregarPagosMensuales(objData)
 
-              // console.log('---respPagoMensualidades---------------index-----------', JSON.stringify(respPagoMensualidades) )
+              console.log('---respPagoMensualidades---------------index-----------', JSON.stringify(respPagoMensualidades) )
 
             } else {
-              // console.log('---inscripciones---------------index-----------',index)
+              console.log('---inscripciones---------------index-----------',index)
             }
           });
 
@@ -256,9 +257,9 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
         //   }
         // })
 
-        res.status(StatusCodes.OK).json({ ok: true, data: listadoEstudiantesPorFamilia })
+        res.status(StatusCodes.OK).json({ ok: true, data: listadoEstudiantesPorFamilia, dataDetalle: monthlyPayment})
       }else{
-        res.status(StatusCodes.OK).json({ok: false, data: [], message:'Sin mensualidades para mostrar'})
+        res.status(StatusCodes.OK).json({ok: false, data: [], dataDetalle:[], message:'Sin mensualidades para mostrar'})
       }
       
     }, (err) => {

@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             field: 'ban_id'
         },
-        repId: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-            field: 'rep_id'
-        },
+        // repId: {
+        //     type: DataTypes.BIGINT,
+        //     allowNull: false,
+        //     field: 'rep_id'
+        // },
         depAmount: {
             type: DataTypes.FLOAT,
             allowNull: false,
@@ -43,26 +43,26 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             field: 'mop_approval_number'
         },
-        depDate: {
-            type: DataTypes.DATEONLY,
-            allowNull: false,
-            field: 'dep_date'
-        },
+        // depDate: {
+        //     type: DataTypes.DATEONLY,
+        //     allowNull: false,
+        //     field: 'dep_date'
+        // },
         depObservation: {
             type: DataTypes.STRING(250),
             allowNull: true,
             field: 'dep_observation'
         },
-        depInvoiceDescription:{
-            type: DataTypes.STRING(250),
-            allowNull: true,
-            field: 'dep_invoice_description'
-        },
-        depStatus:{
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            field: 'dep_status'
-        }
+        // depInvoiceDescription:{
+        //     type: DataTypes.STRING(250),
+        //     allowNull: true,
+        //     field: 'dep_invoice_description'
+        // },
+        // depStatus:{
+        //     type: DataTypes.INTEGER,
+        //     allowNull: false,
+        //     field: 'dep_status'
+        // }
 
     }, {
         tableName: 'payment_detail',
@@ -82,10 +82,10 @@ module.exports = (sequelize, DataTypes) => {
             as: 'paymentMethodsPay',
             foreignKey: 'payId'
         })
-        paymentDetailModel.belongsTo(models.representativeModel, {
-            as: 'representativePay',
-            foreignKey: 'repId'
-        })
+        // paymentDetailModel.belongsTo(models.representativeModel, {
+        //     as: 'representativePay',
+        //     foreignKey: 'repId'
+        // })
     }
 
     return paymentDetailModel

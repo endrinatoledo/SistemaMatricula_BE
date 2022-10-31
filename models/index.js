@@ -61,8 +61,9 @@ db.monthlyPaymentModel =  require('./monthlyPaymentModel')(sequelize,DataTypes)
 db.paymentDetailModel =  require('./paymentDetailModel')(sequelize,DataTypes)
 db.banksModel =  require('./banksModel')(sequelize,DataTypes)
 db.costoMensualidadesModel = require('./costoMensualidadesModel')(sequelize, DataTypes)
-
-
+db.invoiceHeaderModel = require('./invoiceHeaderModel')(sequelize, DataTypes)
+db.controlNumberModel = require('./controlNumberModel')(sequelize, DataTypes)
+db.invoiceNumberModel = require('./invoiceNumberModel')(sequelize, DataTypes)
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
