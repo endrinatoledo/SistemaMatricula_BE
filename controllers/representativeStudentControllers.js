@@ -541,6 +541,10 @@ const getRepresentativeStudentByIdRepresentative = async (req, res, next) => {
         model: FamilyModel,
         as: 'families',
         require: true
+      }, {
+        model: RepresentativeModel,
+        as: 'representative',
+        require: true
       }
     ],
     where: {
