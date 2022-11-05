@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
             field: 'inh_phone'
         },
         inhDate: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.STRING(20),
             allowNull: false,
             field: 'inh_date'
         },
