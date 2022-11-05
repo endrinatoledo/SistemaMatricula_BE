@@ -266,7 +266,6 @@ const updateInscription = async (req, res, next) => {
 
   if (!req.params.insId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
 
-console.log('ENTRO A ACTUALIZAD body',req.body)
   try {
     InscriptionsModel.findOne({
       where: {
@@ -275,7 +274,6 @@ console.log('ENTRO A ACTUALIZAD body',req.body)
       }
     }).then((inscription) => {
 
-      console.log('---********************************************---inscription 189',inscription)
       if (inscription !== undefined && inscription !== null) {
         let status = null
         if (req.body.insStatus) {

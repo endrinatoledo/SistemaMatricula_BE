@@ -63,6 +63,10 @@ module.exports = (sequelize, DataTypes) => {
             as: 'representativeInvoice',
             foreignKey: 'repId'
         })
+        invoiceHeaderModel.hasMany(models.invoiceDetailModel, {
+            as: 'inh_ind',
+            foreignKey: 'inhId'
+        })
     }
 
     return invoiceHeaderModel

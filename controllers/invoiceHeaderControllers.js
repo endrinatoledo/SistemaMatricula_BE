@@ -5,13 +5,14 @@ const Op = Sequelize.Op
 const db = require("../models");
 const { updateInvoiceNumber } = require('./invoiceNumberControllers')
 const { updateControlNumber } = require('./controlNumberControllers')
+const { addInvoiceDetail } = require('./invoiceDetailControllers')
 const InvoiceHeaderModel = db.invoiceHeaderModel
 const InvoiceNumberModel = db.invoiceNumberModel
 const ControlNumberModel = db.controlNumberModel
 
 const addInvoiceHeader = async (req, res, next) => {
 
-    // console.log('llego aquiiii-----------------------------------------------', req.body)
+    console.log('llego aquiiii-----------------------------------------------', req.body.cuerpo)
     // if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
     try {
 
@@ -42,7 +43,7 @@ const addInvoiceHeader = async (req, res, next) => {
             inhPhone :req.body.cabecera.phones,
             inhDate :req.body.cabecera.date,
             inhControlNumber: numComprobante.resultF, 
-            inhInvoiceNumber: req.body.cabecera.voucherType !='COMPROBANTE' ? numFactura.resultF : '',
+            inhInvoiceNumber:  numFactura.resultF,
             inhWayToPay:''
         })
                 .then(async (invoiceHeader) => {
@@ -52,7 +53,8 @@ const addInvoiceHeader = async (req, res, next) => {
                         const actualizarNumFactura = await updateInvoiceNumber(numFactura.data.dataValues.nuiId)
                         const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
 
-                        
+                        const detailInvoice = await addInvoiceDetail(req.body.cuerpo, numFactura.resultF)
+
                     }else{
                         console.log('entro por 57')
                     }
