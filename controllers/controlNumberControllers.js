@@ -3,10 +3,10 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
 
-const controlNumberModel = db.controlNumberModel
+const ControlNumberModel = db.controlNumberModel
 
 const latestControlNumber = async (req, res, next) =>{
-    controlNumberModel.findOne({
+  ControlNumberModel.findOne({
       order:[['nucId','DESC']],
       limit: 1,
     })
@@ -19,6 +19,35 @@ const latestControlNumber = async (req, res, next) =>{
     })
   }
 
+const updateControlNumber = async (controlNumber) => {
+  try {
+    const res = await ControlNumberModel.findOne({
+      where: {
+        nucId: controlNumber
+      }
+    }).then((controlNumberRes) => {
+      controlNumberRes.update({
+        nucValue: Number(controlNumberRes.nucValue) + 1
+      })
+        .then((controlNumberAct) => {
+          message = 'Numero de control actualizado satisfactoriamente';
+          return { ok: true, data: controlNumberAct, message }
+        }, (err) => {
+          return { ok: false, message: `Error al actualizar num Control: ${err}` }
+        })
+    }, (err) => {
+      return { ok: false, message: `Error al consultar num Control: ${err}` }
+    })
+    return res
+  } catch (error) {
+    return { ok: false, message: `Error en try al consultar num Control: ${err}` }
+
+  }
+
+
+}
+
 module.exports = {
-    latestControlNumber
+    latestControlNumber,
+  updateControlNumber,
 }

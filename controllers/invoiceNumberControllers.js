@@ -3,12 +3,11 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
 
-const invoiceNumberModel = db.invoiceNumberModel
+const InvoiceNumberModel = db.invoiceNumberModel
 
 const latestInvoiceNumber = async (req, res, next) =>{
-    invoiceNumberModel.findOne({
+  InvoiceNumberModel.findOne({
       order:[['nui_id','DESC']],
-      limit: 1,
     })
     .then((result) => {
       res.status(StatusCodes.OK).json({ok: true, data: result})
@@ -19,6 +18,36 @@ const latestInvoiceNumber = async (req, res, next) =>{
     })
   }
 
+const updateInvoiceNumber = async (invoiceNumber) => {
+
+  try {
+    const res = await InvoiceNumberModel.findOne({
+      where: {
+        nuiId: invoiceNumber
+      }
+    }).then((invoiceNumberRes) => {
+
+      invoiceNumberRes.update({
+        nuiValue: Number(invoiceNumberRes.dataValues.nuiValue) + 1
+      })
+        .then((invoiceNumberAct) => {
+          message = 'Numero de factura actualizado satisfactoriamente';
+          return { ok: true, data: invoiceNumberAct, message }
+        }, (err) => {
+          return { ok: false, message: `Error al actualizar numFact: ${err}` }
+        })
+    }, (err) => {
+
+      console.log(`Error al consultar numFact: ${err}`)
+      return { ok: false, message: `Error al consultar numFact: ${err}` }
+    })
+    return res
+  } catch (error) {
+    return { ok: false, message: `Error en try al consultar numFact: ${error}` }
+  }
+  
+}
 module.exports = {
-    latestInvoiceNumber
+    latestInvoiceNumber,
+    updateInvoiceNumber
 }

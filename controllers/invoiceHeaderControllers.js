@@ -3,14 +3,36 @@ const { LowercaseString, FirstCapitalLetter } = require('../utils/functions')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
-
+const { updateInvoiceNumber } = require('./invoiceNumberControllers')
+const { updateControlNumber } = require('./controlNumberControllers')
 const InvoiceHeaderModel = db.invoiceHeaderModel
+const InvoiceNumberModel = db.invoiceNumberModel
+const ControlNumberModel = db.controlNumberModel
 
 const addInvoiceHeader = async (req, res, next) => {
 
-    console.log('llego aquiiii-----------------------------------------------', req.body)
+    // console.log('llego aquiiii-----------------------------------------------', req.body)
     // if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
     try {
+
+        const numComprobante = await ControlNumberModel.findOne({
+            order: [['nuc_id', 'DESC']],
+        })
+            .then((result) => {
+                return { ok: true, data: result, resultF: result.dataValues.nucValue }
+            }, (err) => {
+                message = err
+                return { ok: false, message }
+            })
+
+        const numFactura = await InvoiceNumberModel.findOne({
+            order: [['nui_id', 'DESC']],
+        })
+            .then((result) => {
+                return { ok: true, data: result, resultF: result.dataValues.nuiValue }
+            }, (err) => {
+                return { ok: false, message: err }
+            })
 
         InvoiceHeaderModel.create({
             repId :req.body.familia[0].repId,
@@ -19,12 +41,21 @@ const addInvoiceHeader = async (req, res, next) => {
             inhAddress :req.body.cabecera.address,
             inhPhone :req.body.cabecera.phones,
             inhDate :req.body.cabecera.date,
-            inhControlNumber :11,
-            inhInvoiceNumber : 11,
+            inhControlNumber: numComprobante.resultF, 
+            inhInvoiceNumber: req.body.cabecera.voucherType !='COMPROBANTE' ? numFactura.resultF : '',
             inhWayToPay:''
         })
-                .then((invocideHeader) => {
-                 console.log('*****************************invocideHeader', invocideHeader)
+                .then(async (invoiceHeader) => {
+
+                    if (invoiceHeader.dataValues != undefined && invoiceHeader.dataValues != null){
+
+                        const actualizarNumFactura = await updateInvoiceNumber(numFactura.data.dataValues.nuiId)
+                        const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
+
+                        
+                    }else{
+                        console.log('entro por 57')
+                    }
                     // message = 'Concepto creado con éxito';
                     // res.status(StatusCodes.OK).json({ ok: true, data: invocideHeader, message })
                 }, (err) => {
@@ -45,6 +76,7 @@ const addInvoiceHeader = async (req, res, next) => {
     }
 
 }
+
 
 module.exports = {
     addInvoiceHeader,
