@@ -175,9 +175,7 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
         }
       ]
     })
-    .then((monthlyPayment) => {
-
-      
+    .then((monthlyPayment) => {    
 
       if(monthlyPayment.length > 0){
         let hash = {};
@@ -189,7 +187,7 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
           const studentData = estudiante.dataValues.student.dataValues
 
           return {
-            mopId: estudiante.dataValues.mopId,
+            // mopId: estudiante.dataValues.mopId,
             perId: estudiante.dataValues.perId,
             stuId: estudiante.dataValues.stuId,
             insId: estudiante.dataValues.insId,
@@ -208,27 +206,25 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
             dic: null
           }
         })
-        console.log('.........eliminarRepetidos.....................', listadoEstudiantesPorFamilia)
+        // console.log('.........eliminarRepetidos.....................', listadoEstudiantesPorFamilia)
 
         for (let index = 0; index < listadoEstudiantesPorFamilia.length; index++) {
 
           for (let index2 = 0; index2 < monthlyPayment.length; index2++) {
 
             if (listadoEstudiantesPorFamilia[index].stuId === monthlyPayment[index2].dataValues.stuId){
-              if (monthlyPayment[index2].dataValues.mopMonth === 'enero') listadoEstudiantesPorFamilia[index].ene = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'febrero') listadoEstudiantesPorFamilia[index].feb = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'marzo') listadoEstudiantesPorFamilia[index].mar = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'abril') listadoEstudiantesPorFamilia[index].abr = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'mayo') listadoEstudiantesPorFamilia[index].may = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'junio') listadoEstudiantesPorFamilia[index].jun = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'julio') listadoEstudiantesPorFamilia[index].jul = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'agosto') listadoEstudiantesPorFamilia[index].ago = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'septiembre') listadoEstudiantesPorFamilia[index].sep = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'octubre') listadoEstudiantesPorFamilia[index].oct = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'noviembre') listadoEstudiantesPorFamilia[index].nov = monthlyPayment[index2].dataValues.mopStatus
-              if (monthlyPayment[index2].dataValues.mopMonth === 'diciembre') listadoEstudiantesPorFamilia[index].dic = monthlyPayment[index2].dataValues.mopStatus
-
-              console.log('##################################', monthlyPayment[index2].dataValues)
+              if (monthlyPayment[index2].dataValues.mopMonth === 'enero') listadoEstudiantesPorFamilia[index].ene = { mopId: monthlyPayment[index2].dataValues.mopId ,mopStatus : monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'febrero') listadoEstudiantesPorFamilia[index].feb = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'marzo') listadoEstudiantesPorFamilia[index].mar = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'abril') listadoEstudiantesPorFamilia[index].abr = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'mayo') listadoEstudiantesPorFamilia[index].may = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'junio') listadoEstudiantesPorFamilia[index].jun = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'julio') listadoEstudiantesPorFamilia[index].jul = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'agosto') listadoEstudiantesPorFamilia[index].ago = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'septiembre') listadoEstudiantesPorFamilia[index].sep = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'octubre') listadoEstudiantesPorFamilia[index].oct = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'noviembre') listadoEstudiantesPorFamilia[index].nov = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
+              if (monthlyPayment[index2].dataValues.mopMonth === 'diciembre') listadoEstudiantesPorFamilia[index].dic = { mopId: monthlyPayment[index2].dataValues.mopId, mopStatus: monthlyPayment[index2].dataValues.mopStatus}
 
             }
 

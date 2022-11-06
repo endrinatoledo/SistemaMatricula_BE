@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             field: 'ind_id'
         },
-        modId:{
+        mopId:{
             type: DataTypes.BIGINT,
             allowNull: true,
-            field: 'mod_id'
+            field: 'mop_id'
         },
         indStuName:{
             type: DataTypes.STRING(250),
