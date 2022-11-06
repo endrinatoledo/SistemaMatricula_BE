@@ -6,13 +6,14 @@ const db = require("../models");
 const { updateInvoiceNumber } = require('./invoiceNumberControllers')
 const { updateControlNumber } = require('./controlNumberControllers')
 const { addInvoiceDetail } = require('./invoiceDetailControllers')
+const { addPaymentDetail } = require('./paymentDetailControllers')
 const InvoiceHeaderModel = db.invoiceHeaderModel
 const InvoiceNumberModel = db.invoiceNumberModel
 const ControlNumberModel = db.controlNumberModel
 
 const addInvoiceHeader = async (req, res, next) => {
 
-    console.log('llego aquiiii-----------------------------------------------', req.body.cuerpo)
+
     // if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
     try {
 
@@ -54,9 +55,11 @@ const addInvoiceHeader = async (req, res, next) => {
                         const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
 
                         const detailInvoice = await addInvoiceDetail(req.body.cuerpo, numFactura.resultF)
+                        const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos)
 
                     }else{
                         console.log('entro por 57')
+                        //manejar error
                     }
                     // message = 'Concepto creado con éxito';
                     // res.status(StatusCodes.OK).json({ ok: true, data: invocideHeader, message })

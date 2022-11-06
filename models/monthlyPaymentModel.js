@@ -84,10 +84,6 @@ module.exports = (sequelize, DataTypes) => {
           as: 'student',
           foreignKey: 'stuId'
         })
-        monthlyPaymentModel.hasMany(models.paymentDetailModel, {
-              as: 'mon_pay',
-              foreignKey: 'mopId'
-        })
         monthlyPaymentModel.belongsTo(models.inscriptionsModel, {
           as: 'inscriptionMonthly',
           foreignKey: 'insId'

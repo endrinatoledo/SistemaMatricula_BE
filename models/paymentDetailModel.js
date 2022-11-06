@@ -34,12 +34,12 @@ module.exports = (sequelize, DataTypes) => {
             field: 'dep_amount'
         },
         depCardNumber: { //numero de tarjeta
-            type: DataTypes.STRING(250),
+            type: DataTypes.STRING(50),
             allowNull: true,
             field: 'dep_card_number'
         },
         depApprovalNumber: { //numero de referencia
-            type: DataTypes.STRING(250),
+            type: DataTypes.STRING(50),
             allowNull: true,
             field: 'dep_approval_number'
         },
@@ -59,18 +59,14 @@ module.exports = (sequelize, DataTypes) => {
             as: 'banksPay',
             foreignKey: 'banId'
         })
-        paymentDetailModel.belongsTo(models.monthlyPaymentModel, {
-            as: 'monthlyPaymentPay',
-            foreignKey: 'mopId'
-        })
         paymentDetailModel.belongsTo(models.paymentMethodsModel, {
             as: 'paymentMethodsPay',
             foreignKey: 'payId'
         })
-        // paymentDetailModel.belongsTo(models.representativeModel, {
-        //     as: 'representativePay',
-        //     foreignKey: 'repId'
-        // })
+        paymentDetailModel.belongsTo(models.invoiceHeaderModel, {
+            as: 'invoiceHeaderPay',
+            foreignKey: 'inhId'
+        })
     }
 
     return paymentDetailModel

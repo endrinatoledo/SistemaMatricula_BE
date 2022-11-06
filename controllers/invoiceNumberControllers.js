@@ -19,9 +19,9 @@ const latestInvoiceNumber = async (req, res, next) =>{
   }
 
 const updateInvoiceNumber = async (invoiceNumber) => {
-
+  let res
   try {
-    const res = await InvoiceNumberModel.findOne({
+     res = await InvoiceNumberModel.findOne({
       where: {
         nuiId: invoiceNumber
       }
@@ -41,10 +41,11 @@ const updateInvoiceNumber = async (invoiceNumber) => {
       console.log(`Error al consultar numFact: ${err}`)
       return { ok: false, message: `Error al consultar numFact: ${err}` }
     })
-    return res
   } catch (error) {
     return { ok: false, message: `Error en try al consultar numFact: ${error}` }
   }
+
+  return res
   
 }
 module.exports = {
