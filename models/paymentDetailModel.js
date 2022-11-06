@@ -8,12 +8,12 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             field: 'dep_id'
         },
-        mopId: {
-            type: DataTypes.BIGINT,
+        depCurrency: { //moneda
+            type: DataTypes.STRING(50),
             allowNull: false,
-            field: 'mod_id'
+            field: 'dep_currency'
         },
-        payId: {
+        payId: { //metodo de pago
             type: DataTypes.BIGINT,
             allowNull: false,
             field: 'pay_id'
@@ -23,46 +23,31 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             field: 'ban_id'
         },
-        // repId: {
-        //     type: DataTypes.BIGINT,
-        //     allowNull: false,
-        //     field: 'rep_id'
-        // },
-        depAmount: {
+        inhId: {
+            type: DataTypes.BIGINT,
+            allowNull: false,
+            field: 'inh_id'
+        },
+        depAmount: { //monto
             type: DataTypes.FLOAT,
             allowNull: false,
             field: 'dep_amount'
         },
-        depCardNumber: {
+        depCardNumber: { //numero de tarjeta
             type: DataTypes.STRING(250),
             allowNull: true,
-            field: 'mop_card_number'
+            field: 'dep_card_number'
         },
-        depApprovalNumber: {
+        depApprovalNumber: { //numero de referencia
             type: DataTypes.STRING(250),
             allowNull: true,
-            field: 'mop_approval_number'
+            field: 'dep_approval_number'
         },
-        // depDate: {
-        //     type: DataTypes.DATEONLY,
-        //     allowNull: false,
-        //     field: 'dep_date'
-        // },
         depObservation: {
             type: DataTypes.STRING(250),
             allowNull: true,
             field: 'dep_observation'
-        },
-        // depInvoiceDescription:{
-        //     type: DataTypes.STRING(250),
-        //     allowNull: true,
-        //     field: 'dep_invoice_description'
-        // },
-        // depStatus:{
-        //     type: DataTypes.INTEGER,
-        //     allowNull: false,
-        //     field: 'dep_status'
-        // }
+        }
 
     }, {
         tableName: 'payment_detail',
