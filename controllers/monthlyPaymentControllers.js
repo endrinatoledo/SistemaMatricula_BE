@@ -3,8 +3,10 @@ const { LowercaseString, FirstCapitalLetter } = require('../utils/functions')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
+const data = require('../../SistemaMatricula_FE/src/components/config/config');
 
 const MonthlyPaymentModel = db.monthlyPaymentModel
+const InvoiceHeaderModel = db.invoiceHeaderModel
 
 const updateMonthlyPayment = async (body) => {
 
@@ -51,7 +53,87 @@ const updateMonthlyPayment = async (body) => {
 
 }
 
+const getMonthlyPaymentByFamId = async (req, res, next) => {
+
+    let dataFinal = [
+        {mes: 'Enero', data:[]},
+        { mes: 'Febrero', data: [] },
+        { mes: 'Marzo', data: [] },
+        { mes: 'Abril', data: [] },
+        { mes: 'Mayo', data: [] },
+        { mes: 'Junio', data: [] },
+        { mes: 'Julio', data: [] },
+        { mes: 'Agosto', data: [] },
+        { mes: 'Septiembre', data: [] },
+        { mes: 'Octubre', data: [] },
+        { mes: 'Noviembre', data: [] },
+        { mes: 'Diciembre', data: [] },
+    ]
+
+    try {
+
+        MonthlyPaymentModel.findAll({
+            where: {
+                famId: req.params.famId
+            }
+        })
+            .then((monthlyPaymentRes) => {
+
+                if (monthlyPaymentRes.length > 0){
+
+                    const arrayMopId = monthlyPaymentRes.map((item) => item.mopId)
+                    console.log('----------------', arrayMopId)
+
+                    InvoiceHeaderModel.findAll({
+                        where: {
+                            mop_id: {
+                                    [Op.in]: arrayMopId
+                            }
+                    },
+                    }).then((invoiceHeaderModelRes) => {
+
+                        if (invoiceHeaderModelRes.length > 0) {
+                            
+                        }else{
+                            message: 'Sin datos para mostrar en cabecera de facturas'
+                            console.log(message)
+                            res.status(StatusCodes.OK).json({ ok: false, message: message, data: [] })
+                        }
+
+                     }, (err) => {
+                        
+                        message = 'Error consultando cabecera de facturas';
+                        console.log(message,'-', err)
+                        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                        next(err)
+                    })
+                    res.status(StatusCodes.OK).json({ ok: true, data: monthlyPaymentRes })
+                }else{
+                    message: 'Sin datos para mostrar en mensualidad de familias'
+                    console.log(message)
+                    res.status(StatusCodes.OK).json({ ok: false, message: message, data:[] })
+                }
+                
+
+                
+            }, (err) => {
+                console.log('Error consultando pago de mensualidades por familia',err)
+                message = 'Error consultando pago de mensualidades por familia';
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                next(err)
+            })
+
+        
+    } catch (error) {
+        console.log('error al consultar getMonthlyPaymentByFamId', error)
+        message = 'Error al consultar pago de mensualidades por familia';
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
+        next(err);
+    }
+}
+
 
 module.exports = {
     updateMonthlyPayment,
+    getMonthlyPaymentByFamId,
 }

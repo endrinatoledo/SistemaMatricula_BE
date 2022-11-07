@@ -43,6 +43,7 @@ const costoMensualidadesRoutes = require('./routes/costoMensualidadesRoutes')
 const controlNumberRoutes = require('./routes/controlNumberRoutes')
 const invoiceNumberRoutes = require('./routes/invoiceNumberRoutes')
 const invoiceHeaderRoutes = require('./routes/invoiceHeaderRoutes')
+const monthlyPaymentRoutes = require('./routes/monthlyPaymentRoutes')
 
 
 app.use('/api/users',routerUser)
@@ -77,6 +78,8 @@ app.use('/api/costoMensualidades', costoMensualidadesRoutes)
 app.use('/api/controlNumber',controlNumberRoutes)
 app.use('/api/invoiceNumber',invoiceNumberRoutes)
 app.use('/api/invoiceHeader', invoiceHeaderRoutes)
+app.use('/api/monthlyPayment', monthlyPaymentRoutes)
+
 
 
 //testing api
