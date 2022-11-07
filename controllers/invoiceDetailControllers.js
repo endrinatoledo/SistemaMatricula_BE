@@ -56,19 +56,18 @@ const addInvoiceDetail = async (body, inhId) => {
                 }, (err) => {
                     console.log('err', JSON.stringify(err))
                     messageRes = `Error al cargar pago de mensualidades del estudiante ${body[index].indStuName}`;
-                    return { messge: messageRes }
+                    return { ok: false, messge: messageRes }
                 }))
         }
-
-        return arrayRespuestas
-
 
     } catch (err) {
         console.log('error al guardar factura', err)
 
-        return { ok: false, message }
+        return { ok: false, message: 'error al guardar detalle de factura' }
 
     }
+
+    return arrayRespuestas
 
 }
 

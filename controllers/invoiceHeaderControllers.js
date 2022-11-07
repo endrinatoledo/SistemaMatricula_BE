@@ -57,15 +57,22 @@ const addInvoiceHeader = async (req, res, next) => {
                         const detailInvoice = await addInvoiceDetail(req.body.cuerpo, numFactura.resultF)
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos)
 
+                        console.log('actualizarNumComprobante', actualizarNumComprobante)
+
+                        // if (addPaymentDetailRes.length > 0 ){
+
+                        // }
+                        setTimeout(() => {
+                            res.status(StatusCodes.OK).json({ ok: true, message: 'Registro Creado con éxito' })
+                        }, 5000);
+                        
                     }else{
-                        console.log('entro por 57')
-                        //manejar error
+                        res.status(StatusCodes.OK).json({ ok: false, message: 'Error al crear registro' })
                     }
-                    // message = 'Concepto creado con éxito';
-                    // res.status(StatusCodes.OK).json({ ok: true, data: invocideHeader, message })
                 }, (err) => {
-                    message = err
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message })
+                    console.log('error: ', err)
+                    message = 'Error al crear cabecera de factura '
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
                     next(err)
                 })
         .catch((err) => {
