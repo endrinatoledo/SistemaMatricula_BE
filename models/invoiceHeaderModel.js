@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             field: 'inh_id'
         },
-        repId:{
+        famId:{
             type: DataTypes.BIGINT,
             allowNull: false,
-            field: 'rep_id'
+            field: 'fam_id'
         },
         inhBusinessName: {
             type: DataTypes.STRING(250),
@@ -59,9 +59,9 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     invoiceHeaderModel.associate = function (models) {
-        invoiceHeaderModel.belongsTo(models.representativeModel, {
-            as: 'representativeInvoice',
-            foreignKey: 'repId'
+        invoiceHeaderModel.belongsTo(models.familyModel, {
+            as: 'familyInvoice',
+            foreignKey: 'famId'
         })
         invoiceHeaderModel.hasMany(models.invoiceDetailModel, {
             as: 'inh_ind',

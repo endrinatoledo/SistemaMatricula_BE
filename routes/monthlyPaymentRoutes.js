@@ -2,6 +2,6 @@ const monthlyPaymentControllers = require('../controllers/monthlyPaymentControll
 
 const router = require('express').Router()
 
-router.get('/family/:famId', monthlyPaymentControllers.getMonthlyPaymentByFamId)
+// router.get('/family/:famId', monthlyPaymentControllers.getMonthlyPaymentByFamId)
 
 module.exports = router

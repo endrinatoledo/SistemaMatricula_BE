@@ -130,10 +130,10 @@ module.exports = (sequelize, DataTypes) => {
             as: 'representativeStu',
             foreignKey: 'repId'
           }) 
-          representativeModel.hasMany(models.invoiceHeaderModel, {
-            as: 'representativeInv',
-            foreignKey: 'repId'
-          })   
+        //   representativeModel.hasMany(models.invoiceHeaderModel, {
+        //     as: 'representativeInv',
+        //     foreignKey: 'repId'
+        //   })   
         //   representativeModel.hasMany(models.paymentDetailModel, {
         //     as: 'paymentDetail',
         //     foreignKey: 'repId'

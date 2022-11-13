@@ -35,10 +35,10 @@ module.exports = (sequelize, DataTypes) => {
 
       familyModel.associate = function (models) {
 
-        // familyModel.hasMany(models.representativeModel, {
-        //   as: 'fam_repre',
-        //   foreignKey: 'famId'
-        // })
+        familyModel.hasMany(models.invoiceHeaderModel, {
+          as: 'fam_invoice',
+          foreignKey: 'famId'
+        })
         familyModel.hasMany(models.inscriptionsModel, {
           as: 'inscription',
           foreignKey: 'famId'
