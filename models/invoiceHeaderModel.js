@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             field: 'fam_id'
         },
+        perId: {
+            type: DataTypes.BIGINT,
+            allowNull: false,
+            field: 'per_id'
+        },
         inhBusinessName: {
             type: DataTypes.STRING(250),
             allowNull: false,
@@ -62,6 +67,10 @@ module.exports = (sequelize, DataTypes) => {
         invoiceHeaderModel.belongsTo(models.familyModel, {
             as: 'familyInvoice',
             foreignKey: 'famId'
+        })
+        invoiceHeaderModel.belongsTo(models.periodsModel, {
+            as: 'perInvoice',
+            foreignKey: 'perId'
         })
         invoiceHeaderModel.hasMany(models.invoiceDetailModel, {
             as: 'inh_ind',
