@@ -11,7 +11,6 @@ const InvoiceDetailModel = db.invoiceDetailModel
 
 const addInvoiceDetail = async (body, inhId) => {
 
-    // console.log('bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',body)
     let arrayRespuestas = []
     try {
         for (let index = 0; index < body.length; index++) {
@@ -26,14 +25,12 @@ const addInvoiceDetail = async (body, inhId) => {
 
             })
                 .then(async (res) => {
-                    // console.log('res.........................***', res)
 
                      await MonthlyPaymentModel.findOne({
                         where: {
                             mopId: res.mopId
                         }
                     }).then((resMonthlyPayment) => {
-
                     resMonthlyPayment.update({
                         mopAmount: res.indcosto,
                         mopAmountPaid: res.indpagado,
@@ -43,10 +40,13 @@ const addInvoiceDetail = async (body, inhId) => {
                             message = 'Mensualidad actualizada satisfactoriamente';
                             return { ok: true, data: resUpdateMonthlyPayment, message }
                         }, (err) => {
+                            console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---48',err)
+
                             return { ok: false, message: `Error al actualizar num Control: ${err}` }
                         })
 
                     }, (err) => {
+                        console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---55', err)
                         return { ok: false, message: `Error al buscar registro de Mensualidad: ${err}` }
                     })
                     // )
@@ -54,7 +54,7 @@ const addInvoiceDetail = async (body, inhId) => {
                     // messageRes = `Se agrego pago de mensualidades del estudiante ${body[index].indStuName}`;
                     // return { messge: messageRes }
                 }, (err) => {
-                    console.log('err', JSON.stringify(err))
+                    console.log('err.......................................63', JSON.stringify(err))
                     messageRes = `Error al cargar pago de mensualidades del estudiante ${body[index].indStuName}`;
                     return { ok: false, messge: messageRes }
                 }))
