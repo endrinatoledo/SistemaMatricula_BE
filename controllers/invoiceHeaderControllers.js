@@ -60,6 +60,7 @@ const addInvoiceHeader = async (req, res, next) => {
                         const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId )
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos)
 
+
                         setTimeout(() => {
                             res.status(StatusCodes.OK).json({ ok: true, message: 'Registro Creado con éxito' })
                         }, 5000);
@@ -116,11 +117,13 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
         })
             .then((resultInvoiceHeader) => {
 
-                if (resultInvoiceHeader.length > 0){
+                console.log('1...............................................')
 
+                if (resultInvoiceHeader.length > 0){
+                    console.log('2...............................................')
                     resultInvoiceHeader.forEach(async element => {
                         const fechaC = (element.dataValues.inhDate).split('/')
-
+                        console.log('3...............................................')
                         const cabecera = {
                             inhId: element.dataValues.inhId,
                             famId: element.dataValues.famId,
@@ -141,8 +144,9 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                             }
                         })
                             .then((respuestaInvoiceDetailModel) => {
+                                console.log('4...............................................')
                                 if (respuestaInvoiceDetailModel.length > 0){
-
+                                    console.log('5...............................................')
                                     const cuerpoFactura = respuestaInvoiceDetailModel.map(cuerpo => {                                                                           
                                         return {
                                             indId: cuerpo.dataValues.indId,
@@ -160,7 +164,9 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                                             inhId: element.dataValues.inhId
                                         }
                                     }).then((respuestaPaymentDetailModel) => { 
+                                        console.log('6...............................................')
                                         if (respuestaPaymentDetailModel.length > 0) {
+                                            console.log('7...............................................')
                                             const detalleDePago = respuestaPaymentDetailModel.map(detalle => {
                                                 return {
                                                     depId: detalle.dataValues.depId,
@@ -218,58 +224,57 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                                             if (fechaC[1] === '12' || fechaC[1] === '12') {
                                                 dataFinal[11].data.push(facturaObjeto)
                                             }
-
-                                            res.status(StatusCodes.OK).json({ ok: true, data: dataFinal }) 
+                                            
 
                                         }else{
+                                            console.log('10...............................................')
                                             console.log('sin datos de detalle de pago de factura para mostrar')
                                             res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'sin datos de detalle de pago de factura para mostrar'}) 
                                         }
                                     }, (err) => {
+                                        console.log('11...............................................')
                                         console.log('error consultando detalle de pago de factura por inhId :', err)
                                         message = 'error consultando detalle de pago de factura por inhId '
-                                        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                                        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message }) 
                                     })
 
-                                }else{
+                                }else{ 
+                                    console.log('12...............................................')
                                     console.log('sin datos de cuerpo de factura para mostrar')
                                     res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'Sin datos para mostrar' }) 
                                 }
-                                // res.status(StatusCodes.OK).json({ ok: true, data: respuesta })
                             }, (err) => {
+                                console.log('13...............................................')
                                 console.log('error consultando detalle de factura por inhId :', err)
                                 message = 'error consultando detalle de factura por inhId '
-                                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-                                // result = { ok: false, message: message, data: null }
-
-                            })
-
-
-                        
-
-                        // console.log('.................................dataFinal', dataFinal[10])
-                        
+                                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+                            })                        
                     });
+                    
+                    console.log('9...............................................')
+                    res.status(StatusCodes.OK).json({ ok: true, data: dataFinal }) 
                 }else{
+                    console.log('14...............................................')
+                    console.log('sin datos en resultInvoiceHeader para mostrar')
                     res.status(StatusCodes.OK).json({ ok: false, data: [], message:'Sin datos para mostrar' }) 
                 }
                 
             }, (err) => {
+                console.log('15...............................................')
                 console.log('error al consultar periodo y familia', err)
                 message = 'error al consultar periodo y familia'
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
-                next(err)
+                // next(err)
             })
 
         
     } catch (error) {
+        console.log('16...............................................')
         console.log('error al consultar pagos de familia')
         message = 'Error al consultar pagos por familia';
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
         next(err);
     }
-
-    console.log('llego a buscar facturas----------------------------------------', req.params)
 
 }
 
