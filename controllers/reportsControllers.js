@@ -429,6 +429,8 @@ const schoolInsurance = async (req, res, next) => {
 
 const morosos = async (req, res, next) => {
 
+    console.log('llego morososssssssssssssssssssssssssssssssssssssssss')
+
     let where = {
         perId: req.body.periodo.perId,
         levId: req.body.level.levId
@@ -502,11 +504,19 @@ const morosos = async (req, res, next) => {
 
 
 }
+
+const mensualidadesCobranza = async (req, res, next) => {
+
+
+    console.log('llegoooooooooooooooooooooooooooooooooooooo mensualidadesCobranza')
+
+}
 module.exports = {
     reportByLevelAndSection,
     reportStatistics,
     familyPayroll,
     schoolInsurance,
     morosos,
+    mensualidadesCobranza,
 
 }

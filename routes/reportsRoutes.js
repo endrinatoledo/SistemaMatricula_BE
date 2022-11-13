@@ -7,5 +7,6 @@ router.post  ('/statistics', reportsControllers.reportStatistics)
 router.post  ('/familypayroll', reportsControllers.familyPayroll)
 router.post  ('/schoolinsurance', reportsControllers.schoolInsurance)
 router.post  ('/morosos', reportsControllers.morosos)
+router.post('/mensualidades/cobranza', reportsControllers.mensualidadesCobranza)
  
 module.exports = router
