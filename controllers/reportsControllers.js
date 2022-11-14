@@ -429,14 +429,12 @@ const schoolInsurance = async (req, res, next) => {
 
 const morosos = async (req, res, next) => {
 
-    console.log('llego morososssssssssssssssssssssssssssssssssssssssss')
+    // console.log('llego morososssssssssssssssssssssssssssssssssssssssss', req.body)
 
     let where = {
         perId: req.body.periodo.perId,
-        levId: req.body.level.levId
-    }
-    if (req.body.section) {
-        where.secId = req.body.section.secId
+        levId: req.body.level.levId,
+        secId: req.body.section.secId
     }
 
     MonthlyPaymentModel.findAll({
@@ -446,51 +444,83 @@ const morosos = async (req, res, next) => {
                 model: StudentModel,
                 as: 'student',
                 require: true
-            }, {
-                model: LevelsModel,
-                as: 'level',
-                order: [['lev_id', 'ASC']],
-                require: true
-            },
-            {
-                model: SectionsModel,
-                as: 'section',
-                order: [['sec_id', 'ASC']],
-                require: true
             }
+            // , {
+            //     model: LevelsModel,
+            //     as: 'level',
+            //     order: [['lev_id', 'ASC']],
+            //     require: true
+            // },
+            // {
+            //     model: SectionsModel,
+            //     as: 'section',
+            //     order: [['sec_id', 'ASC']],
+            //     require: true
+            // }
         ]
-    }).then((monthlyPayment) => {
+    })
+    .then((monthlyPayment) => {
 
         if (monthlyPayment.length > 0) {
 
-            const datosEstudiante = monthlyPayment.map(item => {
+            let hash = {};
+            const eliminarEstudiantesRepetidos = monthlyPayment.filter(o => hash[o.dataValues.stuId] ? false : hash[o.dataValues.stuId] = true);
+            const estudiantesOrdenados = eliminarEstudiantesRepetidos.map((item) => {
                 return {
-                    level: item.dataValues.level.dataValues.levName,
-                    section: item.dataValues.section.dataValues.secName,
                     stuId: item.dataValues.stuId,
-                    stuIdType: item.student.dataValues.stuIdType,
-                    stuIdentificationNumber: item.student.dataValues.stuIdentificationNumber,
-                    stuFirstName: item.student.dataValues.stuFirstName,
-                    stuSecondName: item.student.dataValues.stuSecondName,
-                    stuSurname: item.student.dataValues.stuSurname,
-                    stuSecondSurname: item.student.dataValues.stuSecondSurname,
-                    stuSex: item.student.dataValues.stuSex,
-                    mopEne: item.dataValues.mopEne,
-                    mopFeb: item.dataValues.mopFeb,
-                    mopMar: item.dataValues.mopMar,
-                    mopAbr: item.dataValues.mopAbr,
-                    mopMay: item.dataValues.mopMay,
-                    mopJun: item.dataValues.mopJun,
-                    mopJul: item.dataValues.mopJul,
-                    mopAgo: item.dataValues.mopAgo,
-                    mopSep: item.dataValues.mopSep,
-                    mopOct: item.dataValues.mopOct,
-                    mopNov: item.dataValues.mopNov,
-                    mopDic: item.dataValues.mopDic,
+                    nombre: `${item.student.dataValues.stuFirstName} ${item.student.dataValues.stuSecondName} ${item.student.dataValues.stuSurname} ${item.student.dataValues.stuSecondSurname}`,
+                    mopEne: null,
+                    mopFeb: null,
+                    mopMar: null,
+                    mopAbr: null,
+                    mopMay: null,
+                    mopJun: null,
+                    mopJul: null,
+                    mopAgo: null,
+                    mopSep: null,
+                    mopOct: null,
+                    mopNov: null,
+                    mopDic: null,
                 }
             })
 
-            res.status(StatusCodes.OK).json({ ok: true, data: datosEstudiante })
+            let dataEspejo = estudiantesOrdenados
+            // console.log('estudiantesOrdenados', estudiantesOrdenados)
+
+            const dataFinal = estudiantesOrdenados.map((item, index )=> {
+                const dataEne = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'enero')
+                const dataFeb = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'febrero')
+                const dataMar = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'marzo')
+                const dataAbr = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'abril')
+                const dataMay = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'mayo')
+                const dataJun = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'junio')
+                const dataJul = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'julio')
+                const dataAgo = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'agosto')
+                const dataSep = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'septiembre')
+                const dataOct = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'octubre')
+                const dataNov = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'noviembre')
+                const dataDic = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'diciembre')
+
+                return {
+                    stuId: item.stuId,
+                    nombre: item.nombre,
+                    mopEne : dataEne.mopStatus,
+                    mopFeb : dataFeb.mopStatus,
+                    mopMar : dataMar.mopStatus,
+                    mopAbr : dataAbr.mopStatus,
+                    mopMay : dataMay.mopStatus,
+                    mopJun : dataJun.mopStatus,
+                    mopJul : dataJul.mopStatus,
+                    mopAgo : dataAgo.mopStatus,
+                    mopSep : dataSep.mopStatus,
+                    mopOct : dataOct.mopStatus,
+                    mopNov : dataNov.mopStatus,
+                    mopDic : dataDic.mopStatus,
+                }
+                                
+            })
+            console.log('dataFinal..........................................', dataFinal)           
+            res.status(StatusCodes.OK).json({ ok: true, data: dataFinal })
         } else {
             message = 'Sin datos para mostrar';
             res.status(StatusCodes.OK).json({ ok: false, message })
