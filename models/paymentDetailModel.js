@@ -43,6 +43,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             field: 'dep_approval_number'
         },
+        deptasa: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            field: 'dep_tasa'
+        },
+        excId: { //id de los datos de la tasa
+            type: DataTypes.BIGINT,
+            allowNull: true,
+            field: 'exc_id'
+        },
         depObservation: {
             type: DataTypes.STRING(250),
             allowNull: true,
@@ -66,6 +76,10 @@ module.exports = (sequelize, DataTypes) => {
         paymentDetailModel.belongsTo(models.invoiceHeaderModel, {
             as: 'invoiceHeaderPay',
             foreignKey: 'inhId'
+        })
+        paymentDetailModel.belongsTo(models.exchangeRatesModel, {
+            as: 'paymentExchange',
+            foreignKey: 'excId'
         })
     }
 

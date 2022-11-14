@@ -60,7 +60,7 @@ const addInvoiceHeader = async (req, res, next) => {
                         const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
                         
                         const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
-                        const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos)
+                        const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
 
 
                         setTimeout(() => {

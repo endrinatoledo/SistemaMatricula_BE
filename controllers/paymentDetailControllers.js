@@ -6,7 +6,7 @@ const db = require("../models");
 
 const PaymentDetailModel = db.paymentDetailModel
 
-const addPaymentDetail = async (invoiceHeader, body) => {
+const addPaymentDetail = async (invoiceHeader, body,tasa) => {
 
     let arrayRespuestas = []
 
@@ -21,6 +21,8 @@ const addPaymentDetail = async (invoiceHeader, body) => {
                 depCardNumber: body[index].tarjeta != null ? body[index].tarjeta : '',
                 depApprovalNumber: body[index].referencia != null ? body[index].referencia : '',
                 depObservation: body[index].observacion != null ? body[index].observacion : '',
+                deptasa: tasa != null && tasa != undefined ? tasa.excAmount : null,
+                excId: tasa != null && tasa != undefined ? tasa.excId : null,
             }).then((paymentDetail) => {
                 message = 'Pago registrado con éxito ';
                 return { ok: true, data: paymentDetail, message }
