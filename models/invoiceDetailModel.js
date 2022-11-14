@@ -33,6 +33,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             field: 'ind_pagado'
         },
+        indtasa: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            field: 'ind_tasa'
+        },
+        excId: { //id de los datos de la tasa
+            type: DataTypes.BIGINT,
+            allowNull: true,
+            field: 'exc_tasa'
+        },
         inhId:{ //id de cabecera de factura
             type: DataTypes.BIGINT,
             allowNull: false,
@@ -51,6 +61,10 @@ module.exports = (sequelize, DataTypes) => {
         invoiceDetailModel.belongsTo(models.invoiceHeaderModel, {
             as: 'invoiceHeade',
             foreignKey: 'inhId'
+        })
+        invoiceDetailModel.belongsTo(models.exchangeRatesModel, {
+            as: 'invoiceExchange',
+            foreignKey: 'excId'
         })
     }
 

@@ -9,7 +9,7 @@ const InvoiceNumberModel = db.invoiceNumberModel
 const MonthlyPaymentModel = db.monthlyPaymentModel
 const InvoiceDetailModel = db.invoiceDetailModel
 
-const addInvoiceDetail = async (body, inhId) => {
+const addInvoiceDetail = async (body, inhId,tasa) => {
 
     let arrayRespuestas = []
     try {
@@ -21,7 +21,9 @@ const addInvoiceDetail = async (body, inhId) => {
                 indDescripcion: body[index].descripcion,
                 indcosto: body[index].costo.cmeAmount,
                 indpagado: body[index].montoPagado + body[index].pago ,
-                inhId: inhId
+                inhId: inhId,
+                indtasa: tasa != null && tasa != undefined ? tasa.excAmount : null,
+                excId: tasa != null && tasa != undefined ? tasa.excId : null,
 
             })
                 .then(async (res) => {

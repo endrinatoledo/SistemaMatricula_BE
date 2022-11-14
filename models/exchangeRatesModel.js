@@ -32,10 +32,10 @@ module.exports = (sequelize, DataTypes) => {
 
       exchangeRatesModel.associate = function (models) {
 
-        // exchangeRatesModel.hasMany(models.usersModel, {
-        //   as: 'rol_user',
-        //   foreignKey: 'rolId'
-        // })
+        exchangeRatesModel.hasMany(models.invoiceDetailModel, {
+          as: 'inv_ech',
+          foreignKey: 'excId'
+        })
       }
     return exchangeRatesModel
 }

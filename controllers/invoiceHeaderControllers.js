@@ -13,6 +13,8 @@ const ControlNumberModel = db.controlNumberModel
 const PeriodsModel = db.periodsModel
 const InvoiceDetailModel = db.invoiceDetailModel
 const PaymentDetailModel = db.paymentDetailModel
+const PaymentMethodsModel = db.paymentMethodsModel
+const BanksModel = db.banksModel
 
 const addInvoiceHeader = async (req, res, next) => {
 
@@ -57,7 +59,7 @@ const addInvoiceHeader = async (req, res, next) => {
                         const actualizarNumFactura = await updateInvoiceNumber(numFactura.data.dataValues.nuiId)
                         const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
                         
-                        const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId )
+                        const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos)
 
 
@@ -115,152 +117,57 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                 famId: req.params.famId
             }
         })
-            .then((resultInvoiceHeader) => {
+            .then(async (resultInvoiceHeader) => {
 
-                console.log('1...............................................')
+                if (resultInvoiceHeader.length > 0) {
+                    const idInvoicesHeader = resultInvoiceHeader.map( item => item.dataValues.inhId)
 
-                if (resultInvoiceHeader.length > 0){
-                    console.log('2...............................................')
-                    resultInvoiceHeader.forEach(async element => {
-                        const fechaC = (element.dataValues.inhDate).split('/')
-                        console.log('3...............................................')
-                        const cabecera = {
-                            inhId: element.dataValues.inhId,
-                            famId: element.dataValues.famId,
-                            perId: element.dataValues.perId,
-                            inhBusinessName: element.dataValues.inhBusinessName,
-                            inhRifCed: element.dataValues.inhRifCed,
-                            inhAddress: element.dataValues.inhAddress,
-                            inhPhone: element.dataValues.inhPhone,
-                            inhDate: element.dataValues.inhDate,
-                            inhControlNumber: element.dataValues.inhControlNumber,
-                            inhInvoiceNumber: element.dataValues.inhInvoiceNumber,
-                            inhWayToPay: element.dataValues.inhWayToPay,
+                    const invoiceDetail = await InvoiceDetailModel.findAll({
+                        where: {
+                            inh_id:{
+                                [Op.in]: idInvoicesHeader
+                            }                            
                         }
-
-                        InvoiceDetailModel.findAll({
-                            where: {
-                                inhId: element.dataValues.inhId
+                    })
+                    const paymentDetail = await PaymentDetailModel.findAll({
+                        where: {
+                            inh_id: {
+                                [Op.in]: idInvoicesHeader
                             }
+                        },
+                        include: [
+                            {
+                            model: PaymentMethodsModel,
+                            as: 'paymentMethodsPay',
+                            require: true
+                        },
+                        {
+                            model: BanksModel,
+                            as: 'banksPay',
+                            require: true
+                        }
+                    ]
+                    })
+
+                    const ordenarData = resultInvoiceHeader.map(item =>{
+                        const itemsInvoiceDetail = invoiceDetail.filter(element => element.dataValues.inhId === item.dataValues.inhId )
+                        const itemsPaymentDetail = paymentDetail.filter(element => element.dataValues.inhId === item.dataValues.inhId)
+
+                        return {
+                            fecha:item.dataValues.inhDate,
+                            cuerpo: itemsInvoiceDetail,
+                            cabecera: item,
+                            pago: itemsPaymentDetail
+                        }
                         })
-                            .then((respuestaInvoiceDetailModel) => {
-                                console.log('4...............................................')
-                                if (respuestaInvoiceDetailModel.length > 0){
-                                    console.log('5...............................................')
-                                    const cuerpoFactura = respuestaInvoiceDetailModel.map(cuerpo => {                                                                           
-                                        return {
-                                            indId: cuerpo.dataValues.indId,
-                                            mopId: cuerpo.dataValues.mopId,
-                                            indStuName: cuerpo.dataValues.indStuName,
-                                            indDescripcion: cuerpo.dataValues.indDescripcion,
-                                            indcosto: cuerpo.dataValues.indcosto,
-                                            indpagado: cuerpo.dataValues.indpagado,
-                                            inhId: cuerpo.dataValues.inhId,
-                                        }
-                                       } )
-
-                                    PaymentDetailModel.findAll({
-                                        where: {
-                                            inhId: element.dataValues.inhId
-                                        }
-                                    }).then((respuestaPaymentDetailModel) => { 
-                                        console.log('6...............................................')
-                                        if (respuestaPaymentDetailModel.length > 0) {
-                                            console.log('7...............................................')
-                                            const detalleDePago = respuestaPaymentDetailModel.map(detalle => {
-                                                return {
-                                                    depId: detalle.dataValues.depId,
-                                                    depCurrency: detalle.dataValues.depCurrency,
-                                                    payId: detalle.dataValues.payId,
-                                                    banId: detalle.dataValues.banId,
-                                                    inhId: detalle.dataValues.inhId,
-                                                    depAmount: detalle.dataValues.depAmount,
-                                                    depCardNumber: detalle.dataValues.depCardNumber,
-                                                    depApprovalNumber: detalle.dataValues.depApprovalNumber,
-                                                    depObservation: detalle.dataValues.depObservation,
-                                                }
-                                            })
-                                            const facturaObjeto = {
-                                                cabecera: cabecera,
-                                                cuerpoFactura: cuerpoFactura,
-                                                detalleDePago: detalleDePago
-                                            }
-
-                                            // dataFinal.push(facturaObjeto)
-
-                                            if (fechaC[1] === '1' || fechaC[1] === '01') {
-                                                dataFinal[0].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '2' || fechaC[1] === '02') {
-                                                dataFinal[1].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '3' || fechaC[1] === '03') {
-                                                dataFinal[2].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '4' || fechaC[1] === '04') {
-                                                dataFinal[3].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '5' || fechaC[1] === '05') {
-                                                dataFinal[4].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '6' || fechaC[1] === '06') {
-                                                dataFinal[5].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '7' || fechaC[1] === '07') {
-                                                dataFinal[6].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '8' || fechaC[1] === '08') {
-                                                dataFinal[7].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '9' || fechaC[1] === '09') {
-                                                dataFinal[8].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '10' || fechaC[1] === '10') {
-                                                dataFinal[9].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '11' || fechaC[1] === '11') {
-                                                dataFinal[10].data.push(facturaObjeto)
-                                            }
-                                            if (fechaC[1] === '12' || fechaC[1] === '12') {
-                                                dataFinal[11].data.push(facturaObjeto)
-                                            }
-                                            
-
-                                        }else{
-                                            console.log('10...............................................')
-                                            console.log('sin datos de detalle de pago de factura para mostrar')
-                                            res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'sin datos de detalle de pago de factura para mostrar'}) 
-                                        }
-                                    }, (err) => {
-                                        console.log('11...............................................')
-                                        console.log('error consultando detalle de pago de factura por inhId :', err)
-                                        message = 'error consultando detalle de pago de factura por inhId '
-                                        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message }) 
-                                    })
-
-                                }else{ 
-                                    console.log('12...............................................')
-                                    console.log('sin datos de cuerpo de factura para mostrar')
-                                    res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'Sin datos para mostrar' }) 
-                                }
-                            }, (err) => {
-                                console.log('13...............................................')
-                                console.log('error consultando detalle de factura por inhId :', err)
-                                message = 'error consultando detalle de factura por inhId '
-                                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
-                            })                        
-                    });
                     
-                    console.log('9...............................................')
-                    res.status(StatusCodes.OK).json({ ok: true, data: dataFinal }) 
+                    res.status(StatusCodes.OK).json({ ok: true, data: ordenarData}) 
+
                 }else{
-                    console.log('14...............................................')
-                    console.log('sin datos en resultInvoiceHeader para mostrar')
-                    res.status(StatusCodes.OK).json({ ok: false, data: [], message:'Sin datos para mostrar' }) 
+                    res.status(StatusCodes.OK).json({ ok: false, data: [], message: 'Sin datos para mostrar' }) 
                 }
                 
             }, (err) => {
-                console.log('15...............................................')
                 console.log('error al consultar periodo y familia', err)
                 message = 'error al consultar periodo y familia'
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
@@ -269,7 +176,6 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
 
         
     } catch (error) {
-        console.log('16...............................................')
         console.log('error al consultar pagos de familia')
         message = 'Error al consultar pagos por familia';
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
