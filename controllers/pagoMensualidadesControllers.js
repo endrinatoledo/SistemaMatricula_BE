@@ -172,11 +172,16 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
           model: StudentModel,
           as: 'student',
           require: true
+        }, {
+          model: LevelsModel,
+          as: 'level',
+          require: true
         }
       ]
     })
     .then((monthlyPayment) => {    
 
+      console.log('******************************',monthlyPayment[0])
       if(monthlyPayment.length > 0){
         let hash = {};
         const data3 = monthlyPayment.filter(o => hash[o.stuId] ? false : hash[o.stuId] = true);

@@ -8,12 +8,13 @@ const ControlNumberModel = db.controlNumberModel
 const latestControlNumber = async (req, res, next) =>{
   ControlNumberModel.findOne({
       order:[['nucId','DESC']],
-      limit: 1,
+      // limit: 1,
     })
     .then((result) => {
       res.status(StatusCodes.OK).json({ok: true, data: result})
     }, (err) => {
-      message = err
+      console.log('error al consultar numero de control',err)
+      message = 'Error al consultar numero de control'
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
       next(err)
     })

@@ -21,15 +21,19 @@ const addInvoiceHeader = async (req, res, next) => {
     // if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
     try {
 
-        const numComprobante = await ControlNumberModel.findOne({
-            order: [['nuc_id', 'DESC']],
-        })
-            .then((result) => {
-                return { ok: true, data: result, resultF: result.dataValues.nucValue }
-            }, (err) => {
-                message = err
-                return { ok: false, message }
+        let numComprobante = ''
+
+        if (req.body.cabecera.voucherType !== 'FACTURA FISCAL'){
+            numComprobante = await ControlNumberModel.findOne({
+                order: [['nuc_id', 'DESC']],
             })
+                .then((result) => {
+                    return { ok: true, data: result, resultF: result.dataValues.nucValue }
+                }, (err) => {
+                    message = err
+                    return { ok: false, message }
+                })
+        }
 
         const numFactura = await InvoiceNumberModel.findOne({
             order: [['nui_id', 'DESC']],
@@ -48,7 +52,7 @@ const addInvoiceHeader = async (req, res, next) => {
             inhAddress :req.body.cabecera.address,
             inhPhone :req.body.cabecera.phones,
             inhDate :req.body.cabecera.date,
-            inhControlNumber: numComprobante.resultF, 
+            inhControlNumber: (req.body.cabecera.voucherType !== 'FACTURA FISCAL') ? numComprobante.resultF : '', 
             inhInvoiceNumber:  numFactura.resultF,
             inhWayToPay:''
         })
@@ -57,8 +61,9 @@ const addInvoiceHeader = async (req, res, next) => {
                     if (invoiceHeader.dataValues != undefined && invoiceHeader.dataValues != null){
 
                         const actualizarNumFactura = await updateInvoiceNumber(numFactura.data.dataValues.nuiId)
-                        const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
-                        
+                        if (req.body.cabecera.voucherType !== 'FACTURA FISCAL') {
+                            const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
+                        }
                         const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
 

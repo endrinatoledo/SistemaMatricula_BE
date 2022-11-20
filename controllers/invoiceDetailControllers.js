@@ -16,11 +16,11 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
         for (let index = 0; index < body.length; index++) {
             
             arrayRespuestas.push(await InvoiceDetailModel.create({
-                mopId: body[index].mopId,
+                mopId: body[index].mopId ? body[index].mopId : null,
                 indStuName: body[index].student,
                 indDescripcion: body[index].descripcion,
-                indcosto: body[index].costo.cmeAmount,
-                indpagado: body[index].montoPagado + body[index].pago ,
+                indcosto: body[index].costo ? body[index].costo.cmeAmount : body[index].costoNeto,
+                indpagado: body[index].montoPagado ? body[index].montoPagado + body[index].pago : body[index].pago,
                 inhId: inhId,
                 indtasa: tasa != null && tasa != undefined ? tasa.excAmount : null,
                 excId: tasa != null && tasa != undefined ? tasa.excId : null,
@@ -28,6 +28,9 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
             })
                 .then(async (res) => {
 
+                    if (body[index].mopId){
+
+                    
                      await MonthlyPaymentModel.findOne({
                         where: {
                             mopId: res.mopId
@@ -52,7 +55,10 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
                         return { ok: false, message: `Error al buscar registro de Mensualidad: ${err}` }
                     })
                     // )
-
+                    }else{
+                        message = 'Pago resgitrado satisfactoriamente';
+                        return { ok: true, data: resUpdateMonthlyPayment, message }
+                    }
                     // messageRes = `Se agrego pago de mensualidades del estudiante ${body[index].indStuName}`;
                     // return { messge: messageRes }
                 }, (err) => {
