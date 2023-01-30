@@ -29,8 +29,6 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
                 .then(async (res) => {
 
                     if (body[index].mopId){
-
-                    
                      await MonthlyPaymentModel.findOne({
                         where: {
                             mopId: res.mopId
@@ -56,7 +54,7 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
                     })
                     // )
                     }else{
-                        message = 'Pago resgitrado satisfactoriamente';
+                        message = 'Pago registrado satisfactoriamente';
                         return { ok: true, data: resUpdateMonthlyPayment, message }
                     }
                     // messageRes = `Se agrego pago de mensualidades del estudiante ${body[index].indStuName}`;

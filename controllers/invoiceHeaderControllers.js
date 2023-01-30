@@ -67,6 +67,8 @@ const addInvoiceHeader = async (req, res, next) => {
                         const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
 
+                        // console.log('detailInvoice***************************************************', detailInvoice) 
+                        console.log('addPaymentDetailRes------------------------------------', addPaymentDetailRes)
 
                         setTimeout(() => {
                             res.status(StatusCodes.OK).json({ ok: true, message: 'Registro Creado con éxito' })
