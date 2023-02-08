@@ -36,13 +36,17 @@ const agregarPagosMensuales =  async (objData) =>{
         })
           .then((res) => {
             messageRes = `Se agrego pago de mensualidades del estudiante ${objData.student}`;
+            console.log(messageRes)
             return { messge: messageRes }
           }, (err) => {
+            console.log(`Error al cargar pago de mensualidades del estudiante ${objData.student}`)
+            console.log(`Error:  ${err}`)
             messageRes = `Error al cargar pago de mensualidades del estudiante ${objData.student}`;
             return { messge: messageRes }
           }))
       }
     } catch (error) {
+      console.log('error en agregarPagosMensuales')
       console.log('..........................................', error)
     }
 
@@ -305,4 +309,5 @@ const getTablaPagoMensualidadesPorEstudiante = async(req, res) => {
 module.exports = {
     getTablaPagoMensualidadesPorFamilia,
     getTablaPagoMensualidadesPorEstudiante,
+    agregarPagosMensuales
 }
