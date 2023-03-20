@@ -5,7 +5,7 @@ const Op = Sequelize.Op
 const db = require("../models");
 const { updateInvoiceNumber } = require('./invoiceNumberControllers')
 const { updateControlNumber } = require('./controlNumberControllers')
-const { addInvoiceDetail } = require('./invoiceDetailControllers')
+const { addInvoiceDetail2 } = require('./invoiceDetailControllers')
 const { addPaymentDetail } = require('./paymentDetailControllers')
 const InvoiceHeaderModel = db.invoiceHeaderModel
 const InvoiceNumberModel = db.invoiceNumberModel
@@ -64,11 +64,11 @@ const addInvoiceHeader = async (req, res, next) => {
                         if (req.body.cabecera.voucherType !== 'FACTURA FISCAL') {
                             const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
                         }
-                        const detailInvoice = await addInvoiceDetail(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
+                        const detailInvoice = await addInvoiceDetail2(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
 
                         // console.log('detailInvoice***************************************************', detailInvoice) 
-                        console.log('addPaymentDetailRes------------------------------------', addPaymentDetailRes)
+                        // console.log('addPaymentDetailRes------------------------------------', addPaymentDetailRes)
 
                         setTimeout(() => {
                             res.status(StatusCodes.OK).json({ ok: true, message: 'Registro Creado con éxito' })
