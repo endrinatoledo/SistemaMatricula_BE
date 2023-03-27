@@ -57,7 +57,12 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.INTEGER(11),
           allowNull: false,
           field: 'mop_status'
-        }
+      },
+      mopExonerated: {
+        type: DataTypes.INTEGER(11),
+        allowNull: true,
+        field: 'mop_exponerate'
+      }
     }, {
         tableName: 'monthly_payment',
         timestamps: false

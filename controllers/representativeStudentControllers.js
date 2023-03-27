@@ -569,6 +569,41 @@ const getRepresentativeStudentByIdRepresentative = async (req, res, next) => {
 }
 
 
+const getRepresentativeStudentByIdStudent = async (req, res, next) => {
+
+  RepresentativeStudentModel.findAll({
+    include: [
+      {
+        model: FamilyModel,
+        as: 'families',
+        require: true
+      }, {
+        model: RepresentativeModel,
+        as: 'representative',
+        require: true
+      }
+    ],
+    where: {
+      stuId: req.params.stuId
+    },
+    group: "famId",
+  })
+    .then((representativeStudent) => {
+
+      if (representativeStudent.length > 0) {
+        res.status(StatusCodes.OK).json({ ok: true, data: representativeStudent })
+      } else {
+        res.status(StatusCodes.OK).json({ ok: false, data: representativeStudent, message: 'Representante no asociado a una familia' })
+      }
+
+    }, (err) => {
+      message = err
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+      next(err)
+    })
+
+}
+
 module.exports = {
   addRepresentativeStudent,
   getAllRepresentativeStudent,
@@ -580,4 +615,5 @@ module.exports = {
   updateStatusRepresentative,
   updateStatusStudent,
   getRepresentativeStudentByIdRepresentative,
+  getRepresentativeStudentByIdStudent,
 }

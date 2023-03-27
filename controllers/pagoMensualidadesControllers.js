@@ -304,10 +304,86 @@ const getTablaPagoMensualidadesPorEstudiante = async(req, res) => {
 
 }
 
+const getMensualidadesPorEstudiante = async (req, res, next) => {
+try {
+  let where = {}
+  if (req.body.tIdentif !== '' && req.body.tIdentif !==null ) where.stuIdType = req.body.tIdentif
+  if (req.body.identif !== '') where.stuIdentificationNumber = req.body.identif
+  if (req.body.pNombre !== '') where.stuFirstName = req.body.pNombre
+  if (req.body.pApellido !== '') where.stuSurname = req.body.pApellido
+  if (req.body.sApellido !== '') where.stuSecondSurname = req.body.sApellido
+  PeriodsModel.findOne({
+    order: [['per_id', 'DESC']],
+    where: {
+      perStatus: 1
+    }
+    }).then((period) => {
+      console.log('este wehere',where)
+      InscriptionsModel.findAll({
+        order: [['fam_id', 'ASC']],
+        where: {
+          perId: period.perId
+        },
+        include: [
+          {
+            model: StudentModel,
+            as: 'student',
+            require: true,
+            where: where
+          }, {
+            model: FamilyModel,
+            as: 'family',
+            require: true
+          },{
+            model: PeriodLevelSectionModel,
+            as: 'periodLevelSectionI',
+            require: true,
+            include: [
+              {
+                model: LevelsModel,
+                as: 'level',
+                require: true
+              }, {
+                model: SectionsModel,
+                as: 'section',
+                require: true
+              }
+            ]
+          }]
+      }).then((students) => {
+        
+        if (students.length > 0){
+          const data = students.map(item => {
+            // console.log('estos estudiantes', item.family)
+            return {
+              idInscrip: item.insId,
+              famId: item.famId,
+              idStuden: item.stuId,
+              familia: item.family.famName,
+              nombre: `${item.student.stuFirstName} ${item.student.stuSecondName ? item.student.stuSecondName : ''} ${item.student.stuSurname}  ${item.student.stuSecondSurname}`,
+              nivel: item.periodLevelSectionI.level.levName,
+              seccion: item.periodLevelSectionI.section.secName,
+              detalleCompleto: `NOMBRE: ${item.student.stuFirstName} ${item.student.stuSecondName ? item.student.stuSecondName : ''} ${item.student.stuSurname}  ${item.student.stuSecondSurname} - FAMILIA:${item.family.famName} - CURSO: ${item.periodLevelSectionI.level.levName}, SECCIÓN ${item.periodLevelSectionI.section.secName}`
+            }
+          })
+          res.status(StatusCodes.OK).json({ ok: true, data: data })
+        }else{
+          res.status(StatusCodes.OK).json({ ok: true, data: [] })
+        }
+      })
+  })
+
+} catch (error) {
+  console.log('Error al consultar datos por estudiante: ', error)
+  message = 'Error al consultar datos por estudiante'
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
+}
+}
 // validarTodosEstudiantes()
 
 module.exports = {
     getTablaPagoMensualidadesPorFamilia,
     getTablaPagoMensualidadesPorEstudiante,
-    agregarPagosMensuales
+    agregarPagosMensuales,
+    getMensualidadesPorEstudiante
 }
