@@ -53,6 +53,49 @@ const updateMonthlyPayment = async (body) => {
 
 }
 
+const mensualidadesExoneradas =  async (req, res, next) => {
+    
+    console.log('este req', req.body)
+    let arrayRespuestas = []
+    try {
+        for (let index = 0; index < req.body.length; index++) {
+            console.log('entro con id ', req.body[index].mopId)
+            arrayRespuestas.push(await MonthlyPaymentModel.findOne({
+                where: {
+                    mopId: req.body[index].mopId
+                }
+            })
+                .then((resMonthlyPayment) => {
+
+                    resMonthlyPayment.update({
+                        mopStatus: 1,
+                        mopExonerated: 1
+                    })
+                        .then((resUpdateMonthlyPayment) => {
+                            message = 'Mensualidad exonerada satisfactoriamente';
+                            return { ok: true, data: resUpdateMonthlyPayment, message }
+                        }, (err) => {
+                            console.log('line 81 error',err)
+                            return { ok: false, message: `Error exonerando mensualidad: ${err}` }
+                        })
+                    messageRes = `Se agrego pago de mensualidades del estudiante`;
+                    return { messge: messageRes }
+                }, (err) => {
+                    console.log('err line 90', JSON.stringify(err))
+                    messageRes = `Error al consultar mensualidades del estudiante `;
+                    return { messge: messageRes }
+                }))
+        }
+        console.log('res', JSON.stringify(arrayRespuestas))
+        return res.status(StatusCodes.OK).json({ ok: true, data: arrayRespuestas, message:'Mesualidades exoneradas correctamemte' })
+
+    } catch (error) {
+        let message = `Error al actualizar la exoneracion de mensualidades:`
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
+    }
+
+}
+
 // const getMonthlyPaymentByFamId = async (req, res, next) => {
 
 //     let dataFinal = [
@@ -135,5 +178,6 @@ const updateMonthlyPayment = async (body) => {
 
 module.exports = {
     updateMonthlyPayment,
+    mensualidadesExoneradas,
     // getMonthlyPaymentByFamId,
 }
