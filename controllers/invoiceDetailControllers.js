@@ -93,6 +93,8 @@ const addInvoiceDetail2 = async (body, inhId, tasa) => {
                 inhId: inhId,
                 indtasa: tasa != null && tasa != undefined ? tasa.excAmount : null,
                 excId: tasa != null && tasa != undefined ? tasa.excId : null,
+                indMontoAgregadoDol: body[index].pagoAplicadoDol,                
+                indMontoAgregadoBol: body[index].pagoAplicadoBol
 
             })
                 .then(async (res) => {
@@ -106,7 +108,8 @@ const addInvoiceDetail2 = async (body, inhId, tasa) => {
                             resMonthlyPayment.update({
                                 mopAmount: res.indcosto,
                                 mopAmountPaid: res.indpagado,
-                                mopStatus: res.indcosto == body[index].pagoAplicadoDol ? 1 : 2
+                                // mopStatus: res.indcosto == body[index].pagoAplicadoDol ? 1 : 2
+                                mopStatus: res.indcosto == Number(body[index].pagoAplicadoDol) + body[index].montoPagado ? 1 : 2
                                 // mopStatus: res.indcosto === res.indpagado ? 1 : 2
                             })
                                 .then((resUpdateMonthlyPayment) => {

@@ -31,13 +31,13 @@ const addUser =  async (req, res, next) =>{
           }else{
             console.log('paso por alla')
             UserModel.create({
-                usuName: req.body.usuName,
-                usuLastName: req.body.usuLastName,
-                usuEmail: req.body.usuEmail,
-                usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
+              usuName: req.body.usuName,
+              usuLastName: req.body.usuLastName,
+              usuEmail: req.body.usuEmail,
+              usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
                 // usuPassword: encbcrypt.encryptPWD('1234'),
-                usuStatus: 1,
-                rolId: Number(req.body.rolId),
+              usuStatus: 1,
+              rolId: Number(req.body.rolId),
             })
             .then((user) => {
 

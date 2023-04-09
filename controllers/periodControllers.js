@@ -4,7 +4,9 @@ const Op = Sequelize.Op
 const db = require("../models");
 
 const PeriodsModel = db.periodsModel
-
+const LevelsModel = db.levelsModel
+const SectionsModel = db.sectionsModel
+const PeriodLevelSectionModel = db.periodLevelSectionModel
 //consultar periodo activo
 const getOneActivePeriod =  async (req, res,next) =>{
 
@@ -25,45 +27,136 @@ const getOneActivePeriod =  async (req, res,next) =>{
 }
 //Add period
 
-const addPeriod =  async (req, res,next) =>{
+//NUEVA MODALIDAD
+const addPeriod = async (req, res, next) => {
+// const addPeriod = async () => {
+  // console.log('req.body-------------------------------', req.body)
+  let arrayRespuestas = []
+  const anio = 2023
+  // res.status(StatusCodes.NOT_ACCEPTABLE).json({ok: true,data: period, message})
+  if (!req.body.startYear) return res.status(StatusCodes.NOT_ACCEPTABLE).json({ ok: false, message: 'Todos los campos son obligatorios' });
+  try {
 
-            // res.status(StatusCodes.NOT_ACCEPTABLE).json({ok: true,data: period, message})
-    if (!req.body.perStartYear || !req.body.perStatus) return res.status(StatusCodes.NOT_ACCEPTABLE).json({ok: false, message: 'Todos los campos son obligatorios'});
-    try {
+    let perExists = await PeriodsModel.findOne({
+      where: { perStartYear: Number(req.body.startYear) }
+      // where: { perStartYear: anio }
 
-        let perExists = await PeriodsModel.findOne({
-            where: { perStartYear: Number(req.body.perStartYear) }
-      
-          }).catch((err) => {
-            throw err; 
-          });
+    }).catch((err) => {
+      throw err;
+    });
 
-          if (perExists){
-            return res.status(StatusCodes.OK).json({ok: false, message: 'Periodo ya se encuentra registrado'})
-          }else{
-            PeriodsModel.create({
-                perStartYear: Number(req.body.perStartYear),
-                perEndYear: (Number(req.body.perStartYear) + 1),
-                perStatus: req.body.perStatus
-            })
-            .then((period) => {
-                message = 'Periodo creado con éxito';
-                res.status(StatusCodes.OK).json({ok: true,data: period, message})
-              }, (err) => {
-                message = 'Error al crear Periodo'
-                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
-                next(err)
-              })
+    let allLevels = await LevelsModel.findAll({
+      where: { levStatus: 1 }
 
+    }).catch((err) => {
+      throw err;
+    });
 
-          }
-    } catch (err) {
-        message = err;
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
-        next(err);
+    let allSections = await SectionsModel.findAll({
+      where: {
+        secStatus: 1
       }
+    }).catch((err) => {
+      throw err;
+    });
 
+    if (perExists) {
+      return res.status(StatusCodes.OK).json({ ok: false, message: 'Periodo ya se encuentra registrado' })
+    } else 
+      if (allLevels.length < 1 || allSections.length < 1){
+      return res.status(StatusCodes.OK).json({ ok: false, message: 'Error al cargar las secciones y niveles' })
+    }   
+    else {
+      PeriodsModel.create({
+        perStartYear: Number(req.body.startYear),
+        perEndYear: (Number(req.body.startYear) + 1),
+        perStatus: 1
+        // perStartYear: anio,
+        // perEndYear: (anio + 1),
+        // perStatus: 1
+      })
+        .then(async (period) => {
+
+          for (let index = 0; index < allLevels.length; index++) {
+            for (let index2 = 0; index2 < allSections.length; index2++) { 
+              arrayRespuestas.push(await PeriodLevelSectionModel.create({
+                perId: period.dataValues.perId,
+                levId: allLevels[index].dataValues.levId,
+                secId: allSections[index2].dataValues.secId
+
+              }).then(async (respuesta) => {
+                // console.log('respuestassssssssssssssssssssssssssssssssssssssssssss', JSON.stringify(respuesta))
+                return `Se agregó Correctamente: ${allLevels[index].dataValues.levName} sección ${allSections[index2].dataValues.secName}`
+
+              }, (err) => {
+                // console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---55', err)
+                return `Error al agregar ${allLevels[index].dataValues.levName} sección ${allSections[index2].dataValues.secName}, Codigo: LEV-${allLevels[index].dataValues.levId}SEC-${allSections[index2].dataValues.secId}
+                Detalle de error: ${err}`
+                // return { ok: false, message: `Error al buscar registro de Mensualidad: ${err}` }
+              }))
+            }
+          }
+
+          res.status(StatusCodes.OK).json({ ok: true, data: arrayRespuestas })
+          // message = 'Periodo creado con éxito';
+          // res.status(StatusCodes.OK).json({ ok: true, data: period, message })
+        }, (error) => {
+          // return `Error al guardar periodo`
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al guardar periodo', error: error})
+          // next(err)
+        })
+
+    }
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al guardar periodo', error: err })
+    next(err);
+  }
+  
 }
+
+// addPeriod()
+
+
+//MODALIDAD VIEJA
+// const addPeriod =  async (req, res,next) =>{
+
+//             // res.status(StatusCodes.NOT_ACCEPTABLE).json({ok: true,data: period, message})
+//     if (!req.body.perStartYear || !req.body.perStatus) return res.status(StatusCodes.NOT_ACCEPTABLE).json({ok: false, message: 'Todos los campos son obligatorios'});
+//     try {
+
+//         let perExists = await PeriodsModel.findOne({
+//             where: { perStartYear: Number(req.body.perStartYear) }
+      
+//           }).catch((err) => {
+//             throw err; 
+//           });
+
+//           if (perExists){
+//             return res.status(StatusCodes.OK).json({ok: false, message: 'Periodo ya se encuentra registrado'})
+//           }else{
+//             PeriodsModel.create({
+//                 perStartYear: Number(req.body.perStartYear),
+//                 perEndYear: (Number(req.body.perStartYear) + 1),
+//                 perStatus: req.body.perStatus
+//             })
+//             .then((period) => {
+//                 message = 'Periodo creado con éxito';
+//                 res.status(StatusCodes.OK).json({ok: true,data: period, message})
+//               }, (err) => {
+//                 message = 'Error al crear Periodo'
+//                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message})
+//                 next(err)
+//               })
+
+
+//           }
+//     } catch (err) {
+//         message = err;
+//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
+//         next(err);
+//       }
+
+// }
 //get All period
 const getAllPeriods =  async (req, res, next) =>{
 
