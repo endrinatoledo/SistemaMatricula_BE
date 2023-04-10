@@ -65,6 +65,7 @@ db.invoiceHeaderModel = require('./invoiceHeaderModel')(sequelize, DataTypes)
 db.controlNumberModel = require('./controlNumberModel')(sequelize, DataTypes)
 db.invoiceNumberModel = require('./invoiceNumberModel')(sequelize, DataTypes)
 db.invoiceDetailModel = require('./invoiceDetailModel')(sequelize, DataTypes)
+db.companiesModel = require('./companiesModel')(sequelize, DataTypes)
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
