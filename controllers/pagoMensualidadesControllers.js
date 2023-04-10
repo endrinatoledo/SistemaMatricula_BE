@@ -20,7 +20,7 @@ const agregarPagosMensuales =  async (objData) =>{
 
     try {
       for (let index = 0; index < meses.length; index++) {
-        console.log('*******************************************', objData)
+        // console.log('*******************************************', objData)
         arrayRespuestas.push(await MonthlyPaymentModel.create({
           perId: objData.perId,
           stuId: objData.stuId,
@@ -36,18 +36,18 @@ const agregarPagosMensuales =  async (objData) =>{
         })
           .then((res) => {
             messageRes = `Se agrego pago de mensualidades del estudiante ${objData.student}`;
-            console.log(messageRes)
+            // console.log(messageRes)
             return { messge: messageRes }
           }, (err) => {
-            console.log(`Error al cargar pago de mensualidades del estudiante ${objData.student}`)
-            console.log(`Error:  ${err}`)
+            // console.log(`Error al cargar pago de mensualidades del estudiante ${objData.student}`)
+            // console.log(`Error:  ${err}`)
             messageRes = `Error al cargar pago de mensualidades del estudiante ${objData.student}`;
             return { messge: messageRes }
           }))
       }
     } catch (error) {
-      console.log('error en agregarPagosMensuales')
-      console.log('..........................................', error)
+      // console.log('error en agregarPagosMensuales')
+      // console.log('..........................................', error)
     }
 
         
@@ -56,7 +56,7 @@ const agregarPagosMensuales =  async (objData) =>{
 
 const validarTodosEstudiantes =  async () =>{
 
-  console.log('entroooooooooooooooooooooo')
+  // console.log('entroooooooooooooooooooooo')
   try {
     
     PeriodsModel.findOne({
@@ -127,10 +127,10 @@ const validarTodosEstudiantes =  async () =>{
 
               const respPagoMensualidades = await agregarPagosMensuales(objData)
 
-              console.log('---respPagoMensualidades---------------index-----------', JSON.stringify(respPagoMensualidades) )
+              // console.log('---respPagoMensualidades---------------index-----------', JSON.stringify(respPagoMensualidades) )
 
             } else {
-              console.log('---inscripciones---------------index-----------',index)
+              // console.log('---inscripciones---------------index-----------',index)
             }
           });
 
@@ -144,13 +144,13 @@ const validarTodosEstudiantes =  async () =>{
 
       })
         .catch((err) => {
-          console.log('..........................ERROR...............', err)
+          // console.log('..........................ERROR...............', err)
           message = `Error al consultar Inscripciones ${err}`;
           return { statusCode: 500, ok: false, message }
         });
 
     }).catch((err) => {
-      console.log('..........................ERROR...............', err)
+      // console.log('..........................ERROR...............', err)
 
       message = `Error al consultar periodo ${err}`;
       return { statusCode: 500, ok: false, message }
@@ -158,7 +158,7 @@ const validarTodosEstudiantes =  async () =>{
     });
 
   } catch (error) {
-    console.log('errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrr 156', error)
+    // console.log('errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrr 156', error)
   }
 
 
@@ -268,13 +268,13 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
       }
       
     }, (err) => {
-      console.log('Error al consultar mensualidades por familia: ',err)
+      // console.log('Error al consultar mensualidades por familia: ',err)
       message = 'Error al consultar mensualidades por familia'
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
     })
 
   } catch (error) {
-    console.log('Error al consultar mensualidades por familia: ',error)
+    // console.log('Error al consultar mensualidades por familia: ',error)
     message = 'Error de conexión al consultar mensualidades por familia'
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
   }
@@ -291,13 +291,13 @@ const getTablaPagoMensualidadesPorEstudiante = async(req, res) => {
     .then((monthlyPayment) => {
       res.status(StatusCodes.OK).json({ok: true, data: monthlyPayment})
     }, (err) => {
-      console.log('Error al consultar mensualidades por estudiante: ',err)
+      // console.log('Error al consultar mensualidades por estudiante: ',err)
       message = 'Error al consultar mensualidades por estudiante'
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
     })
 
   } catch (error) {
-    console.log('Error al consultar mensualidades por estudiante: ',error)
+    // console.log('Error al consultar mensualidades por estudiante: ',error)
     message = 'Error de conexión al consultar mensualidades por estudiante'
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false,data:[], message})
   }
@@ -318,7 +318,7 @@ try {
       perStatus: 1
     }
     }).then((period) => {
-      console.log('este wehere',where)
+      // console.log('este wehere',where)
       InscriptionsModel.findAll({
         order: [['fam_id', 'ASC']],
         where: {

@@ -102,17 +102,17 @@ const addInscription = async (req, res, next) => {
                   })
                     .then((res) => {
                       messageRes = `Se agrego pago de mensualidades del estudiante `;
-                      console.log(messageRes)
+                      // console.log(messageRes)
                       return { messge: messageRes }
                     }, (err) => {
-                      console.log(`Error al cargar pago de mensualidades del estudiante`)
-                      console.log(`Error:  ${err}`)
+                      // console.log(`Error al cargar pago de mensualidades del estudiante`)
+                      // console.log(`Error:  ${err}`)
                       messageRes = `Error al cargar pago de mensualidades del estudiante `;
                       return { messge: messageRes }
                     }))
                 }
 
-                console.log('-------------------------------arrayRespuestas', arrayRespuestas)
+                // console.log('-------------------------------arrayRespuestas', arrayRespuestas)
 
                 message = 'Inscripción creada con éxito';
                 res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
@@ -169,7 +169,7 @@ const addInscription = async (req, res, next) => {
               //   })
               }else{
               const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
-              console.log('Se elimino inscripcion',resEliminar)
+              // console.log('Se elimino inscripcion',resEliminar)
               res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
               }  
 
@@ -181,7 +181,7 @@ const addInscription = async (req, res, next) => {
           
           }else{
             const resEliminar =  eliminarInscripcion(inscription.dataValues.insId)
-            console.log('Se elimino inscripcion',resEliminar)
+            // console.log('Se elimino inscripcion',resEliminar)
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message:'Error al registrar inscripción' })
           }
         }, (err) => {
@@ -257,7 +257,7 @@ const getAllInscriptions = async (req, res, next) => {
       next(err)
     }
   } catch (error) {
-    console.log('eor3...............................................',error)
+    // console.log('eor3...............................................',error)
       message = 'Error de conexion al consultar inscripciones'
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
       next(err)
@@ -338,7 +338,7 @@ const updateInscription = async (req, res, next) => {
         })
           .then((inscription) => {
 
-            console.log('resultado de buscar inscripcion',inscription)
+            // console.log('resultado de buscar inscripcion',inscription)
 
             message = 'Inscripción actualizada con éxito';
             res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
@@ -348,20 +348,20 @@ const updateInscription = async (req, res, next) => {
             next(err)
           })
       } else {
-        console.log('-------------Inscripción no encontrada')
+        // console.log('-------------Inscripción no encontrada')
         message = 'Inscripción no encontrada';
         res.status(StatusCodes.OK).json({ ok: false, data: inscription, message })
       }
     }, (err) => {
 
-      console.log('-------------LINEA 219',err)
+      // console.log('-------------LINEA 219',err)
 
       message = err
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
       next(err)
     })
   } catch (error) {
-    console.log('-------------LINEA 226',err)
+    // console.log('-------------LINEA 226',err)
 
     message = err
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })

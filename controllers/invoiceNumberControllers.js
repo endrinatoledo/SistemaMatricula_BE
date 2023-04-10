@@ -38,7 +38,7 @@ const updateInvoiceNumber = async (invoiceNumber) => {
         })
     }, (err) => {
 
-      console.log(`Error al consultar numFact: ${err}`)
+      // console.log(`Error al consultar numFact: ${err}`)
       return { ok: false, message: `Error al consultar numFact: ${err}` }
     })
   } catch (error) {

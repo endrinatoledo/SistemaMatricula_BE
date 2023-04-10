@@ -13,7 +13,7 @@ const latestControlNumber = async (req, res, next) =>{
     .then((result) => {
       res.status(StatusCodes.OK).json({ok: true, data: result})
     }, (err) => {
-      console.log('error al consultar numero de control',err)
+      // console.log('error al consultar numero de control',err)
       message = 'Error al consultar numero de control'
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message})
       next(err)

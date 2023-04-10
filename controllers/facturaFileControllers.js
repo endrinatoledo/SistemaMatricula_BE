@@ -140,7 +140,7 @@ try {
 // AV(100) Bolivar Norte. Valencia-Carabobo                          ${numFactura}
 
 } catch (error) {
-  console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrro', error)
+  // console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrro', error)
 }
 
 

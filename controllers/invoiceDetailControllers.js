@@ -43,13 +43,13 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
                             message = 'Mensualidad actualizada satisfactoriamente';
                             return { ok: true, data: resUpdateMonthlyPayment, message }
                         }, (err) => {
-                            console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---48',err)
+                            // console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---48',err)
 
                             return { ok: false, message: `Error al actualizar num Control: ${err}` }
                         })
 
                     }, (err) => {
-                        console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---55', err)
+                        // console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---55', err)
                         return { ok: false, message: `Error al buscar registro de Mensualidad: ${err}` }
                     })
                     // )
@@ -60,14 +60,14 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
                     // messageRes = `Se agrego pago de mensualidades del estudiante ${body[index].indStuName}`;
                     // return { messge: messageRes }
                 }, (err) => {
-                    console.log('err.......................................63', JSON.stringify(err))
+                    // console.log('err.......................................63', JSON.stringify(err))
                     messageRes = `Error al cargar pago de mensualidades del estudiante ${body[index].indStuName}`;
                     return { ok: false, messge: messageRes }
                 }))
         }
 
     } catch (err) {
-        console.log('error al guardar factura', err)
+        // console.log('error al guardar factura', err)
 
         return { ok: false, message: 'error al guardar detalle de factura' }
 
@@ -79,7 +79,7 @@ const addInvoiceDetail = async (body, inhId,tasa) => {
 
 const addInvoiceDetail2 = async (body, inhId, tasa) => {
 
-    console.log('este es el body que llegooooo', body)
+    // console.log('este es el body que llegooooo', body)
     let arrayRespuestas = []
     try {
         for (let index = 0; index < body.length; index++) {
@@ -116,13 +116,13 @@ const addInvoiceDetail2 = async (body, inhId, tasa) => {
                                     message = 'Mensualidad actualizada satisfactoriamente';
                                     return { ok: true, data: resUpdateMonthlyPayment, message }
                                 }, (err) => {
-                                    console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---48', err)
+                                    // console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---48', err)
 
                                     return { ok: false, message: `Error al actualizar num Control: ${err}` }
                                 })
 
                         }, (err) => {
-                            console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---55', err)
+                            // console.log('errrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr---55', err)
                             return { ok: false, message: `Error al buscar registro de Mensualidad: ${err}` }
                         })
                         // )
@@ -133,14 +133,14 @@ const addInvoiceDetail2 = async (body, inhId, tasa) => {
                     // messageRes = `Se agrego pago de mensualidades del estudiante ${body[index].indStuName}`;
                     // return { messge: messageRes }
                 }, (err) => {
-                    console.log('err.......................................63', JSON.stringify(err))
+                    // console.log('err.......................................63', JSON.stringify(err))
                     messageRes = `Error al cargar pago de mensualidades del estudiante ${body[index].indStuName}`;
                     return { ok: false, messge: messageRes }
                 }))
         }
 
     } catch (err) {
-        console.log('error al guardar factura', err)
+        // console.log('error al guardar factura', err)
 
         return { ok: false, message: 'error al guardar detalle de factura' }
 

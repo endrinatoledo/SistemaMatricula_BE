@@ -26,7 +26,7 @@ const add = async (perId,levId,secId) => {
     })
 
   } catch (error) {
-    console.log('error al inserta nuevo periodo, causa: ',error)
+    // console.log('error al inserta nuevo periodo, causa: ',error)
     throw err; 
   }
 

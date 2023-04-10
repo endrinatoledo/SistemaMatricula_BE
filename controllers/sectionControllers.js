@@ -77,7 +77,7 @@ const getOneSectionById =  async (req, res, next) =>{
 //Update section
 const updateSection =  async (req, res, next) =>{
 
-  console.log('llego', req.body)
+  // console.log('llego', req.body)
 
     sectionsModel.findOne({
         where: {
