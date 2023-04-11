@@ -157,7 +157,7 @@ const deleteOneStudentPaymentSchemeByIdInscription =  async (req, res, next) =>{
         }
       })
       .then((studentPaymentSchema) => {
-        console.log('esto traeeeee',studentPaymentSchema)
+        // console.log('esto traeeeee',studentPaymentSchema)
         res.status(StatusCodes.OK).json({ok: true,message:'Eliminado con exito', data: studentPaymentSchema})
       }, (err) => {
         message = err
@@ -179,7 +179,7 @@ const deleteOneStudentPaymentSchemeByIdInscription =  async (req, res, next) =>{
 //get All Inscription by Id
 const getStudentPaymentByFamId =  async (req, res, next) =>{
 
-  console.log('aquiiiiiiiiiiiiiii',req.params)
+  // console.log('aquiiiiiiiiiiiiiii',req.params)
   try {
     StudentPaymentSchemeModel.findAll({
       include: [{
@@ -207,7 +207,7 @@ const getStudentPaymentByFamId =  async (req, res, next) =>{
       // }
       // ]
     }).then((resul) => {
-      console.log('resultttttttttttttttttttttttttttt',resul)
+      // console.log('resultttttttttttttttttttttttttttt',resul)
       if (resul === null) {
         res.status(StatusCodes.OK).json({ ok: true, data: [] })
       } else {

@@ -18,6 +18,8 @@ const BanksModel = db.banksModel
 
 const addInvoiceHeader = async (req, res, next) => {
 
+
+    // console.log('*****************',req.body) 
     // if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
     try {
 
@@ -64,7 +66,7 @@ const addInvoiceHeader = async (req, res, next) => {
                         if (req.body.cabecera.voucherType !== 'FACTURA FISCAL') {
                             const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
                         }
-                        const detailInvoice = await addInvoiceDetail2(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa )
+                        const detailInvoice = await addInvoiceDetail2(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa)
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
 
                         // console.log('detailInvoice***************************************************', detailInvoice) 
@@ -78,7 +80,7 @@ const addInvoiceHeader = async (req, res, next) => {
                         res.status(StatusCodes.OK).json({ ok: false, message: 'Error al crear registro' })
                     }
                 }, (err) => {
-                    console.log('errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr7+6: ', err)
+                    // console.log('errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr7+6: ', err)
                     message = 'Error al crear cabecera de factura '
                     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
                     next(err)
@@ -89,7 +91,7 @@ const addInvoiceHeader = async (req, res, next) => {
 
 
     } catch (err) {
-        console.log('error al guardar factura', err)
+        // console.log('error al guardar factura', err)
         message = err;
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
         next(err);
@@ -157,8 +159,28 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                     })
 
                     const ordenarData = resultInvoiceHeader.map(item =>{
-                        const itemsInvoiceDetail = invoiceDetail.filter(element => element.dataValues.inhId === item.dataValues.inhId )
                         const itemsPaymentDetail = paymentDetail.filter(element => element.dataValues.inhId === item.dataValues.inhId)
+                        const itemsInvoiceDetail = invoiceDetail.filter(element => {
+                            if (element.dataValues.inhId === item.dataValues.inhId){
+                                // console.log('**************', element.dataValues)
+                                return {
+                                    montoRealDetalle: (Number(itemsPaymentDetail[0].dataValues.depAmount) * parseFloat(itemsPaymentDetail[0].dataValues.deptasa)).toFixed(2),
+                                        indId: element.dataValues.indId,
+                                        mopId: element.dataValues.mopId,
+                                        indStuName: element.dataValues.indStuName,
+                                        indDescripcion: element.dataValues.indDescripcion,
+                                        indcosto: element.dataValues.indcosto,
+                                        indpagado: element.dataValues.indpagado,
+                                        indtasa: element.dataValues.indtasa,
+                                        excId: element.dataValues.excId,
+                                        inhId: element.dataValues.inhId,
+                                    }
+                            }
+                            
+                        })
+
+                        // console.log('itemsInvoiceDetail...............', itemsInvoiceDetail)
+                        // console.log('itemsPaymentDetail****************', itemsPaymentDetail)
 
                         return {
                             fecha:item.dataValues.inhDate,
@@ -175,7 +197,7 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                 }
                 
             }, (err) => {
-                console.log('error al consultar periodo y familia', err)
+                // console.log('error al consultar periodo y familia', err)
                 message = 'error al consultar periodo y familia'
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
                 // next(err)
@@ -183,7 +205,7 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
 
         
     } catch (error) {
-        console.log('error al consultar pagos de familia')
+        // console.log('error al consultar pagos de familia')
         message = 'Error al consultar pagos por familia';
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
         next(err);

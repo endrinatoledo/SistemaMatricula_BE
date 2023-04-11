@@ -47,6 +47,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BIGINT,
             allowNull: false,
             field: 'inh_id'
+        },
+        indMontoAgregadoDol: { //detalle de monto
+            type: DataTypes.STRING(250),
+            allowNull: true,
+            field: 'ind_monto_agregado_dol'
+        },
+        indMontoAgregadoBol: { //detalle de monto
+            type: DataTypes.STRING(250),
+            allowNull: true,
+            field: 'ind_monto_agregado_bol'
         }
     }, {
         tableName: 'invoice_detail',

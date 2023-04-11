@@ -34,7 +34,7 @@ const addPaymentDetail = async (invoiceHeader, body,tasa) => {
         }
 
     } catch (error) {
-        console.log('Error al registrar pago', error)
+        // console.log('Error al registrar pago', error)
         message = `Error de conexión al registrar pago`;
         return { ok: false, message };
     }

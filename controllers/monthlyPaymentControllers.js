@@ -35,11 +35,11 @@ const updateMonthlyPayment = async (body) => {
                         })
 
 
-                    console.log('res', JSON.stringify(res))
+                    // console.log('res', JSON.stringify(res))
                     messageRes = `Se agrego pago de mensualidades del estudiante ${body[index].indStuName}`;
                     return { messge: messageRes }
                 }, (err) => {
-                    console.log('err', JSON.stringify(err))
+                    // console.log('err', JSON.stringify(err))
                     messageRes = `Error al consultar mensualidades del estudiante ${body[index].indStuName}`;
                     return { messge: messageRes }
                 }))
@@ -55,11 +55,11 @@ const updateMonthlyPayment = async (body) => {
 
 const mensualidadesExoneradas =  async (req, res, next) => {
     
-    console.log('este req', req.body)
+    // console.log('este req', req.body)
     let arrayRespuestas = []
     try {
         for (let index = 0; index < req.body.length; index++) {
-            console.log('entro con id ', req.body[index].mopId)
+            // console.log('entro con id ', req.body[index].mopId)
             arrayRespuestas.push(await MonthlyPaymentModel.findOne({
                 where: {
                     mopId: req.body[index].mopId
@@ -75,18 +75,18 @@ const mensualidadesExoneradas =  async (req, res, next) => {
                             message = 'Mensualidad exonerada satisfactoriamente';
                             return { ok: true, data: resUpdateMonthlyPayment, message }
                         }, (err) => {
-                            console.log('line 81 error',err)
+                            // console.log('line 81 error',err)
                             return { ok: false, message: `Error exonerando mensualidad: ${err}` }
                         })
                     messageRes = `Se agrego pago de mensualidades del estudiante`;
                     return { messge: messageRes }
                 }, (err) => {
-                    console.log('err line 90', JSON.stringify(err))
+                    // console.log('err line 90', JSON.stringify(err))
                     messageRes = `Error al consultar mensualidades del estudiante `;
                     return { messge: messageRes }
                 }))
         }
-        console.log('res', JSON.stringify(arrayRespuestas))
+        // console.log('res', JSON.stringify(arrayRespuestas))
         return res.status(StatusCodes.OK).json({ ok: true, data: arrayRespuestas, message:'Mesualidades exoneradas correctamemte' })
 
     } catch (error) {

@@ -349,16 +349,16 @@ const updateRepresentativeStudent = async (req, res, next) => {
             famName: (family.famName != null) ? family.famName : familyres.famName,
             })
             .then((family) => {
-              console.log('-------------Familia actualizada con exito:')
+              // console.log('-------------Familia actualizada con exito:')
               // res.status(StatusCodes.OK).json({ok: true, data:family, message})
             }, (err) => {
-              console.log('--------------error al actualizar familia:', err)
+              // console.log('--------------error al actualizar familia:', err)
             })
           }, (err) => {
-            console.log('------------------error al actualizar familia:', err)
+            // console.log('------------------error al actualizar familia:', err)
           })   
     }else{
-      console.log('no entro a actualizar familia')
+      // console.log('no entro a actualizar familia')
     }
 
     let result = []
@@ -399,7 +399,7 @@ const updateRepresentativeStudent = async (req, res, next) => {
                 .then((representativeStudent1) => {
                   return representativeStudent1
                 }, (err) => {
-                  console.log('error al actualizar registro',err)
+                  // console.log('error al actualizar registro',err)
                   message = 'Error de conexión'
                   return 'error'
                 })
@@ -407,7 +407,7 @@ const updateRepresentativeStudent = async (req, res, next) => {
               return null
             }
           }, (error) => {
-            console.log('error al consultar si el estudiante esta registrado ',error)
+            // console.log('error al consultar si el estudiante esta registrado ',error)
             message = error
             return null
             // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
@@ -419,7 +419,7 @@ const updateRepresentativeStudent = async (req, res, next) => {
     message = 'Familia actualizada con éxito';
     res.status(StatusCodes.OK).json({ ok: true, data: result, message })
   } catch (error) {
-    console.log('-----------------------------error al actualizar', error)
+    // console.log('-----------------------------error al actualizar', error)
     message = err
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
     next(err)

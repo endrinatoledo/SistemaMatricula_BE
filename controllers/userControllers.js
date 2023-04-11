@@ -11,7 +11,7 @@ const RolesModel = db.rolesModel
 
 const addUser =  async (req, res, next) =>{
 
-  console.log('esto llegoooooooooooooooooooo',req.body)
+  // console.log('esto llegoooooooooooooooooooo',req.body)
 
     if (!req.body.usuName || !req.body.usuLastName || 
       !req.body.usuEmail ||  !req.body.usuStatus|| 
@@ -26,18 +26,18 @@ const addUser =  async (req, res, next) =>{
           });
 
           if (mailExists){
-            console.log('paso por aqui')
+            // console.log('paso por aqui')
             return res.status(StatusCodes.OK).json({ok: false, message: 'Email ya se encuentra registrado'})
           }else{
-            console.log('paso por alla')
+            // console.log('paso por alla')
             UserModel.create({
-                usuName: req.body.usuName,
-                usuLastName: req.body.usuLastName,
-                usuEmail: req.body.usuEmail,
-                usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
+              usuName: req.body.usuName,
+              usuLastName: req.body.usuLastName,
+              usuEmail: req.body.usuEmail,
+              usuPassword: encbcrypt.encryptPWD(req.body.usuPassword),
                 // usuPassword: encbcrypt.encryptPWD('1234'),
-                usuStatus: 1,
-                rolId: Number(req.body.rolId),
+              usuStatus: 1,
+              rolId: Number(req.body.rolId),
             })
             .then((user) => {
 
@@ -51,7 +51,7 @@ const addUser =  async (req, res, next) =>{
               })
           }
     } catch (err) {
-      console.log('······#########################',err)
+      // console.log('······#########################',err)
 
         message = err;
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ok: false, message });
