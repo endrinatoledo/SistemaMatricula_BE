@@ -3,6 +3,8 @@ const { LowercaseString, FirstCapitalLetter } = require('../utils/functions')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require("../models");
+const moment = require('moment');
+
 const { updateInvoiceNumber } = require('./invoiceNumberControllers')
 const { updateControlNumber } = require('./controlNumberControllers')
 const { addInvoiceDetail2 } = require('./invoiceDetailControllers')
@@ -15,6 +17,8 @@ const InvoiceDetailModel = db.invoiceDetailModel
 const PaymentDetailModel = db.paymentDetailModel
 const PaymentMethodsModel = db.paymentMethodsModel
 const BanksModel = db.banksModel
+
+
 
 const addInvoiceHeader = async (req, res, next) => {
 
@@ -56,7 +60,8 @@ const addInvoiceHeader = async (req, res, next) => {
             inhDate :req.body.cabecera.date,
             inhControlNumber: (req.body.cabecera.voucherType !== 'FACTURA FISCAL') ? numComprobante.resultF : '', 
             inhInvoiceNumber:  numFactura.resultF,
-            inhWayToPay:''
+            inhWayToPay:'',
+            inhDateCreate: moment(new Date()).format("YYYY/MM/DD")
         })
                 .then(async (invoiceHeader) => {
 
