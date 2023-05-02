@@ -63,6 +63,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             field: 'inh_date_create'
         },
+        inhStatusFact: {
+            type: DataTypes.STRING(250),
+            allowNull: true,
+            field: 'inh_status_fact'
+        },
     }, {
         tableName: 'invoice_header',
         timestamps: false

@@ -17,15 +17,13 @@ const InvoiceDetailModel = db.invoiceDetailModel
 const PaymentDetailModel = db.paymentDetailModel
 const PaymentMethodsModel = db.paymentMethodsModel
 const BanksModel = db.banksModel
+const MonthlyPaymentModel = db.monthlyPaymentModel
 
-
+// Update matricula7.invoice_header Set inh_status_fact = 'ACTIVA'
 
 const addInvoiceHeader = async (req, res, next) => {
 
-
-    // console.log('*****************',req.body) 
-    // if (req.body.icoName === '' || req.body.icoStatus === 0) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
-    try {
+   try {
 
         let numComprobante = ''
 
@@ -61,7 +59,8 @@ const addInvoiceHeader = async (req, res, next) => {
             inhControlNumber: (req.body.cabecera.voucherType !== 'FACTURA FISCAL') ? numComprobante.resultF : '', 
             inhInvoiceNumber:  numFactura.resultF,
             inhWayToPay:'',
-            inhDateCreate: moment(new Date()).format("YYYY/MM/DD")
+            inhDateCreate: moment(new Date()).format("YYYY/MM/DD"),
+            inhStatusFact:'ACTIVA'
         })
                 .then(async (invoiceHeader) => {
 
@@ -73,10 +72,7 @@ const addInvoiceHeader = async (req, res, next) => {
                         }
                         const detailInvoice = await addInvoiceDetail2(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa)
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
-
-                        // console.log('detailInvoice***************************************************', detailInvoice) 
-                        // console.log('addPaymentDetailRes------------------------------------', addPaymentDetailRes)
-
+                        
                         setTimeout(() => {
                             res.status(StatusCodes.OK).json({ ok: true, message: 'Registro Creado con éxito' })
                         }, 5000);
@@ -128,7 +124,8 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
         InvoiceHeaderModel.findAll({
             where: {
                 perId: req.params.perId,
-                famId: req.params.famId
+                famId: req.params.famId,
+                inhStatusFact: 'ACTIVA'
             }
         })
             .then(async (resultInvoiceHeader) => {
@@ -167,7 +164,6 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                         const itemsPaymentDetail = paymentDetail.filter(element => element.dataValues.inhId === item.dataValues.inhId)
                         const itemsInvoiceDetail = invoiceDetail.filter(element => {
                             if (element.dataValues.inhId === item.dataValues.inhId){
-                                // console.log('**************', element.dataValues)
                                 return {
                                     montoRealDetalle: (Number(itemsPaymentDetail[0].dataValues.depAmount) * parseFloat(itemsPaymentDetail[0].dataValues.deptasa)).toFixed(2),
                                         indId: element.dataValues.indId,
@@ -183,10 +179,6 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
                             }
                             
                         })
-
-                        // console.log('itemsInvoiceDetail...............', itemsInvoiceDetail)
-                        // console.log('itemsPaymentDetail****************', itemsPaymentDetail)
-
                         return {
                             fecha:item.dataValues.inhDate,
                             cuerpo: itemsInvoiceDetail,
@@ -218,7 +210,87 @@ const buscarFacturasPorFamilia = async (req, res, next) => {
 
 }
 
+const anularFactura= async (req, res, next) => {
+
+    const arrayIdMop = req.body.arrayIdMop
+    try {
+        InvoiceHeaderModel.findOne({
+            where: {
+                inhId: req.params.inhId
+            }
+        }).then((invoice) => {
+            invoice.update({
+                inhStatusFact: 'ANULADA',
+            })
+                .then(async (resultUpdateInvoice) => {
+                    if (resultUpdateInvoice?.dataValues?.inhStatusFact == 'ANULADA'){
+                        
+                        const actualizarArrayEstatusMeses = await actualizarEstatusMeses(arrayIdMop)
+                        
+                        message = 'Anulacion realizada con éxito';
+                    res.status(StatusCodes.OK).json({ ok: true, message })
+                    }else{
+                        message = 'U - Error al anular factura'
+                        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                        next(err)
+                    }
+                    
+                }, (err) => {
+                    message = 'T - Error al anular factura'
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                    next(err)
+                })
+        }, (err) => {
+            message = err
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+            next(err)
+        })
+    } catch (error) {
+        message = 'C - Error al anular factura'
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+        next(err)
+    }
+}
+
+const actualizarEstatusMeses = async (array) => {
+
+    try {
+        const promises = array.map(function (element) {
+            return MonthlyPaymentModel.findOne({
+                where: {
+                    mopId: element.mopId
+                }
+            })
+                .then((resMonthlyPayment) => {
+                    resMonthlyPayment.update({
+                        mopStatus: 2,
+                        mopAmountPaid: resMonthlyPayment.dataValues.mopAmountPaid - parseFloat(element.montoDol)
+                    }).then((resUpdateMonthlyPayment) => {
+                        message = 'actualizado satisfactoriamente';
+                        return { ok: true, data: resUpdateMonthlyPayment, message }
+                    }, (err) => {
+                        return { ok: false, message: `T - Error al actualizar ${err}` }
+                    })
+                }, (err) => {
+                    return { ok: false, message: `C - Error al actualizar ${err}` }                    
+                })
+        })
+
+        Promise.all(promises).then(function (result) {
+            if (result.length > 0) {
+                const endData = result.filter((item) => item !== undefined)
+                return { ok: true, data: endData }
+            } else {
+                return { ok: true, data: result }
+            }
+        })
+    } catch (error) {
+        return { ok: false, message: `Error en catch al actualizar registro: ${err}` }
+    }
+}
+
 module.exports = {
     addInvoiceHeader,
     buscarFacturasPorFamilia,
+    anularFactura,
 }

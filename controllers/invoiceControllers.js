@@ -25,7 +25,7 @@ const BanksModel = db.banksModel
 const getFacturasPorFiltro = async (req, res, next) => {
 
     try {
-        let whereValue = { perId: req.body.period.perId }
+        let whereValue = { perId: req.body.period.perId, inhStatusFact: 'ACTIVA' }
         if (req.body.numCompro) whereValue = { ...whereValue, inhControlNumber: req.body.numCompro }
         if (req.body.rif) whereValue = { ...whereValue, inhRifCed: req.body.rif }
         if (req.body.razonSocial) whereValue = { ...whereValue, inhBusinessName: { [Op.substring]: req.body.razonSocial } }
