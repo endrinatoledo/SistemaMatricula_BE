@@ -11,11 +11,11 @@ const RolesModel = db.rolesModel
 
 const addUser =  async (req, res, next) =>{
 
-  // console.log('esto llegoooooooooooooooooooo',req.body)
+  console.log('esto llegoooooooooooooooooooo',req.body)
 
-    if (!req.body.usuName || !req.body.usuLastName || 
-      !req.body.usuEmail ||  !req.body.usuStatus|| 
-      !req.body.rolId) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
+    // if (!req.body.usuName || !req.body.usuLastName || 
+    //   !req.body.usuEmail ||  !req.body.usuStatus|| 
+    //   !req.body.rolId) return res.status(406).json({ok: false, message: 'Todos los campos son obligatorios'});
     try {
 
         let mailExists = await UserModel.findOne({

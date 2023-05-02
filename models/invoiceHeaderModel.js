@@ -57,7 +57,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(250),
             allowNull: true,
             field: 'inh_way_to_pay'
-        }
+        },
+        inhDateCreate: {
+            type: DataTypes.DATEONLY,
+            allowNull: true,
+            field: 'inh_date_create'
+        },
+        inhStatusFact: {
+            type: DataTypes.STRING(250),
+            allowNull: true,
+            field: 'inh_status_fact'
+        },
     }, {
         tableName: 'invoice_header',
         timestamps: false

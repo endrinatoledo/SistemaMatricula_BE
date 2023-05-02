@@ -1,5 +1,7 @@
 const { StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize');
+const moment = require('moment');
+
 const { levelsModel, familyModel } = require('../models');
 const Op = Sequelize.Op
 const db = require("../models");
@@ -14,6 +16,8 @@ const SectionsModel = db.sectionsModel
 const RepresentativeModel = db.representativeModel
 const RepresentativeStudentModel = db.representativeStudentModel
 const MonthlyPaymentModel = db.monthlyPaymentModel
+const InvoiceHeaderModel = db.invoiceHeaderModel
+const PaymentDetailModel = db.paymentDetailModel
 
 
 const reportByLevelAndSection = async (req, res, next) => {
@@ -541,6 +545,103 @@ const mensualidadesCobranza = async (req, res, next) => {
     console.log('llegoooooooooooooooooooooooooooooooooooooo mensualidadesCobranza')
 
 }
+
+const clasificacionPagos = async (req, res, next) => {
+    const fechaI = moment(moment(req.body.fechas.fechaI, 'YYYY-MM-DD').toDate()).format("YYYY-MM-DD")
+    const fechaF = moment(moment(req.body.fechas.fechaF, 'YYYY-MM-DD').toDate()).format("YYYY-MM-DD")
+    try {
+        PaymentDetailModel.findAll({
+            include: [{
+                model: InvoiceHeaderModel,
+                as: 'invoiceHeaderPay',
+                require: true,
+                where: {
+                    inhDateCreate: {
+                        [Op.between]: [fechaI, fechaF]
+                    },
+                },
+                order: [['inhDate', 'ASC']],
+            }],
+        })
+        .then(async (resultInvoiceHeader) => {
+            // console.log('-----------------',resultInvoiceHeader);
+            if (resultInvoiceHeader.length > 0){
+                let array = resultInvoiceHeader
+                let hash = {};
+                array = array.filter(o => hash[o.invoiceHeaderPay.inhDateCreate] ? false : hash[o.invoiceHeaderPay.inhDateCreate] = true)
+                const arrayFechas = array.map(item => item.invoiceHeaderPay.inhDateCreate)
+                const arrayFechasOrdenado = arrayFechas.sort()
+
+                const dataFinal = arrayFechasOrdenado.map(item => {
+                    const dolaresEfectivo = resultInvoiceHeader.reduce((valorAnterior, valorActual) => {
+                        if (valorActual.dataValues.depCurrency == 'Dólares' && valorActual.dataValues.payId == 1 && item == valorActual.dataValues.invoiceHeaderPay.dataValues.inhDateCreate){
+                            return valorAnterior + valorActual.dataValues.depAmount;
+                        }else{
+                            return valorAnterior + 0;
+                        }                        
+                    }, 0);
+                    const dolaresTransferencia = resultInvoiceHeader.reduce((valorAnterior, valorActual) => {
+                        if (valorActual.dataValues.depCurrency == 'Dólares' && valorActual.dataValues.payId == 2 && item == valorActual.dataValues.invoiceHeaderPay.dataValues.inhDateCreate) {
+                            return valorAnterior + valorActual.dataValues.depAmount;
+                        } else {
+                            return valorAnterior + 0;
+                        }
+
+                    }, 0);
+                    const dolaresPunto = resultInvoiceHeader.reduce((valorAnterior, valorActual) => {
+                        if (valorActual.dataValues.depCurrency == 'Dólares' && valorActual.dataValues.payId == 3 && item == valorActual.dataValues.invoiceHeaderPay.dataValues.inhDateCreate) {
+                            return valorAnterior + valorActual.dataValues.depAmount;
+                        } else {
+                            return valorAnterior + 0;
+                        }
+                    }, 0);
+                    const bolivaresEfectivo = resultInvoiceHeader.reduce((valorAnterior, valorActual) => {
+                        if (valorActual.dataValues.depCurrency == 'Bolívares' && valorActual.dataValues.payId == 1 && item == valorActual.dataValues.invoiceHeaderPay.dataValues.inhDateCreate) {
+                            return valorAnterior + valorActual.dataValues.depAmount;
+                        } else {
+                            return valorAnterior + 0;
+                        }
+                    }, 0);
+                    const bolivaresTransferencia = resultInvoiceHeader.reduce((valorAnterior, valorActual) => {
+                        if (valorActual.dataValues.depCurrency == 'Bolívares' && valorActual.dataValues.payId == 2 && item == valorActual.dataValues.invoiceHeaderPay.dataValues.inhDateCreate) {
+                            return valorAnterior + valorActual.dataValues.depAmount;
+                        } else {
+                            return valorAnterior + 0;
+                        }
+                    }, 0);
+                    const bolivaresPunto = resultInvoiceHeader.reduce((valorAnterior, valorActual) => {
+                        if (valorActual.dataValues.depCurrency == 'Bolívares' && valorActual.dataValues.payId == 3 && item == valorActual.dataValues.invoiceHeaderPay.dataValues.inhDateCreate) {
+                            return valorAnterior + valorActual.dataValues.depAmount;
+                        } else {
+                            return valorAnterior + 0;
+                        }
+                    }, 0);
+
+                    return {
+                        fecha : item,
+                        dolEfect: parseFloat(dolaresEfectivo).toFixed(2),
+                        dolTran : parseFloat(dolaresTransferencia).toFixed(2),
+                        dolPun: parseFloat(dolaresPunto).toFixed(2),
+                        bolEfect:parseFloat(bolivaresEfectivo).toFixed(2),
+                        bolTran: parseFloat(bolivaresTransferencia).toFixed(2),
+                        bolPun: parseFloat(bolivaresPunto).toFixed(2)
+                    }
+                })
+                res.status(StatusCodes.OK).json({ ok: true, data: dataFinal })
+
+            }else{
+                res.status(StatusCodes.OK).json({ ok: true, data: [] })
+
+            }
+        }, (err) => {
+            console.log('Error al generar reporte de clasificacion de pagos', err)
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message:'Error al generar reporte de clasificacion de pagos',data:[] })
+            next(err)
+        })
+    } catch (error) {
+        
+    }
+}
 module.exports = {
     reportByLevelAndSection,
     reportStatistics,
@@ -548,5 +649,5 @@ module.exports = {
     schoolInsurance,
     morosos,
     mensualidadesCobranza,
-
+    clasificacionPagos,
 }
