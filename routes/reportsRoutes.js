@@ -9,5 +9,6 @@ router.post  ('/schoolinsurance', reportsControllers.schoolInsurance)
 router.post  ('/morosos', reportsControllers.morosos)
 router.post  ('/mensualidades/cobranza', reportsControllers.mensualidadesCobranza)
 router.post  ('/clasificacion/pagos', reportsControllers.clasificacionPagos)
+router.post  ('/morosos/filtros', reportsControllers.morososConFiltros)
 
 module.exports = router

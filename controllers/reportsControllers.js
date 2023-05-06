@@ -642,6 +642,109 @@ const clasificacionPagos = async (req, res, next) => {
         
     }
 }
+
+const morososConFiltros = async (req, res, next) => {
+
+    console.log('llegoa morososConFiltros', req.body)
+    try {
+        const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]]
+        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+        const mesActual = new Date().getMonth();
+        let includeValue = []
+        let where = {
+            perId: req.body.periodo.perId,
+            mopStatus: 2,
+            mopMonth: meses[mesActual]
+        }
+        if (req.body.etapa != 1) {
+            if (req.body.level == null && req.body.section == null) {
+                where.secId = {
+                    [Op.in]: [1, 2]
+                }
+                where.levId = {
+                    [Op.in]: etapasArray[req.body.etapa]
+                }
+            } else {
+                if (req.body.level != null) where.levId = req.body.level.levId;
+                if (req.body.section != null) where.secId = req.body.section.secId;
+            }
+
+        }
+
+        if (req.body.clasificacion == 2) { //busqueda por estudiantes
+            includeValue = [
+                {
+                    model: StudentModel,
+                    as: 'student',
+                    require: true
+                }
+                , {
+                    model: LevelsModel,
+                    as: 'level',
+                    order: [['lev_id', 'ASC']],
+                    require: true
+                },
+                {
+                    model: SectionsModel,
+                    as: 'section',
+                    order: [['sec_id', 'ASC']],
+                    require: true
+                }, {
+                    model: FamilyModel,
+                    as: 'family',
+                    // order: [['sec_id', 'ASC']],
+                    require: true
+                },
+            ]
+        } else { // busqueda por familias
+
+        }
+        MonthlyPaymentModel.findAll({
+            where: where,
+            include: includeValue
+        })
+            .then((monthlyPayment) => {
+                console.log('------------------', monthlyPayment.length)
+                if (monthlyPayment.length > 0) {
+                    if (req.body.clasificacion == 2) { //organizar por estudiantes
+                        const result = monthlyPayment.map((item, index) => {
+                            return {
+                                numer: index,
+                                mes: meses[mesActual],
+                                familia: item.dataValues.family.dataValues.famName,
+                                pName: item.dataValues.student.dataValues.stuFirstName,
+                                sNmae: item.dataValues.student.dataValues.stuSecondName,
+                                pSurname: item.dataValues.student.dataValues.stuSurname,
+                                sSurname: item.dataValues.student.dataValues.stuSecondSurname,
+                                typeInd: item.dataValues.student.dataValues.stuIdType,
+                                identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
+                                level: item.dataValues.level.dataValues.levName,
+                                section: item.dataValues.section.dataValues.secName,
+                            }
+                        });
+                        res.status(StatusCodes.OK).json({ ok: true, data: result })
+                    } else { // organizar por familias
+
+                    }
+                } else {
+                    message = 'Sin datos para mostrar';
+                    res.status(StatusCodes.OK).json({ ok: false, data: [], message })
+                }
+            }, (err) => {
+                message = 'Error al consultar reporte de Morosos con filtro'
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                next(err)
+            })
+    } catch (error) {
+        console.log('este error', error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
+    }
+
+
+}
+
+
+
 module.exports = {
     reportByLevelAndSection,
     reportStatistics,
@@ -650,4 +753,5 @@ module.exports = {
     morosos,
     mensualidadesCobranza,
     clasificacionPagos,
+    morososConFiltros,
 }
