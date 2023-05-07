@@ -541,7 +541,6 @@ const morosos = async (req, res, next) => {
 
 const mensualidadesCobranza = async (req, res, next) => {
 
-    console.log('............',req.body)
     try {
         let consulta = {};
         const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]];
@@ -569,7 +568,7 @@ const mensualidadesCobranza = async (req, res, next) => {
                 }
             ]
         } else { // busqueda por familias
-            consulta.group = ["famId"]
+            consulta.group = ["famId"] 
             consulta.include = [
                 {
                     model: FamilyModel,
@@ -582,7 +581,6 @@ const mensualidadesCobranza = async (req, res, next) => {
         consulta.where = where
         MonthlyPaymentModel.findAll(consulta)
             .then((monthlyPayment) => {
-                // console.log('monthlyPayment..........................................', monthlyPayment[0])
 
                 if (monthlyPayment.length > 0) {
                     if (req.body.clasificacion == 2) { //organizar por estudiantes
@@ -608,9 +606,6 @@ const mensualidadesCobranza = async (req, res, next) => {
                             }
                         })
 
-                        console.log('estudiantesOrdenados..........................................', estudiantesOrdenados[0])
-
-
                         const dataFinal = estudiantesOrdenados.map((item, index) => {
                             const dataSep = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'septiembre')
                             const dataOct = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'octubre')
@@ -629,31 +624,25 @@ const mensualidadesCobranza = async (req, res, next) => {
                             return {
                                 stuId: item.stuId,
                                 nombre: item.nombre,
-                                mopSep: dataSep.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopOct: dataOct.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopNov: dataNov.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopDic: dataDic.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopEne: dataEne.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopFeb: dataFeb.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopMar: dataMar.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopAbr: dataAbr.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopMay: dataMay.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopJun: dataJun.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopJul: dataJul.mopStatus == 2 ? ' ' : 'PAGADO',
-                                mopAgo: dataAgo.mopStatus == 2 ? ' ' : 'PAGADO',
-                                
+                                mopSep: dataSep.mopStatus == 2 ? ' ' : 'PAG',
+                                mopOct: dataOct.mopStatus == 2 ? ' ' : 'PAG',
+                                mopNov: dataNov.mopStatus == 2 ? ' ' : 'PAG',
+                                mopDic: dataDic.mopStatus == 2 ? ' ' : 'PAG',
+                                mopEne: dataEne.mopStatus == 2 ? ' ' : 'PAG',
+                                mopFeb: dataFeb.mopStatus == 2 ? ' ' : 'PAG',
+                                mopMar: dataMar.mopStatus == 2 ? ' ' : 'PAG',
+                                mopAbr: dataAbr.mopStatus == 2 ? ' ' : 'PAG',
+                                mopMay: dataMay.mopStatus == 2 ? ' ' : 'PAG',
+                                mopJun: dataJun.mopStatus == 2 ? ' ' : 'PAG',
+                                mopJul: dataJul.mopStatus == 2 ? ' ' : 'PAG',
+                                mopAgo: dataAgo.mopStatus == 2 ? ' ' : 'PAG',                            
                             }
-
                         })
-                        console.log('dataFinal..........................................', dataFinal)
                         res.status(StatusCodes.OK).json({ ok: true, data: dataFinal })
 
 
-                        // res.status(StatusCodes.OK).json({ ok: true, data: result })
                     } else { // organizar por familias
-
-                       
-                        // res.status(StatusCodes.OK).json({ ok: true, data: result })
+                        
                     }
                 } else {
                     message = 'Sin datos para mostrar';
