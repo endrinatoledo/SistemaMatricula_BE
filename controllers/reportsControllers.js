@@ -541,8 +541,137 @@ const morosos = async (req, res, next) => {
 
 const mensualidadesCobranza = async (req, res, next) => {
 
+    console.log('............',req.body)
+    try {
+        let consulta = {};
+        const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]];
+        let where = { perId: req.body.periodo.perId };
+        if (req.body.etapa != 1) {
+            if (req.body.level == null && req.body.section == null) {
+                where.secId = {
+                    [Op.in]: [1, 2]
+                }
+                where.levId = {
+                    [Op.in]: etapasArray[req.body.etapa]
+                }
+            } else {
+                if (req.body.level != null) where.levId = req.body.level.levId;
+                if (req.body.section != null) where.secId = req.body.section.secId;
+            }
+        }
 
-    console.log('llegoooooooooooooooooooooooooooooooooooooo mensualidadesCobranza')
+        if (req.body.clasificacion == 2) { //busqueda por estudiantes
+            consulta.include = [
+                {
+                    model: StudentModel,
+                    as: 'student',
+                    require: true
+                }
+            ]
+        } else { // busqueda por familias
+            consulta.group = ["famId"]
+            consulta.include = [
+                {
+                    model: FamilyModel,
+                    as: 'family',
+                    require: true
+                },
+            ]
+        }
+
+        consulta.where = where
+        MonthlyPaymentModel.findAll(consulta)
+            .then((monthlyPayment) => {
+                // console.log('monthlyPayment..........................................', monthlyPayment[0])
+
+                if (monthlyPayment.length > 0) {
+                    if (req.body.clasificacion == 2) { //organizar por estudiantes
+                        let hash = {};
+                        const eliminarEstudiantesRepetidos = monthlyPayment.filter(o => hash[o.dataValues.stuId] ? false : hash[o.dataValues.stuId] = true);
+                        const estudiantesOrdenados = eliminarEstudiantesRepetidos.map((item) => {
+                            return {
+                                stuId: item.dataValues.stuId,
+                                nombre: `${item.student.dataValues.stuFirstName} ${item.student.dataValues.stuSecondName} ${item.student.dataValues.stuSurname} ${item.student.dataValues.stuSecondSurname}`,
+                                mopSep: null,
+                                mopOct: null,
+                                mopNov: null,
+                                mopDic: null,
+                                mopEne: null,
+                                mopFeb: null,
+                                mopMar: null,
+                                mopAbr: null,
+                                mopMay: null,
+                                mopJun: null,
+                                mopJul: null,
+                                mopAgo: null,
+                                
+                            }
+                        })
+
+                        console.log('estudiantesOrdenados..........................................', estudiantesOrdenados[0])
+
+
+                        const dataFinal = estudiantesOrdenados.map((item, index) => {
+                            const dataSep = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'septiembre')
+                            const dataOct = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'octubre')
+                            const dataNov = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'noviembre')
+                            const dataDic = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'diciembre')
+
+                            const dataEne = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'enero')
+                            const dataFeb = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'febrero')
+                            const dataMar = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'marzo')
+                            const dataAbr = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'abril')
+                            const dataMay = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'mayo')
+                            const dataJun = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'junio')
+                            const dataJul = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'julio')
+                            const dataAgo = monthlyPayment.find((element) => item.stuId === element.dataValues.stuId && element.dataValues.mopMonth === 'agosto')
+                            
+                            return {
+                                stuId: item.stuId,
+                                nombre: item.nombre,
+                                mopSep: dataSep.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopOct: dataOct.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopNov: dataNov.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopDic: dataDic.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopEne: dataEne.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopFeb: dataFeb.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopMar: dataMar.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopAbr: dataAbr.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopMay: dataMay.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopJun: dataJun.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopJul: dataJul.mopStatus == 2 ? ' ' : 'PAGADO',
+                                mopAgo: dataAgo.mopStatus == 2 ? ' ' : 'PAGADO',
+                                
+                            }
+
+                        })
+                        console.log('dataFinal..........................................', dataFinal)
+                        res.status(StatusCodes.OK).json({ ok: true, data: dataFinal })
+
+
+                        // res.status(StatusCodes.OK).json({ ok: true, data: result })
+                    } else { // organizar por familias
+
+                       
+                        // res.status(StatusCodes.OK).json({ ok: true, data: result })
+                    }
+                } else {
+                    message = 'Sin datos para mostrar';
+                    res.status(StatusCodes.OK).json({ ok: false, data: [], message })
+                }
+            }, (err) => {
+                message = 'Error al consultar Resumen de mensualidades'
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                next(err)
+            })
+
+    } catch (error) {
+        console.log('este error', error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar Resumen de mensualidades' })
+
+    }
+
+    // console.log('llegoooooooooooooooooooooooooooooooooooooo mensualidadesCobranza')
 
 }
 
@@ -651,7 +780,6 @@ const morososConFiltros = async (req, res, next) => {
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
         const mesActual = new Date().getMonth();
         let consulta = {};
-        let includeValue = []
         let where = {
             perId: req.body.periodo.perId,
             mopStatus: 2,
