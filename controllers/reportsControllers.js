@@ -650,6 +650,7 @@ const morososConFiltros = async (req, res, next) => {
         const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]]
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
         const mesActual = new Date().getMonth();
+        let consulta = {};
         let includeValue = []
         let where = {
             perId: req.body.periodo.perId,
@@ -672,7 +673,7 @@ const morososConFiltros = async (req, res, next) => {
         }
 
         if (req.body.clasificacion == 2) { //busqueda por estudiantes
-            includeValue = [
+            consulta.include =[
                 {
                     model: StudentModel,
                     as: 'student',
@@ -692,19 +693,34 @@ const morososConFiltros = async (req, res, next) => {
                 }, {
                     model: FamilyModel,
                     as: 'family',
-                    // order: [['sec_id', 'ASC']],
                     require: true
                 },
             ]
         } else { // busqueda por familias
-
+            consulta.group = ["famId"]
+            consulta.include = [
+                {
+                    model: LevelsModel,
+                    as: 'level',
+                    order: [['lev_id', 'ASC']],
+                    require: true
+                },
+                {
+                    model: SectionsModel,
+                    as: 'section',
+                    order: [['sec_id', 'ASC']],
+                    require: true
+                }, {
+                    model: FamilyModel,
+                    as: 'family',
+                    require: true
+                },
+            ]
         }
-        MonthlyPaymentModel.findAll({
-            where: where,
-            include: includeValue
-        })
+
+        consulta.where = where 
+        MonthlyPaymentModel.findAll(consulta)
             .then((monthlyPayment) => {
-                console.log('------------------', monthlyPayment.length)
                 if (monthlyPayment.length > 0) {
                     if (req.body.clasificacion == 2) { //organizar por estudiantes
                         const result = monthlyPayment.map((item, index) => {
@@ -725,6 +741,16 @@ const morososConFiltros = async (req, res, next) => {
                         res.status(StatusCodes.OK).json({ ok: true, data: result })
                     } else { // organizar por familias
 
+                        const result = monthlyPayment.map((item, index) => {
+                            return {
+                                numer: index,
+                                mes: meses[mesActual],
+                                familia: item.dataValues.family.dataValues.famName,
+                                level: item.dataValues.level.dataValues.levName,
+                                section: item.dataValues.section.dataValues.secName,
+                            }
+                        });
+                        res.status(StatusCodes.OK).json({ ok: true, data: result })
                     }
                 } else {
                     message = 'Sin datos para mostrar';
