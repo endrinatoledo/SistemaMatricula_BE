@@ -566,6 +566,18 @@ const mensualidadesCobranza = async (req, res, next) => {
                     as: 'student',
                     require: true
                 }
+                , {
+                model: LevelsModel,
+                as: 'level',
+                order: [['lev_id', 'ASC']],
+                require: true
+            },
+            {
+                model: SectionsModel,
+                as: 'section',
+                order: [['sec_id', 'ASC']],
+                require: true
+            }
             ]
         } else { // busqueda por familias
             consulta.group = ["famId"] 
@@ -581,7 +593,7 @@ const mensualidadesCobranza = async (req, res, next) => {
         consulta.where = where
         MonthlyPaymentModel.findAll(consulta)
             .then((monthlyPayment) => {
-
+                console.log('monthlyPayment...', monthlyPayment[0])
                 if (monthlyPayment.length > 0) {
                     if (req.body.clasificacion == 2) { //organizar por estudiantes
                         let hash = {};
@@ -589,6 +601,8 @@ const mensualidadesCobranza = async (req, res, next) => {
                         const estudiantesOrdenados = eliminarEstudiantesRepetidos.map((item) => {
                             return {
                                 stuId: item.dataValues.stuId,
+                                level: item.dataValues.level.dataValues.levName,
+                                section: item.dataValues.section.dataValues.secName,
                                 nombre: `${item.student.dataValues.stuFirstName} ${item.student.dataValues.stuSecondName} ${item.student.dataValues.stuSurname} ${item.student.dataValues.stuSecondSurname}`,
                                 mopSep: null,
                                 mopOct: null,
@@ -623,19 +637,21 @@ const mensualidadesCobranza = async (req, res, next) => {
                             
                             return {
                                 stuId: item.stuId,
+                                level: item.level,
+                                section: item.section,
                                 nombre: item.nombre,
-                                mopSep: dataSep.mopStatus == 2 ? ' ' : 'PAG',
-                                mopOct: dataOct.mopStatus == 2 ? ' ' : 'PAG',
-                                mopNov: dataNov.mopStatus == 2 ? ' ' : 'PAG',
-                                mopDic: dataDic.mopStatus == 2 ? ' ' : 'PAG',
-                                mopEne: dataEne.mopStatus == 2 ? ' ' : 'PAG',
-                                mopFeb: dataFeb.mopStatus == 2 ? ' ' : 'PAG',
-                                mopMar: dataMar.mopStatus == 2 ? ' ' : 'PAG',
-                                mopAbr: dataAbr.mopStatus == 2 ? ' ' : 'PAG',
-                                mopMay: dataMay.mopStatus == 2 ? ' ' : 'PAG',
-                                mopJun: dataJun.mopStatus == 2 ? ' ' : 'PAG',
-                                mopJul: dataJul.mopStatus == 2 ? ' ' : 'PAG',
-                                mopAgo: dataAgo.mopStatus == 2 ? ' ' : 'PAG',                            
+                                mopSep: dataSep.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopOct: dataOct.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopNov: dataNov.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopDic: dataDic.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopEne: dataEne.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopFeb: dataFeb.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopMar: dataMar.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopAbr: dataAbr.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopMay: dataMay.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopJun: dataJun.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopJul: dataJul.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopAgo: dataAgo.mopStatus == 2 ? 'PEN' : 'PAG',                            
                             }
                         })
                         res.status(StatusCodes.OK).json({ ok: true, data: dataFinal })
