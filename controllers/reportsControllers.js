@@ -693,6 +693,7 @@ const clasificacionPagos = async (req, res, next) => {
                     inhDateCreate: {
                         [Op.between]: [fechaI, fechaF]
                     },
+                    inhStatusFact: 'ACTIVA'
                 },
                 order: [['inhDate', 'ASC']],
             }],
