@@ -59,7 +59,7 @@ const addInvoiceHeader = async (req, res, next) => {
             inhControlNumber: (req.body.cabecera.voucherType !== 'FACTURA FISCAL') ? numComprobante.resultF : '', 
             inhInvoiceNumber:  numFactura.resultF,
             inhWayToPay:'',
-            inhDateCreate: moment(new Date()).format("YYYY/MM/DD"),
+            inhDateCreate: moment(new Date(req.body.cabecera.date)).format("YYYY/MM/DD"),
             inhStatusFact:'ACTIVA'
         })
                 .then(async (invoiceHeader) => {
