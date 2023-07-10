@@ -23,6 +23,7 @@ const addInscription = async (req, res, next) => {
   if (!req.body.famId || !req.body.plsId || !req.body.stuId || !req.body.perId) return res.status(406).json({ ok: false, message: 'Todos los campos son obligatorios' });
   try {
 
+    console.log('req.body.perId-----', req.body.perId)
     let idExists = await InscriptionsModel.findOne({
       where: {
         stuId: req.body.stuId,
@@ -200,9 +201,6 @@ const addInscription = async (req, res, next) => {
 //get All inscription
 const getAllInscriptions = async (req, res, next) => {
 
-
-  
-
   try {
     let lastPeriod = await PeriodsModel.findOne({ order: [['per_id', 'DESC']], where: { perStatus: 1 } }).catch((err) => {
       throw err;
@@ -257,7 +255,6 @@ const getAllInscriptions = async (req, res, next) => {
       next(err)
     }
   } catch (error) {
-    // console.log('eor3...............................................',error)
       message = 'Error de conexion al consultar inscripciones'
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
       next(err)
@@ -337,9 +334,6 @@ const updateInscription = async (req, res, next) => {
           insStatus: (status) ? status : inscription.insStatus,
         })
           .then((inscription) => {
-
-            // console.log('resultado de buscar inscripcion',inscription)
-
             message = 'Inscripción actualizada con éxito';
             res.status(StatusCodes.OK).json({ ok: true, data: inscription, message })
           }, (err) => {
@@ -348,7 +342,6 @@ const updateInscription = async (req, res, next) => {
             next(err)
           })
       } else {
-        // console.log('-------------Inscripción no encontrada')
         message = 'Inscripción no encontrada';
         res.status(StatusCodes.OK).json({ ok: false, data: inscription, message })
       }
@@ -485,6 +478,60 @@ const getInscriptionsByFamId = async (req, res, next) => {
   }
 }
 
+const getAllInscriptionsByPeriod = async (req, res, next) => {
+
+
+  try {
+      InscriptionsModel.findAll({
+        where: { perId: req.body.perId },
+        include: [{
+          model: PeriodLevelSectionModel,
+          as: 'periodLevelSectionI',
+          require: true,
+          include: [
+            {
+              model: LevelsModel,
+              as: 'level',
+              require: true
+            }, {
+              model: SectionsModel,
+              as: 'section',
+              require: true
+            }
+          ]
+        }
+          , {
+          model: StudentModel,
+          as: 'student',
+          require: true
+        }, {
+          model: FamilyModel,
+          as: 'family',
+          require: true
+        }
+          , {
+          model: PeriodsModel,
+          as: 'period',
+          require: true,
+        }
+        ]
+      })
+        .then((inscriptions) => {
+          res.status(StatusCodes.OK).json({ ok: true, data: inscriptions })
+        }, (err) => {
+          message = err
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+          next(err)
+        })
+
+  } catch (error) {
+    message = 'Error de conexion al consultar inscripciones'
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    next(err)
+
+  }
+}
+
 module.exports = {
   addInscription,
   getAllInscriptions,
@@ -493,5 +540,6 @@ module.exports = {
   deleteInscription,
   getOneInscriptionByStudentByPeriod,
   getInscriptionsByFamId,
+  getAllInscriptionsByPeriod
 
 }
