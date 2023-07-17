@@ -66,6 +66,7 @@ db.controlNumberModel = require('./controlNumberModel')(sequelize, DataTypes)
 db.invoiceNumberModel = require('./invoiceNumberModel')(sequelize, DataTypes)
 db.invoiceDetailModel = require('./invoiceDetailModel')(sequelize, DataTypes)
 db.companiesModel = require('./companiesModel')(sequelize, DataTypes)
+db.conceptosAdicionalesModel = require('./conceptosAdicionalesModel')(sequelize, DataTypes)
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
@@ -73,7 +74,7 @@ Object.keys(db).forEach(modelName => {
     }
   }); 
 //    
- db.sequelize.sync({ alter:false  }).then(() => { 
+ db.sequelize.sync({ alter:false }).then(() => { 
     // console.log('yes re-sync done!') 
 })
 

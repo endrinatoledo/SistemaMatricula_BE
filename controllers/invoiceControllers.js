@@ -24,6 +24,7 @@ const BanksModel = db.banksModel
 
 const getFacturasPorFiltro = async (req, res, next) => {
 
+    console.log('req.body', req.body)
     try {
         let whereValue = { perId: req.body.period.perId, inhStatusFact: 'ACTIVA' }
         if (req.body.numCompro) whereValue = { ...whereValue, inhControlNumber: req.body.numCompro }
@@ -50,7 +51,7 @@ const getFacturasPorFiltro = async (req, res, next) => {
 
                 const invoiceDetail = await InvoiceDetailModel.findAll({
                     where: {
-                        inh_id: {
+                        inhId: {
                             [Op.in]: idInvoicesHeader
                         }
                     }
@@ -79,12 +80,13 @@ const getFacturasPorFiltro = async (req, res, next) => {
                     const itemsPaymentDetail = paymentDetail.filter(element => element.dataValues.inhId === item.dataValues.inhId)
                     const itemsInvoiceDetail = invoiceDetail.filter(element => {
                         if (element.dataValues.inhId === item.dataValues.inhId) {
+                            console.log('element.dataValues', element)
                             return {
                                 montoRealDetalle: (Number(itemsPaymentDetail[0].dataValues.depAmount) * parseFloat(itemsPaymentDetail[0].dataValues.deptasa)).toFixed(2),
                                 indId: element.dataValues.indId,
                                 mopId: element.dataValues.mopId,
-                                indStuName: element.dataValues.indStuName,
-                                indDescripcion: element.dataValues.indDescripcion,
+                                indStuName: element.dataValues.indStuName ? element.dataValues.indStuName : '',
+                                indDescripcion: element.dataValues.indDescripcion.trim(),
                                 indcosto: element.dataValues.indcosto,
                                 indpagado: element.dataValues.indpagado,
                                 indtasa: element.dataValues.indtasa,

@@ -433,7 +433,6 @@ const schoolInsurance = async (req, res, next) => {
 
 const morosos = async (req, res, next) => {
 
-    // console.log('llego morososssssssssssssssssssssssssssssssssssssssss', req.body)
 
     let where = {
         perId: req.body.periodo.perId,
@@ -566,6 +565,18 @@ const mensualidadesCobranza = async (req, res, next) => {
                     as: 'student',
                     require: true
                 }
+                , {
+                model: LevelsModel,
+                as: 'level',
+                order: [['lev_id', 'ASC']],
+                require: true
+            },
+            {
+                model: SectionsModel,
+                as: 'section',
+                order: [['sec_id', 'ASC']],
+                require: true
+            }
             ]
         } else { // busqueda por familias
             consulta.group = ["famId"] 
@@ -581,7 +592,6 @@ const mensualidadesCobranza = async (req, res, next) => {
         consulta.where = where
         MonthlyPaymentModel.findAll(consulta)
             .then((monthlyPayment) => {
-
                 if (monthlyPayment.length > 0) {
                     if (req.body.clasificacion == 2) { //organizar por estudiantes
                         let hash = {};
@@ -589,6 +599,8 @@ const mensualidadesCobranza = async (req, res, next) => {
                         const estudiantesOrdenados = eliminarEstudiantesRepetidos.map((item) => {
                             return {
                                 stuId: item.dataValues.stuId,
+                                level: item.dataValues.level.dataValues.levName,
+                                section: item.dataValues.section.dataValues.secName,
                                 nombre: `${item.student.dataValues.stuFirstName} ${item.student.dataValues.stuSecondName} ${item.student.dataValues.stuSurname} ${item.student.dataValues.stuSecondSurname}`,
                                 mopSep: null,
                                 mopOct: null,
@@ -623,19 +635,21 @@ const mensualidadesCobranza = async (req, res, next) => {
                             
                             return {
                                 stuId: item.stuId,
+                                level: item.level,
+                                section: item.section,
                                 nombre: item.nombre,
-                                mopSep: dataSep.mopStatus == 2 ? ' ' : 'PAG',
-                                mopOct: dataOct.mopStatus == 2 ? ' ' : 'PAG',
-                                mopNov: dataNov.mopStatus == 2 ? ' ' : 'PAG',
-                                mopDic: dataDic.mopStatus == 2 ? ' ' : 'PAG',
-                                mopEne: dataEne.mopStatus == 2 ? ' ' : 'PAG',
-                                mopFeb: dataFeb.mopStatus == 2 ? ' ' : 'PAG',
-                                mopMar: dataMar.mopStatus == 2 ? ' ' : 'PAG',
-                                mopAbr: dataAbr.mopStatus == 2 ? ' ' : 'PAG',
-                                mopMay: dataMay.mopStatus == 2 ? ' ' : 'PAG',
-                                mopJun: dataJun.mopStatus == 2 ? ' ' : 'PAG',
-                                mopJul: dataJul.mopStatus == 2 ? ' ' : 'PAG',
-                                mopAgo: dataAgo.mopStatus == 2 ? ' ' : 'PAG',                            
+                                mopSep: dataSep.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopOct: dataOct.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopNov: dataNov.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopDic: dataDic.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopEne: dataEne.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopFeb: dataFeb.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopMar: dataMar.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopAbr: dataAbr.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopMay: dataMay.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopJun: dataJun.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopJul: dataJul.mopStatus == 2 ? 'PEN' : 'PAG',
+                                mopAgo: dataAgo.mopStatus == 2 ? 'PEN' : 'PAG',                            
                             }
                         })
                         res.status(StatusCodes.OK).json({ ok: true, data: dataFinal })
@@ -659,9 +673,6 @@ const mensualidadesCobranza = async (req, res, next) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar Resumen de mensualidades' })
 
     }
-
-    // console.log('llegoooooooooooooooooooooooooooooooooooooo mensualidadesCobranza')
-
 }
 
 const clasificacionPagos = async (req, res, next) => {
@@ -677,12 +688,12 @@ const clasificacionPagos = async (req, res, next) => {
                     inhDateCreate: {
                         [Op.between]: [fechaI, fechaF]
                     },
+                    inhStatusFact: 'ACTIVA'
                 },
                 order: [['inhDate', 'ASC']],
             }],
         })
         .then(async (resultInvoiceHeader) => {
-            // console.log('-----------------',resultInvoiceHeader);
             if (resultInvoiceHeader.length > 0){
                 let array = resultInvoiceHeader
                 let hash = {};
@@ -763,7 +774,6 @@ const clasificacionPagos = async (req, res, next) => {
 
 const morososConFiltros = async (req, res, next) => {
 
-    console.log('llegoa morososConFiltros', req.body)
     try {
         const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]]
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
@@ -883,9 +893,461 @@ const morososConFiltros = async (req, res, next) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
     }
 
+ 
+}
+
+function crearArregloDePagosPorEstudiante(estudiantes) {
+    const estudiantesConPagos = estudiantes.reduce((acc, estudiante) => {
+        const { idEstudiante, pName, pSurname, sSurname } = estudiante;
+        const estudianteExistente = acc.find((e) => e.idEstudiante === idEstudiante);
+
+        if (estudianteExistente) {
+            return acc;
+        }
+
+        const pagos = [];
+
+        acc.push({
+            idEstudiante,
+            nombre: `${pName} ${pSurname} ${sSurname}`,
+            pagos,
+        });
+
+        return acc;
+    }, []);
+
+    estudiantesConPagos.forEach((estudianteConPagos) => {
+        const { idEstudiante, pagos } = estudianteConPagos;
+
+        estudiantes
+            .filter((estudiante) => estudiante.idEstudiante === idEstudiante)
+            .forEach((estudiante) => {
+                const { mes, mopStatus } = estudiante;
+                pagos.push({
+                    mes,
+                    mopStatus,
+                });
+            });
+    });
+
+    return estudiantesConPagos;
+}
+
+function ordenarPagosDesdeSeptiembreHastaAgosto(estudiantes) {
+    const mesesOrdenados = ['septiembre', 'octubre', 'noviembre', 'diciembre', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto'];
+
+    const estudiantesOrdenados = estudiantes.map((estudiante) => {
+        const pagosOrdenados = estudiante.pagos.sort((a, b) => {
+            const mesA = a.mes.toLowerCase();
+            const mesB = b.mes.toLowerCase();
+            return mesesOrdenados.indexOf(mesA) - mesesOrdenados.indexOf(mesB);
+        });
+
+        return { ...estudiante, pagos: pagosOrdenados };
+    });
+
+    return estudiantesOrdenados;
+}
+
+function validarPagosEstudiantes(estudiantes) {
+
+    const fechaActual = new Date();
+    const mesActual = fechaActual.toLocaleString('default', { month: 'long' }).toLowerCase();
+    // Restar un mes a la fecha actual
+    fechaActual.setMonth(fechaActual.getMonth() - 1);
+
+    // Obtener el nombre del mes anterior
+    const mesAnterior = fechaActual.toLocaleString('default', { month: 'long' }).toLowerCase();
+
+    const estatusEstudiantes = estudiantes.map((estudiante) => {
+        const pagosEstudiante = estudiante.pagos;
+
+        // Buscar el pago correspondiente al mes actual
+        const pagoMesActual = pagosEstudiante.find((pago) => pago.mes.toLowerCase() === mesActual);
+        const pagoMesAnterior = pagosEstudiante.find((pago) => pago.mes.toLowerCase() === mesAnterior);
+
+        if (pagoMesActual) {
+            // Si el estudiante tiene el pago del mes actual, validar si está al día
+            if (pagoMesActual.mopStatus === 1) {
+                return { idEstudiante: estudiante.idEstudiante,nombre:estudiante.nombre ,estatus: 'al dia' };
+            } else if (pagoMesActual.mopStatus === 2) {
+                if (pagoMesAnterior.mopStatus === 1){
+                    return { idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'un mes moroso' };
+                }else{
+                    return { idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'mas de un mes moroso' };
+                }
+            }
+        } 
+    });
+
+    return estatusEstudiantes;
+}
+
+function contarEstatusEstudiantes(estudiantes) {
+    let alDia = 0;
+    let unMesMoroso = 0;
+    let masDeUnMesMoroso = 0;
+
+    estudiantes.forEach(estudiante => {
+        switch (estudiante.estatus) {
+            case 'al dia':
+                alDia++;
+                break;
+            case 'un mes moroso':
+                unMesMoroso++;
+                break;
+            case 'mas de un mes moroso':
+                masDeUnMesMoroso++;
+                break;
+            default:
+                break;
+        }
+    });
+
+    return { alDia, unMesMoroso, masDeUnMesMoroso };
+}
+
+function ArrayDataParaGrafica(objetct) {
+    const valoresEstatusEstudiantes = Object.values(objetct);
+    return valoresEstatusEstudiantes;
+}
+
+
+const graficaMorosos = async (req, res, next) => {
+
+    let consulta = {}; 
+    try {
+        
+        let where = {
+            perId: req.body.periodo.perId,
+            levId:req.body.level.levId,
+            secId:req.body.section.secId
+        }
+        consulta.include = [
+            {
+                model: StudentModel,
+                as: 'student',
+                require: true
+            }
+            , {
+                model: LevelsModel,
+                as: 'level',
+                order: [['lev_id', 'ASC']],
+                require: true
+            },
+            {
+                model: SectionsModel,
+                as: 'section',
+                order: [['sec_id', 'ASC']],
+                require: true
+            }, {
+                model: FamilyModel,
+                as: 'family',
+                require: true
+            },
+        ]
+        consulta.where = where 
+
+        MonthlyPaymentModel.findAll(consulta)
+            .then((monthlyPayment) => {
+                if (monthlyPayment.length > 0) {
+                    const result = monthlyPayment.map((item, index) => {
+                        return {
+                            numer: index,
+                            idEstudiante: item.dataValues.stuId,
+                            familia: item.dataValues.family.dataValues.famName,
+                            pName: item.dataValues.student.dataValues.stuFirstName,
+                            sNmae: item.dataValues.student.dataValues.stuSecondName,
+                            pSurname: item.dataValues.student.dataValues.stuSurname,
+                            sSurname: item.dataValues.student.dataValues.stuSecondSurname,
+                            typeInd: item.dataValues.student.dataValues.stuIdType,
+                            identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
+                            mopStatus: item.dataValues.mopStatus,
+                            mes: item.dataValues.mopMonth,
+                        }
+                    });
+
+                    const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
+                    const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
+                    const resultadoEstudianteEstatusPago = validarPagosEstudiantes(resultEstudiantesPagosOrdenados) // estatus por estudiante para tabla
+                    const conteoEstatusEstudiantes = contarEstatusEstudiantes(resultadoEstudianteEstatusPago) // conteo de estatus por estudiante para grafica
+                    const arrayDataGrafica = ArrayDataParaGrafica(conteoEstatusEstudiantes) //arreglo para data de grafica
+
+                    const dataFinal = {
+                        arrayDataGrafica,
+                        labelsGrafica: ['Solventes', '1 Mes Moroso', '+1 Mes Morosos'],
+                        arrayEstudiantesEstatusPago: resultadoEstudianteEstatusPago,
+                        nombreReporte: `Estatus de pago de estudiantes de ${req.body.level.levName} sección ${req.body.section.secName}`,
+                    }
+                    res.send({ ok: true, message: 'Consulta exitosa', data: [dataFinal] })
+
+                } else {
+                    res.send({ ok: falsa, message: 'Sin resultados para mostrar', data: [] })
+                }
+                
+            }, (err) => {
+                message = 'Error al consultar reporte de Morosos con filtro'
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+                next(err)
+            })
+
+
+
+
+
+
+    } catch (error) {
+        console.log('este error', error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
+
+    }
 
 }
 
+
+// const estudiantes = [
+//     {
+//         idEstudiante: 1,
+//         mes: 'enero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'febrero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'marzo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'abril',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'mayo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'junio',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'julio',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'agosto',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'septiembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'octubre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'noviembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 1,
+//         mes: 'diciembre',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'enero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'febrero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'marzo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'abril',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'mayo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'junio',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'julio',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'agosto',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'septiembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'octubre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'noviembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 2,
+//         mes: 'diciembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'enero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'febrero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'marzo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'abril',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'mayo',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'junio',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'julio',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'agosto',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'septiembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'octubre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'noviembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 3,
+//         mes: 'diciembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'enero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'febrero',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'marzo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'abril',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'mayo',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'junio',
+//         mopStatus: 1
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'julio',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'agosto',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'septiembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'octubre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'noviembre',
+//         mopStatus: 2
+//     },
+//     {
+//         idEstudiante: 4,
+//         mes: 'diciembre',
+//         mopStatus: 1
+//     },
+
+// ]
 
 
 module.exports = {
@@ -897,4 +1359,5 @@ module.exports = {
     mensualidadesCobranza,
     clasificacionPagos,
     morososConFiltros,
+    graficaMorosos,
 }

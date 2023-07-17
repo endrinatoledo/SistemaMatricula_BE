@@ -169,7 +169,8 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
   try {
     MonthlyPaymentModel.findAll({
       where: {
-          famId: req.params.famId
+          famId: req.params.famId,
+          perId: req.params.perId
       },
       include: [
         {
@@ -185,7 +186,7 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
     })
     .then((monthlyPayment) => {    
 
-      console.log('******************************',monthlyPayment[0])
+      // console.log('******************************',monthlyPayment[0]) 
       if(monthlyPayment.length > 0){
         let hash = {};
         const data3 = monthlyPayment.filter(o => hash[o.stuId] ? false : hash[o.stuId] = true);
@@ -305,6 +306,8 @@ const getTablaPagoMensualidadesPorEstudiante = async(req, res) => {
 }
 
 const getMensualidadesPorEstudiante = async (req, res, next) => {
+
+  console.log('req.body', req.body)
 try {
   let where = {}
   if (req.body.tIdentif !== '' && req.body.tIdentif !==null ) where.stuIdType = req.body.tIdentif
@@ -312,17 +315,17 @@ try {
   if (req.body.pNombre !== '') where.stuFirstName = req.body.pNombre
   if (req.body.pApellido !== '') where.stuSurname = req.body.pApellido
   if (req.body.sApellido !== '') where.stuSecondSurname = req.body.sApellido
-  PeriodsModel.findOne({
-    order: [['per_id', 'DESC']],
-    where: {
-      perStatus: 1
-    }
-    }).then((period) => {
-      // console.log('este wehere',where)
+  // PeriodsModel.findOne({
+  //   order: [['per_id', 'DESC']],
+  //   where: {
+  //     perStatus: 1
+  //   }
+  //   }).then((period) => {
+      // console.log('period----------------------------', period)
       InscriptionsModel.findAll({
         order: [['fam_id', 'ASC']],
         where: {
-          perId: period.perId
+          perId: req.body.periodo.perId
         },
         include: [
           {
@@ -371,7 +374,7 @@ try {
           res.status(StatusCodes.OK).json({ ok: true, data: [] })
         }
       })
-  })
+  // })
 
 } catch (error) {
   console.log('Error al consultar datos por estudiante: ', error)
