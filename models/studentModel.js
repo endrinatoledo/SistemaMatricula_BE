@@ -103,6 +103,10 @@ module.exports = (sequelize, DataTypes) => {
             as: 'stu_monthly',
             foreignKey: 'stuId'
           })
+        studentModel.hasMany(models.conceptosAdicionalesModel, {
+          as: 'stu_conceptosAdicionales',
+          foreignKey: 'stuId'
+        })
       }
 
     return studentModel

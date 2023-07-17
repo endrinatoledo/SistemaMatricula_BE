@@ -50,6 +50,11 @@ module.exports = (sequelize, DataTypes) => {
           as: 'per_monthly',
           foreignKey: 'perId'
         })
+        periodsModel.hasMany(models.conceptosAdicionalesModel, {
+          as: 'per_ceonceptosAdicionales',
+          foreignKey: 'perId'
+        })
+
       }
     return periodsModel
 }

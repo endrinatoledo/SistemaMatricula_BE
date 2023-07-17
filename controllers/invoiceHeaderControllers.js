@@ -7,8 +7,9 @@ const moment = require('moment');
 
 const { updateInvoiceNumber } = require('./invoiceNumberControllers')
 const { updateControlNumber } = require('./controlNumberControllers')
-const { addInvoiceDetail2 } = require('./invoiceDetailControllers')
+const { addInvoiceDetail2, addInvoiceDetailConceptosAdicionales } = require('./invoiceDetailControllers')
 const { addPaymentDetail } = require('./paymentDetailControllers')
+const { addConceptosAdicionales } = require('./conceptosAdicionalesController')
 const InvoiceHeaderModel = db.invoiceHeaderModel
 const InvoiceNumberModel = db.invoiceNumberModel
 const ControlNumberModel = db.controlNumberModel
@@ -23,6 +24,7 @@ const MonthlyPaymentModel = db.monthlyPaymentModel
 
 const addInvoiceHeader = async (req, res, next) => {
 
+    // console.log('---------------------------',req.body)
    try {
 
         let numComprobante = ''
@@ -47,7 +49,8 @@ const addInvoiceHeader = async (req, res, next) => {
             }, (err) => {
                 return { ok: false, message: err }
             })
-
+       const fechaActual = new Date();
+       const fechaISO = fechaActual.toISOString().slice(0, 10);
         InvoiceHeaderModel.create({
             perId: req.body.periodo.perId,
             famId :req.body.familia[0].famId,
@@ -59,7 +62,10 @@ const addInvoiceHeader = async (req, res, next) => {
             inhControlNumber: (req.body.cabecera.voucherType !== 'FACTURA FISCAL') ? numComprobante.resultF : '', 
             inhInvoiceNumber:  numFactura.resultF,
             inhWayToPay:'',
-            inhDateCreate: moment(new Date(req.body.cabecera.date)).format("DD/MM/YYYY"),
+            inhDateCreate: fechaISO,  
+
+
+            // inhDateCreate: moment(new Date(req.body.cabecera.date)).format("DD/MM/YYYY"),
             inhStatusFact:'ACTIVA'
         })
                 .then(async (invoiceHeader) => {
@@ -70,7 +76,19 @@ const addInvoiceHeader = async (req, res, next) => {
                         if (req.body.cabecera.voucherType !== 'FACTURA FISCAL') {
                             const actualizarNumComprobante = await updateControlNumber(numComprobante.data.dataValues.nucId)
                         }
-                        const detailInvoice = await addInvoiceDetail2(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa)
+
+
+                    
+                        //--- validar aqui si viene el cuerpo
+                        if (Array.isArray(req.body.conceptosAdicionales) && req.body.conceptosAdicionales.length > 0){
+                            console.log('entro aquii')
+                            const detailInvoiceConAdi = await addInvoiceDetailConceptosAdicionales(req.body.conceptosAdicionales, invoiceHeader.dataValues.inhId, req.body.tasa)
+                            const addConAdi = await addConceptosAdicionales(req.body.conceptosAdicionales, invoiceHeader.dataValues.inhId, req.body.tasa, req.body.periodo.perId)
+                        }
+                        if (Array.isArray(req.body.cuerpo) && req.body.cuerpo.length > 0) {
+                            const detailInvoice = await addInvoiceDetail2(req.body.cuerpo, invoiceHeader.dataValues.inhId, req.body.tasa)
+                        }
+
                         const addPaymentDetailRes = await addPaymentDetail(invoiceHeader, req.body.detallePagos, req.body.tasa)
                         
                         setTimeout(() => {

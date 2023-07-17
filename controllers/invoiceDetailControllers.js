@@ -150,7 +150,48 @@ const addInvoiceDetail2 = async (body, inhId, tasa) => {
 
 }
 
+const addInvoiceDetailConceptosAdicionales = async (body, inhId, tasa) => {
+
+
+    let arrayRespuestas = []
+    try {
+        for (let index = 0; index < body.length; index++) {
+
+            arrayRespuestas.push(await InvoiceDetailModel.create({
+                // const descripcion = `${concepto.icoName ? concepto.icoName.toUpperCase() : ''} ${concepto.famName ? concepto.famName.toUpperCase() : ''} ${concepto.student ? concepto.student.toUpperCase() : ''} ${concepto.description ? concepto.description.toUpperCase() : ''}`
+                mopId:  null,
+                indStuName: null,
+                indDescripcion: `${body[index].icoName ? body[index].icoName.toUpperCase() : ''} ${body[index].famName ? body[index].famName.toUpperCase() : ''} ${body[index].student ? body[index].student.toUpperCase() : ''} ${body[index].description ? body[index].description.toUpperCase() : ''}`,
+                indcosto: body[index].costoDol,
+                indpagado: parseFloat(body[index].montoApagarDol), //ajustar logica al aplicar pago
+                inhId: inhId,
+                indtasa: tasa != null && tasa != undefined ? tasa.excAmount : null,
+                excId: tasa != null && tasa != undefined ? tasa.excId : null,
+                indMontoAgregadoDol: body[index].montoApagarDol,
+                indMontoAgregadoBol: body[index].montoApagarBol
+
+            })
+                .then(async (res) => {
+                    // console.log('res CA........................', res)
+                        message = 'Pago CA registrado satisfactoriamente';
+                        return { ok: true, data: resUpdateMonthlyPayment, message }
+                    
+                }, (err) => {
+                    // console.log('err.......................................63', JSON.stringify(err))
+                    messageRes = `Error al cargar pago de CA ${body[index].icoName}`;
+                    return { ok: false, messge: messageRes }
+                }))
+        }
+
+    } catch (err) {
+        // console.log('error al guardar factura', err)
+        return { ok: false, message: 'error al guardar detalle CA de factura' }
+    }
+    return arrayRespuestas
+}
+
 module.exports = {
     addInvoiceDetail,
-    addInvoiceDetail2
+    addInvoiceDetail2,
+    addInvoiceDetailConceptosAdicionales
 }
