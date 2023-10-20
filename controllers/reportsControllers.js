@@ -18,6 +18,7 @@ const RepresentativeStudentModel = db.representativeStudentModel
 const MonthlyPaymentModel = db.monthlyPaymentModel
 const InvoiceHeaderModel = db.invoiceHeaderModel
 const PaymentDetailModel = db.paymentDetailModel
+const InvoiceDetailModel = db.invoiceDetailModel
 
 
 const reportByLevelAndSection = async (req, res, next) => {
@@ -235,6 +236,7 @@ const familyPayroll = async (req, res, next) => {
                 }
             ],
         })
+
         if (resultFamily.length > 0) {
 
             const arrayIdFamily = resultFamily.map((element) => {
@@ -242,6 +244,7 @@ const familyPayroll = async (req, res, next) => {
             })
 
             const arraySinDuplicados = eliminarElementosRepetidos(arrayIdFamily)
+            console.log('arraySinDuplicados', arraySinDuplicados.length)
 
             let resultRepresentatives = await RepresentativeStudentModel.findAll({
                 where: {
@@ -1104,250 +1107,324 @@ const graficaMorosos = async (req, res, next) => {
 
 }
 
+const conceptosFacturaSeguroEscolar = async (req, res, next) => {
 
-// const estudiantes = [
-//     {
-//         idEstudiante: 1,
-//         mes: 'enero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'febrero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'marzo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'abril',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'mayo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'junio',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'julio',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'agosto',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'septiembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'octubre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'noviembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 1,
-//         mes: 'diciembre',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'enero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'febrero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'marzo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'abril',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'mayo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'junio',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'julio',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'agosto',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'septiembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'octubre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'noviembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 2,
-//         mes: 'diciembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'enero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'febrero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'marzo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'abril',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'mayo',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'junio',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'julio',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'agosto',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'septiembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'octubre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'noviembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 3,
-//         mes: 'diciembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'enero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'febrero',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'marzo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'abril',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'mayo',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'junio',
-//         mopStatus: 1
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'julio',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'agosto',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'septiembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'octubre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'noviembre',
-//         mopStatus: 2
-//     },
-//     {
-//         idEstudiante: 4,
-//         mes: 'diciembre',
-//         mopStatus: 1
-//     },
+    try {
+        InvoiceHeaderModel.findAll({
+            where: {
+                perId: req.body.periodo.perId,
+            },
+            include:[{
+                model: InvoiceDetailModel,
+                as: 'inh_ind',
+                require: true,
+                where:{
+                    indDescripcion: { [Op.like]:`%${req.body.conceptoFacura}%` }
+                }
+            },{
+                model: FamilyModel,
+                as: 'familyInvoice',
+                require: true
+            }]
+            }).then(async (invoiceDetailResult) => {
 
-// ]
+                const resultMapeado = invoiceDetailResult.map((item, index) => {
+                    return {
+                        idFam: item.familyInvoice.dataValues.famId,
+                        familia: item.familyInvoice.dataValues.famName,
+                        concepto: item.inh_ind,
+                    }
+                });
+
+                const resultMapeado2 = await transformarDatos(resultMapeado);
+
+                const arrayIdFamily = resultMapeado2.map((element) => {
+                    return element.idFamily
+                })
+
+                const arraySinDuplicados = eliminarElementosRepetidos(arrayIdFamily)
+
+                let resultInscription = await InscriptionsModel.findAll({
+                    where: {
+                        perId: req.body.periodo.perId,
+                        insStatus: 1
+                    },
+                    include: [
+                        {
+                            model: FamilyModel,
+                            as: 'family',
+                            require: true,
+                            where: {
+                                fam_id: {
+                                    [Op.in]: arraySinDuplicados
+                                }
+                            },
+                        },
+                        {
+                            model: StudentModel,
+                            as: 'student',
+                            require: true
+                        }, {
+                            model: PeriodLevelSectionModel,
+                            as: 'periodLevelSectionI',
+                            require: true,
+                            include: [
+                                {
+                                    model: LevelsModel,
+                                    as: 'level',
+                                    require: true
+                                }, {
+                                    model: SectionsModel,
+                                    as: 'section',
+                                    require: true
+                                }
+                            ]
+                        }
+                    ],
+                })
+ 
+                if (resultInscription.length > 0) {
+                    const data = resultInscription.map((element) => {
+                        var date = new Date(element.dataValues.student.dataValues.stuDateOfBirth);
+                        const day = `${(date.getDate())}`.padStart(2, '0');
+                        const month = `${(date.getMonth() + 1)}`.padStart(2, '0');
+                        const year = date.getFullYear();
+                        const formatted_date = `${day}/${month}/${year}`
+
+                        return {
+                            famId: element.dataValues.family.dataValues.famId,
+                            identificationNumberStu: element.dataValues.student.dataValues.stuIdentificationNumber ? element.dataValues.student.dataValues.stuIdentificationNumber : '',
+                            surnameStu: element.dataValues.student.dataValues.stuSurname,
+                            secondSurnameStu: element.dataValues.student.dataValues.stuSecondSurname ? element.dataValues.student.dataValues.stuSecondSurname : '',
+                            firstNameStu: element.dataValues.student.dataValues.stuFirstName,
+                            secondNameStu: element.dataValues.student.dataValues.stuSecondName ? element.dataValues.student.dataValues.stuSecondName : '',
+                            dateOfBirthStu: formatted_date,
+                            sexStu: (element.dataValues.student.dataValues.stuSex).toUpperCase(),
+                            levelSection: element.dataValues.periodLevelSectionI.dataValues.level.dataValues.levName,
+                        }
+                    })
+
+                    // const arrayIdFamily = resultInscription.map((element) => {
+                    //     return element.dataValues.famId
+                    // })
+                    // const arraySinDuplicados = eliminarElementosRepetidos(arrayIdFamily)
+
+                    const resultRepresentatives = await RepresentativeStudentModel.findAll({
+                        where: {
+                            fam_id: {
+                                [Op.in]: arraySinDuplicados
+                            }
+                        },
+                        include: [
+                            {
+                                model: RepresentativeModel,
+                                as: 'representative',
+                                require: true
+                            }
+                        ],
+                        group: 'repId'
+                    })
+                    for (let indexF = 0; indexF < data.length; indexF++) {
+                        for (let indexE = 0; indexE < resultRepresentatives.length; indexE++) {
+                            if (resultRepresentatives[indexE].dataValues.famId === data[indexF].famId) {
+                                data[indexF].repIdentificationNumber = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repIdentificationNumber}`
+                                data[indexF].surnamesRep = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repSurname} ${resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondSurname ? resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondSurname : ''}`
+                                data[indexF].namesRep = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repFirstName} ${resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondName ? resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondName : ''}`
+                            }
+                        }
+                    }
+                    res.status(StatusCodes.OK).json({ ok: true, data: data })
+                }
+
+                // const resultRepresentatives = await RepresentativeStudentModel.findAll({
+                //     where: {
+                //         fam_id: {
+                //             [Op.in]: arraySinDuplicados
+                //         }
+                //     },
+                //     include: [
+                //         {
+                //             model: RepresentativeModel,
+                //             as: 'representative',
+                //             require: true
+                //         }
+                //     ],
+                //     group: 'repId'
+                // });
+
+                // RepresentativeStudentModel.findAll({
+                //     where: {
+                //         fam_id: {
+                //             [Op.in]: arraySinDuplicados
+                //         }
+                //     },
+                //     include: [
+                //         {
+                //             model: RepresentativeModel,
+                //             as: 'representative',
+                //             require: true
+                //         }
+                //     ],
+                //     group: 'repId'
+                // }).then((resultRepresentatives) => {
+
+                //     // let data = []
+                //     // for (let indexF = 0; indexF < resultMapeado2.length; indexF++) {
+                //     //     for (let indexE = 0; indexE < resultRepresentatives.length; indexE++) {
+                //     //         if (resultRepresentatives[indexE].dataValues.famId === resultMapeado2[indexF].famId) {
+                //     //             data.repIdentificationNumber = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repIdentificationNumber}`
+                //     //             data.surnamesRep = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repSurname} ${resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondSurname ? resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondSurname : ''}`
+                //     //             data.namesRep = `${resultRepresentatives[indexE].dataValues.representative.dataValues.repFirstName} ${resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondName ? resultRepresentatives[indexE].dataValues.representative.dataValues.repSecondName : ''}`
+                //     //             data.family = resultMapeado2[indexF].familia
+                //     //             data.concepto = resultMapeado2[indexF].concepto
+                //     //         }
+                //     //     }
+                //     // }
+
+                //     const transformedData = resultMapeado2.map((resultMapeado) => {
+                //         const match = resultRepresentatives.find((resultRepresentative) => {
+                //             return resultRepresentative.dataValues.famId === resultMapeado.idFamily;
+                //         });
+
+                //         if (match) {
+                //             const representative = match.dataValues.representative;
+                //             const repIdentificationNumber = representative.dataValues.repIdentificationNumber;
+                //             const surnamesRep = `${representative.dataValues.repSurname} ${representative.dataValues.repSecondSurname ? representative.dataValues.repSecondSurname : ''}`;
+                //             const namesRep = `${representative.dataValues.repFirstName} ${representative.dataValues.repSecondName ? representative.dataValues.repSecondName : ''}`;
+                //             const filtrarNombre = resultMapeado.concepto.split('SEGURO ESCOLAR  ')
+                //             const nombreStudiante = filtrarNombre.join("");
+                //             const palabras = resultMapeado.concepto.split(" "); // Dividir la cadena en palabras por espacios en blanco
+                //             const Grado = palabras.pop(); // Extraer la última palabra
+                //             return {
+                //                 concepto: nombreStudiante.toUpperCase(),
+                //                 repIdentificationNumber,
+                //                 surnamesRep: surnamesRep.toUpperCase(),
+                //                 namesRep: namesRep.toUpperCase(),
+                //                 family: resultMapeado.familia.toUpperCase(),
+                //             };
+                //         }
+
+                //         return null;
+                //     });
+
+                //     console.log('transformedData', transformedData[0])
+                //     res.status(StatusCodes.OK).json({ ok: true, data: transformedData })
+
+                // })
+
+
+
+
+
+        })
+    } catch (error) {
+        console.log('este error en concepotos de factura', error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte por conceptos de factura' })
+
+    }
+}
+
+async function transformarDatos(entrada) {
+    const ejemplosalida = [];
+    for (const item of entrada) {
+
+        for (const concepto of item.concepto) {
+
+            ejemplosalida.push({
+                idFamily: item.idFam,
+                familia: item.familia,
+                concepto: concepto.dataValues.indDescripcion
+            });
+        }
+    }
+
+    return ejemplosalida;
+}
+
+const conceptosFacturaPintura = async (req, res, next) => {
+
+    console.log('req.body---------------------', req.body)
+    try {
+        InvoiceHeaderModel.findAll({
+            where: {
+                perId: req.body.periodo.perId,
+            },
+            include: [{
+                model: InvoiceDetailModel,
+                as: 'inh_ind',
+                require: true,
+                where: {
+                    indDescripcion: { [Op.like]: `%${req.body.conceptoFacura}%` }
+                }
+            }, {
+                model: FamilyModel,
+                as: 'familyInvoice',
+                require: true
+            }]
+        }).then(async (invoiceDetailResult) => {
+
+
+            const resultMapeado = invoiceDetailResult.map((item, index) => {
+                return {
+                    idFam: item.familyInvoice.dataValues.famId,
+                    familia: item.familyInvoice.dataValues.famName,
+                    concepto: item.inh_ind,
+                }
+            });
+
+            const resultMapeado2 = await transformarDatos(resultMapeado);
+            console.log('invoiceDetailResult*********', resultMapeado2)
+            res.status(StatusCodes.OK).json({ ok: true, data: resultMapeado2 })
+
+        })
+    } catch (error) {
+        console.log('este error en pintura', error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte por conceptos de primera fase de pintura' })
+
+    }
+}
+
+const conceptosReparacionSUM = async (req, res, next) => {
+
+    try {
+        InvoiceHeaderModel.findAll({
+            where: {
+                perId: req.body.periodo.perId,
+            },
+            include: [{
+                model: InvoiceDetailModel,
+                as: 'inh_ind',
+                require: true,
+                where: {
+                    indDescripcion: { [Op.like]: `%${req.body.conceptoFacura}%` }
+                }
+            }, {
+                model: FamilyModel,
+                as: 'familyInvoice',
+                require: true
+            }]
+        }).then(async (invoiceDetailResult) => {
+
+
+            const resultMapeado = invoiceDetailResult.map((item, index) => {
+                return {
+                    idFam: item.familyInvoice.dataValues.famId,
+                    familia: item.familyInvoice.dataValues.famName,
+                    concepto: item.inh_ind,
+                }
+            });
+
+            const resultMapeado2 = await transformarDatos(resultMapeado);
+            console.log('invoiceDetailResult*********', resultMapeado2)
+            res.status(StatusCodes.OK).json({ ok: true, data: resultMapeado2 })
+
+        })
+    } catch (error) {
+        console.log('este error en pintura', error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte por conceptos de primera fase de pintura' })
+
+    }
+}
 
 
 module.exports = {
@@ -1360,4 +1437,7 @@ module.exports = {
     clasificacionPagos,
     morososConFiltros,
     graficaMorosos,
+    conceptosFacturaSeguroEscolar,
+    conceptosFacturaPintura,
+    conceptosReparacionSUM
 }

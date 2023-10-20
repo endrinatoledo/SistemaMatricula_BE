@@ -9,6 +9,7 @@ const sequelize = new Sequelize(
     dbConfig.PASSWORD,{
         host:dbConfig.HOST,
         dialect : dbConfig.DIALECT,
+        // logging: console.log,
         operatorsAliases: false,
 
         pool:{
@@ -74,7 +75,7 @@ Object.keys(db).forEach(modelName => {
     }
   }); 
 //    
- db.sequelize.sync({ alter:false }).then(() => { 
+ db.sequelize.sync({ alter:false }).then(() => {  
     // console.log('yes re-sync done!') 
 })
 
