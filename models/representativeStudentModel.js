@@ -52,10 +52,10 @@ module.exports = (sequelize, DataTypes) => {
           as: 'families',
           foreignKey: 'famId'
         }) 
-        representativeStudentModel.hasMany(models.inscriptionsModel, {
-          as: 'inscriptionR',
-          foreignKey: 'insId'
-        }) 
+        //representativeStudentModel.hasMany(models.inscriptionsModel, {
+        //  as: 'inscriptionR',
+        //  foreignKey: 'insId'
+        //}) 
  
 
       }

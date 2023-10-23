@@ -31,8 +31,10 @@ const addInscription = async (req, res, next) => {
         insStatus: 1
       }
     }).catch((err) => {
+      console.log('error al buscar', err)
       throw err;
     });
+    console.log('******************idExists',idExists)
     if (idExists) {
       return res.status(StatusCodes.OK).json({ ok: false, message: 'Alumno posee una inscripción activa en este periodo' })
     } else {
@@ -46,6 +48,8 @@ const addInscription = async (req, res, next) => {
         insStatus: 1
       })
         .then(async (inscription) => {
+          console.log('resultado al crear', inscription)
+
           if(inscription.dataValues.plsId){
 
 
@@ -189,9 +193,13 @@ const addInscription = async (req, res, next) => {
           message = 'Error de conexión'
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, data: [], message })
           next(err)
-        })
+        }).catch((err) => {
+          console.log('error al crear', err)
+          throw err;
+        });
     }
   } catch (err) {
+    console.log('este errorrrr', err)
     message = 'Error de conexion al registrar inscripcion';
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message });
     next(err);
