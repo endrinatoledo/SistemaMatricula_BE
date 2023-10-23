@@ -11,5 +11,9 @@ router.post  ('/mensualidades/cobranza', reportsControllers.mensualidadesCobranz
 router.post  ('/clasificacion/pagos', reportsControllers.clasificacionPagos)
 router.post  ('/morosos/filtros', reportsControllers.morososConFiltros)
 router.post  ('/morosos/grafica', reportsControllers.graficaMorosos)
+router.post('/conceptos/factura/seguroescolar', reportsControllers.conceptosFacturaSeguroEscolar)
+router.post('/conceptos/factura/pintura', reportsControllers.conceptosFacturaPintura)
+router.post('/conceptos/factura/reparacionsum', reportsControllers.conceptosReparacionSUM)
+
 
 module.exports = router
