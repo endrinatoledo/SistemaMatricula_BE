@@ -2,10 +2,9 @@ const { StatusCodes } = require('http-status-codes')
 const Sequelize = require('sequelize');
 const moment = require('moment');
 
-const { levelsModel, familyModel } = require('../models');
 const Op = Sequelize.Op
 const db = require("../models");
-
+const ConceptosAdicionalesModel = db.conceptosAdicionalesModel
 const InscriptionsModel = db.inscriptionsModel
 const PeriodLevelSectionModel = db.periodLevelSectionModel
 const StudentModel = db.studentModel
@@ -1341,40 +1340,73 @@ async function transformarDatos(entrada) {
     return ejemplosalida;
 }
 
+function ordenarArregloPorFamilia(arr) {
+    return new Promise((resolve, reject) => {
+        if (!Array.isArray(arr)) {
+            reject(new Error('El argumento debe ser un arreglo.'));
+        }
+
+        arr.sort((a, b) => {
+            const familiaA = a.familia.toLowerCase();
+            const familiaB = b.familia.toLowerCase();
+            if (familiaA < familiaB) {
+                return -1;
+            }
+            if (familiaA > familiaB) {
+                return 1;
+            }
+            return 0;
+        });
+
+        resolve(arr);
+    });
+}
+
+
 const conceptosFacturaPintura = async (req, res, next) => {
 
-    console.log('req.body---------------------', req.body)
     try {
-        InvoiceHeaderModel.findAll({
+        ConceptosAdicionalesModel.findAll({
             where: {
                 perId: req.body.periodo.perId,
+                icoName: 'PRIMERA FASE DE PINTURA'
             },
-            include: [{
-                model: InvoiceDetailModel,
-                as: 'inh_ind',
-                require: true,
-                where: {
-                    indDescripcion: { [Op.like]: `%${req.body.conceptoFacura}%` }
-                }
-            }, {
-                model: FamilyModel,
-                as: 'familyInvoice',
-                require: true
-            }]
+            include: [
+                {
+                    model: InvoiceHeaderModel,
+                    as: 'conceptosAdicionalesInvoiceHeader',
+                    require: true,
+                    include: [
+                        {
+                            model: FamilyModel,
+                            as: 'familyInvoice',
+                            require: true
+                        }]
+                },
+            ]
         }).then(async (invoiceDetailResult) => {
 
+            console.log('invoiceDetailResult*********', invoiceDetailResult[0].dataValues)
 
             const resultMapeado = invoiceDetailResult.map((item, index) => {
+
+                const date = new Date(item.dataValues.cadCreationDate);
+                const dia = date.getUTCDate();
+                const mes = date.getUTCMonth() + 1; // Se suma 1 porque los meses comienzan desde 0 (enero).
+                const año = date.getUTCFullYear();
                 return {
-                    idFam: item.familyInvoice.dataValues.famId,
-                    familia: item.familyInvoice.dataValues.famName,
-                    concepto: item.inh_ind,
+                    idFam: item.dataValues.conceptosAdicionalesInvoiceHeader?.dataValues.familyInvoice.famId,
+                    familia: item.dataValues.conceptosAdicionalesInvoiceHeader?.dataValues.familyInvoice.famName,
+                    montoPagado: item.cadMontoPagadoDolares,
+                    costo: item.dataValues.cadCostoDolares,
+                    fecha: `${dia.toString().padStart(2, '0')}-${mes.toString().padStart(2, '0')}-${año}`,
                 }
             });
 
-            const resultMapeado2 = await transformarDatos(resultMapeado);
-            console.log('invoiceDetailResult*********', resultMapeado2)
-            res.status(StatusCodes.OK).json({ ok: true, data: resultMapeado2 })
+            const dataOrdenada = await ordenarArregloPorFamilia(resultMapeado)
+
+            console.log('invoiceDetailResult*********', dataOrdenada[0])
+            res.status(StatusCodes.OK).json({ ok: true, data: dataOrdenada })
 
         })
     } catch (error) {
@@ -1387,36 +1419,47 @@ const conceptosFacturaPintura = async (req, res, next) => {
 const conceptosReparacionSUM = async (req, res, next) => {
 
     try {
-        InvoiceHeaderModel.findAll({
+        ConceptosAdicionalesModel.findAll({
             where: {
                 perId: req.body.periodo.perId,
+                icoName:'REPARACION SUM'
             },
-            include: [{
-                model: InvoiceDetailModel,
-                as: 'inh_ind',
+            include: [
+                {
+                model: InvoiceHeaderModel,
+                as: 'conceptosAdicionalesInvoiceHeader',
                 require: true,
-                where: {
-                    indDescripcion: { [Op.like]: `%${req.body.conceptoFacura}%` }
-                }
-            }, {
-                model: FamilyModel,
-                as: 'familyInvoice',
-                require: true
-            }]
+                include: [
+                {
+                    model: FamilyModel,
+                    as: 'familyInvoice',
+                    require: true
+                }]
+            },
+        ]
         }).then(async (invoiceDetailResult) => {
 
+            console.log('invoiceDetailResult*********', invoiceDetailResult[0].dataValues)
 
             const resultMapeado = invoiceDetailResult.map((item, index) => {
+
+                const date = new Date(item.dataValues.cadCreationDate);
+                const dia = date.getUTCDate();
+                const mes = date.getUTCMonth() + 1; // Se suma 1 porque los meses comienzan desde 0 (enero).
+                const año = date.getUTCFullYear();
                 return {
-                    idFam: item.familyInvoice.dataValues.famId,
-                    familia: item.familyInvoice.dataValues.famName,
-                    concepto: item.inh_ind,
+                    idFam: item.dataValues.conceptosAdicionalesInvoiceHeader?.dataValues.familyInvoice.famId,
+                    familia: item.dataValues.conceptosAdicionalesInvoiceHeader?.dataValues.familyInvoice.famName,
+                    montoPagado: item.cadMontoPagadoDolares,
+                    costo: item.dataValues.cadCostoDolares,
+                    fecha: `${dia.toString().padStart(2, '0')}-${mes.toString().padStart(2, '0')}-${año}`,
                 }
             });
 
-            const resultMapeado2 = await transformarDatos(resultMapeado);
-            console.log('invoiceDetailResult*********', resultMapeado2)
-            res.status(StatusCodes.OK).json({ ok: true, data: resultMapeado2 })
+            const dataOrdenada = await ordenarArregloPorFamilia(resultMapeado)
+
+            console.log('invoiceDetailResult*********', dataOrdenada[0])      
+            res.status(StatusCodes.OK).json({ ok: true, data: dataOrdenada })
 
         })
     } catch (error) {
