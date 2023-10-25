@@ -280,9 +280,10 @@ const actualizarEstatusMeses = async (array) => {
                 }
             })
                 .then((resMonthlyPayment) => {
+                    const monto = resMonthlyPayment.dataValues.mopAmountPaid - parseFloat(element.montoDol)
                     resMonthlyPayment.update({
                         mopStatus: 2,
-                        mopAmountPaid: resMonthlyPayment.dataValues.mopAmountPaid - parseFloat(element.montoDol)
+                        mopAmountPaid: monto - 1 ? 0 : monto
                     }).then((resUpdateMonthlyPayment) => {
                         message = 'actualizado satisfactoriamente';
                         return { ok: true, data: resUpdateMonthlyPayment, message }
