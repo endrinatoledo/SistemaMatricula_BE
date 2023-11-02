@@ -774,6 +774,17 @@ const clasificacionPagos = async (req, res, next) => {
     }
 }
 
+function extraerPlsIdsPromesa(arreglo) {
+    return new Promise((resolve, reject) => {
+        if (Array.isArray(arreglo)) {
+            const plsIds = arreglo.map(item => item.plsId);
+            resolve(plsIds);
+        } else {
+            reject(new Error("Entrada no es un arreglo válido"));
+        }
+    });
+}
+
 const morososConFiltros = async (req, res, next) => {
 
     try {
@@ -781,6 +792,8 @@ const morososConFiltros = async (req, res, next) => {
         const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
         const mesActual = new Date().getMonth();
         let consulta = {};
+        let perLevSecResultantes;
+        
         let where = {
             perId: req.body.periodo.perId,
             mopStatus: 2,
@@ -788,17 +801,41 @@ const morososConFiltros = async (req, res, next) => {
         }
         if (req.body.etapa != 1) {
             if (req.body.level == null && req.body.section == null) {
-                where.secId = {
-                    [Op.in]: [1, 2]
-                }
-                where.levId = {
-                    [Op.in]: etapasArray[req.body.etapa]
-                }
+                // where.secId = {
+                //     [Op.in]: [1, 2]
+                // }
+                // where.levId = {
+                //     [Op.in]: etapasArray[req.body.etapa]
+                // }
+
+                perLevSecResultantes = await PeriodLevelSectionModel.findAll({
+                    where: {
+                        perId: req.body.periodo.perId,
+                        secId: {
+                            [Op.in]: [1, 2]
+                        },
+                        levId: {
+                            [Op.in]: etapasArray[req.body.etapa]
+                        }
+                    }
+                })
+
             } else {
-                if (req.body.level != null) where.levId = req.body.level.levId;
-                if (req.body.section != null) where.secId = req.body.section.secId;
+                let where2 = {
+                    perId: req.body.periodo.perId,
+                }
+                if (req.body.level != null) where2.levId = req.body.level.levId;
+                if (req.body.section != null) where2.secId = req.body.section.secId;
+
+                perLevSecResultantes = await PeriodLevelSectionModel.findAll({
+                    where: where2
+                })
+
+                // if (req.body.level != null) where.levId = req.body.level.levId;
+                // if (req.body.section != null) where.secId = req.body.section.secId;
             }
 
+            
         }
 
         if (req.body.clasificacion == 2) { //busqueda por estudiantes
@@ -847,12 +884,75 @@ const morososConFiltros = async (req, res, next) => {
             ]
         }
 
+        
+        const plsIds = await extraerPlsIdsPromesa(perLevSecResultantes);
+
         consulta.where = where 
+        if (consulta.include){
+            consulta.include.push({
+                model: InscriptionsModel,
+                as: 'inscriptionMonthly',
+                require: true,
+                where: {
+                    perId: req.body.periodo.perId,
+                    plsId: {
+                        [Op.in]: plsIds
+                    }
+                },
+                include: [
+                    {
+                        model: PeriodLevelSectionModel,
+                        as: 'periodLevelSectionI',
+                        require: true,
+                        include: [{
+                            model: LevelsModel,
+                            as: 'level',
+                            require: true
+                        }, {
+                            model: SectionsModel,
+                            as: 'section',
+                            require: true
+                        }]
+                    }
+                ]
+            })
+        }else{
+            consulta.include = [
+                {
+                    model: InscriptionsModel,
+                    as: 'inscriptionMonthly',
+                    require: true,
+                    where: {
+                        perId: req.body.periodo.perId,
+                        plsId: {
+                            [Op.in]: plsIds
+                        }
+                    },
+                    include: [
+                        {
+                            model: PeriodLevelSectionModel,
+                            as: 'periodLevelSectionI',
+                            require: true,
+                            include: [{
+                                model: LevelsModel,
+                                as: 'level',
+                                require: true
+                            }, {
+                                model: SectionsModel,
+                                as: 'section',
+                                require: true
+                            }]
+                        }
+                    ]
+                }
+            ]
+        }
         MonthlyPaymentModel.findAll(consulta)
             .then((monthlyPayment) => {
                 if (monthlyPayment.length > 0) {
                     if (req.body.clasificacion == 2) { //organizar por estudiantes
                         const result = monthlyPayment.map((item, index) => {
+                            const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
                             return {
                                 numer: index,
                                 mes: meses[mesActual],
@@ -863,20 +963,22 @@ const morososConFiltros = async (req, res, next) => {
                                 sSurname: item.dataValues.student.dataValues.stuSecondSurname,
                                 typeInd: item.dataValues.student.dataValues.stuIdType,
                                 identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
-                                level: item.dataValues.level.dataValues.levName,
-                                section: item.dataValues.section.dataValues.secName,
+                                level: periodLevelSectionI.level.dataValues.levName,
+                                section: periodLevelSectionI.section.dataValues.secName,
                             }
                         });
                         res.status(StatusCodes.OK).json({ ok: true, data: result })
                     } else { // organizar por familias
 
                         const result = monthlyPayment.map((item, index) => {
+                            const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
+
                             return {
                                 numer: index,
                                 mes: meses[mesActual],
                                 familia: item.dataValues.family.dataValues.famName,
-                                level: item.dataValues.level.dataValues.levName,
-                                section: item.dataValues.section.dataValues.secName,
+                                level: periodLevelSectionI.level.dataValues.levName,
+                                section: periodLevelSectionI.section.dataValues.secName,
                             }
                         });
                         res.status(StatusCodes.OK).json({ ok: true, data: result })
