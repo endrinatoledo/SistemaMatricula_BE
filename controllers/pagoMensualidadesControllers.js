@@ -186,7 +186,7 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
     })
     .then((monthlyPayment) => {    
 
-      // console.log('******************************',monthlyPayment[0]) 
+      console.log('******************************', monthlyPayment[0].level) 
       if(monthlyPayment.length > 0){
         let hash = {};
         const data3 = monthlyPayment.filter(o => hash[o.stuId] ? false : hash[o.stuId] = true);
@@ -241,27 +241,6 @@ const getTablaPagoMensualidadesPorFamilia = async(req, res) => {
           }
           
         }
-
-        // const dataForm = monthlyPayment.map(item =>{
-
-        //   const student = item.dataValues.student.dataValues
-        //   return {
-        //     mopId : item.dataValues.mopId,
-        //     student : `${student.stuFirstName} ${student.stuSecondName ? student.stuSecondName : ''} ${student.stuSurname} ${student.stuSecondSurname ? student.stuSecondSurname : ''}`,          
-        //     ene : item.dataValues.mopEne === 'NO PAGADO' ? 2 : 1,
-        //     feb : item.dataValues.mopFeb === 'NO PAGADO' ? 2 : 1,
-        //     mar : item.dataValues.mopMar === 'NO PAGADO' ? 2 : 1,
-        //     abr : item.dataValues.mopAbr === 'NO PAGADO' ? 2 : 1,
-        //     may : item.dataValues.mopMay === 'NO PAGADO' ? 2 : 1,
-        //     jun : item.dataValues.mopJun === 'NO PAGADO' ? 2 : 1,
-        //     jul : item.dataValues.mopJul === 'NO PAGADO' ? 2 : 1,
-        //     ago : item.dataValues.mopAgo === 'NO PAGADO' ? 2 : 1,
-        //     sep : item.dataValues.mopSep === 'NO PAGADO' ? 2 : 1,
-        //     oct : item.dataValues.mopOct === 'NO PAGADO' ? 2 : 1,
-        //     nov : item.dataValues.mopNov === 'NO PAGADO' ? 2 : 1,
-        //     dic : item.dataValues.mopDic === 'NO PAGADO' ? 2 : 1
-        //   }
-        // })
 
         res.status(StatusCodes.OK).json({ ok: true, data: listadoEstudiantesPorFamilia, dataDetalle: monthlyPayment})
       }else{
