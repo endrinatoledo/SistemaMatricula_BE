@@ -1073,12 +1073,12 @@ function validarPagosEstudiantes(estudiantes) {
         if (pagoMesActual) {
             // Si el estudiante tiene el pago del mes actual, validar si está al día
             if (pagoMesActual.mopStatus === 1) {
-                return { idEstudiante: estudiante.idEstudiante,nombre:estudiante.nombre ,estatus: 'al dia' };
+                return { idEstudiante: estudiante.idEstudiante,nombre:estudiante.nombre ,estatus: 'SOLVENTE' };
             } else if (pagoMesActual.mopStatus === 2) {
                 if (pagoMesAnterior.mopStatus === 1){
-                    return { idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'un mes moroso' };
+                    return { idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '1 MES MOROSO' };
                 }else{
-                    return { idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'mas de un mes moroso' };
+                    return { idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '+1 MES MOROSO' };
                 }
             }
         } 
@@ -1094,13 +1094,13 @@ function contarEstatusEstudiantes(estudiantes) {
 
     estudiantes.forEach(estudiante => {
         switch (estudiante.estatus) {
-            case 'al dia':
+            case 'SOLVENTE':
                 alDia++;
                 break;
-            case 'un mes moroso':
+            case '1 MES MOROSO':
                 unMesMoroso++;
                 break;
-            case 'mas de un mes moroso':
+            case '+1 MES MOROSO':
                 masDeUnMesMoroso++;
                 break;
             default:
@@ -1122,33 +1122,57 @@ const graficaMorosos = async (req, res, next) => {
     let consulta = {}; 
     try {
         
+        const perLevSecResultantes = await PeriodLevelSectionModel.findOne({
+            where: {
+                perId: req.body.periodo.perId,
+                secId: req.body.section.secId,
+                levId: req.body.level.levId
+            }
+        })
+
+        console.log('perLevSecResultantes.....', perLevSecResultantes);
+
         let where = {
-            perId: req.body.periodo.perId,
-            levId:req.body.level.levId,
-            secId:req.body.section.secId
+            perId: req.body.periodo.perId
         }
         consulta.include = [
             {
                 model: StudentModel,
                 as: 'student',
                 require: true
-            }
-            , {
-                model: LevelsModel,
-                as: 'level',
-                order: [['lev_id', 'ASC']],
-                require: true
             },
-            {
-                model: SectionsModel,
-                as: 'section',
-                order: [['sec_id', 'ASC']],
-                require: true
-            }, {
+             {
                 model: FamilyModel,
                 as: 'family',
                 require: true
             },
+            {
+                model: InscriptionsModel,
+                as: 'inscriptionMonthly',
+                require: true,
+                where: {
+                    perId: req.body.periodo.perId,
+                    plsId: {
+                        [Op.in]: [perLevSecResultantes.dataValues.plsId]
+                    }
+                },
+                include: [
+                    {
+                        model: PeriodLevelSectionModel,
+                        as: 'periodLevelSectionI',
+                        require: true,
+                        include: [{
+                            model: LevelsModel,
+                            as: 'level',
+                            require: true
+                        }, {
+                            model: SectionsModel,
+                            as: 'section',
+                            require: true
+                        }]
+                    }
+                ]
+            }
         ]
         consulta.where = where 
 
@@ -1156,6 +1180,8 @@ const graficaMorosos = async (req, res, next) => {
             .then((monthlyPayment) => {
                 if (monthlyPayment.length > 0) {
                     const result = monthlyPayment.map((item, index) => {
+                        const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
+ 
                         return {
                             numer: index,
                             idEstudiante: item.dataValues.stuId,
@@ -1171,6 +1197,8 @@ const graficaMorosos = async (req, res, next) => {
                         }
                     });
 
+                    console.log('este resulttttttttttttttttttt',result)
+
                     const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
                     const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
                     const resultadoEstudianteEstatusPago = validarPagosEstudiantes(resultEstudiantesPagosOrdenados) // estatus por estudiante para tabla
@@ -1181,7 +1209,7 @@ const graficaMorosos = async (req, res, next) => {
                         arrayDataGrafica,
                         labelsGrafica: ['Solventes', '1 Mes Moroso', '+1 Mes Morosos'],
                         arrayEstudiantesEstatusPago: resultadoEstudianteEstatusPago,
-                        nombreReporte: `Estatus de pago de estudiantes de ${req.body.level.levName} sección ${req.body.section.secName}`,
+                        nombreReporte: `Reporte de morosos de ${req.body.level.levName} sección "${req.body.section.secName}"`,
                     }
                     res.send({ ok: true, message: 'Consulta exitosa', data: [dataFinal] })
 
