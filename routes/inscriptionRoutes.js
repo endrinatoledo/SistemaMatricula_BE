@@ -10,6 +10,7 @@ router.get   ('/family/:famId', inscriptionControllers.getInscriptionsByFamId)
 router.post  ('/student/period/', inscriptionControllers.getOneInscriptionByStudentByPeriod)
 router.put   ('/:insId', inscriptionControllers.updateInscription)
 router.delete('/:insId', inscriptionControllers.deleteInscription)
+router.post('/datosActuales', inscriptionControllers.getInscriptionsEstudents)
 
 
 

@@ -485,7 +485,7 @@ const getInscriptionsByFamId = async (req, res, next) => {
     next(err);
   }
 }
-
+ 
 const getAllInscriptionsByPeriod = async (req, res, next) => {
 
 
@@ -540,6 +540,116 @@ const getAllInscriptionsByPeriod = async (req, res, next) => {
   }
 }
 
+const getInscriptionsEstudents = async (req, res, next) => {
+
+  try {
+
+      InscriptionsModel.findAll({
+        where: { 
+          perId: req.body.perId,
+           insStatus: 1,
+          insId: {
+            [Op.in]: req.body.insIds
+          }
+           },
+        include: [{
+          model: PeriodLevelSectionModel,
+          as: 'periodLevelSectionI',
+          require: true,
+          include: [
+            {
+              model: LevelsModel,
+              as: 'level',
+              require: true
+            }, {
+              model: SectionsModel,
+              as: 'section',
+              require: true
+            }
+          ]
+        }
+          , {
+          model: StudentModel,
+          as: 'student',
+          require: true
+        }, {
+          model: FamilyModel,
+          as: 'family',
+          require: true
+        }
+          , {
+          model: PeriodsModel,
+          as: 'period',
+          require: true,
+        }
+        ]
+      })
+        .then((inscriptions) => {
+          console.log('inscriptions******', inscriptions[0].dataValues)
+          // console.log('inscriptions******', inscriptions[0].dataValues.periodLevelSectionI)
+
+          const nuevo = inscriptions.map(item => ({
+            insId: item.dataValues.insId,
+            stuId: item.dataValues.student.dataValues.stuId,
+            nombre: `${item.dataValues.student.dataValues.stuFirstName} ${item.dataValues.student.dataValues.stuSecondName}  ${item.dataValues.student.dataValues.stuSurname} ${item.dataValues.student.dataValues.stuSecondSurname}`,
+            grado: `${item.dataValues.periodLevelSectionI.dataValues.level.dataValues.levName}`,
+          }));
+
+          // {
+          //   stuId: 760,
+          //     stuFirstName: 'Diego',
+          //       stuSecondName: 'Alejandro',
+          //         stuSurname: 'Guerrero',
+          //           stuSecondSurname: 'Gutierrez',
+          //             stuIdType: 'v',
+          //               stuIdentificationNumber: '32531898',
+          //                 stuDateOfBirth: '2007-12-11',
+          //                   stuSex: 'm',
+          //                     couId: 232,
+          //                       fedId: 7,
+          //                         stuPhoto: '',
+          //                           stuStatus: 1
+          // }
+
+          //{
+          // dataValues: {
+          //   plsId: 55,
+          //     perId: 2,
+          //       levId: 14,
+          //         secId: 1,
+          //           level: levelsModel {
+          //     dataValues: [Object],
+          //       _previousDataValues: [Object],
+          //         uniqno: 1,
+          //           _changed: Set(0) { },
+          //     _options: [Object],
+          //       isNewRecord: false
+          //   },
+          //   section: sectionsModel {
+          //     dataValues: [Object],
+          //       _previousDataValues: [Object],
+          //         uniqno: 1,
+          //           _changed: Set(0) { },
+          //     _options: [Object],
+          //       isNewRecord: false
+          //   }
+          // }
+
+          res.status(StatusCodes.OK).json({ ok: true, data: nuevo })
+        }, (err) => {
+          message = err
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+          next(err)
+        })
+
+  } catch (error) {
+    message = 'Error de conexion al consultar inscripciones'
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    next(err)
+
+  }
+}
+
 module.exports = {
   addInscription,
   getAllInscriptions,
@@ -548,6 +658,7 @@ module.exports = {
   deleteInscription,
   getOneInscriptionByStudentByPeriod,
   getInscriptionsByFamId,
-  getAllInscriptionsByPeriod
+  getAllInscriptionsByPeriod,
+  getInscriptionsEstudents
 
 }
