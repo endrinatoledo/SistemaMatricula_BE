@@ -794,6 +794,8 @@ async function filtrarPorEstatusNoSolvente(arrayDeObjetos) {
 
 const morososConFiltros = async (req, res, next) => {
 
+    console.log('req.body', req.body)
+
     let consulta = {};
     try {
 
@@ -805,7 +807,7 @@ const morososConFiltros = async (req, res, next) => {
             }
         })
 
-        console.log('perLevSecResultantes.....', perLevSecResultantes);
+        // console.log('perLevSecResultantes.....', perLevSecResultantes);
 
         let where = {
             perId: req.body.periodo.perId
@@ -850,16 +852,17 @@ const morososConFiltros = async (req, res, next) => {
             }
         ]
         consulta.where = where 
-        consulta.where = where 
+        // consulta.where = where 
 
-        consulta.where = where
+        // consulta.where = where
 
         MonthlyPaymentModel.findAll(consulta)
             .then(async (monthlyPayment) => {
+
+                console.log('monthlyPayment', monthlyPayment[0])
                 if (monthlyPayment.length > 0) {
                     const result = monthlyPayment.map((item, index) => {
                         const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
-console.log('periodLevelSectionI********************', periodLevelSectionI)
                         return {
                             numer: index,
                             idEstudiante: item.dataValues.stuId,
@@ -874,17 +877,29 @@ console.log('periodLevelSectionI********************', periodLevelSectionI)
                             mes: item.dataValues.mopMonth,
                             level: periodLevelSectionI.level.dataValues.levName,
                             section: periodLevelSectionI.section.dataValues.secName,
+                            idFam: item.dataValues.family.dataValues.famId,
                         }
                     });
 
+                    if(req.body.clasificacion == 2){ //por estudiante
+                        const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
+                        const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
 
-                    const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
-                    const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
+                        const datosCompletos = validarPagosEstudiantesDatosCompletos(resultEstudiantesPagosOrdenados) // datos completos para tabla
+                        const resultadoFinal = await filtrarPorEstatusNoSolvente(datosCompletos)
+                        res.send({ ok: true, message: 'Consulta exitosa', data: resultadoFinal })
+                    }else{ //por familia
+                        const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
+                        const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
+  
+                        const datosCompletos = validarPagosEstudiantesDatosCompletos(resultEstudiantesPagosOrdenados) // datos completos para tabla
+                        console.log('datosCompletos', datosCompletos[0])
+                        const familasSinDuplicados = await procesarDatosMorososFamilia(datosCompletos)
+                        const resultadoFinal = await filtrarPorEstatusNoSolvente(familasSinDuplicados)
+                        res.send({ ok: true, message: 'Consulta exitosa', data: resultadoFinal })
+                    }
 
-                    const datosCompletos = validarPagosEstudiantesDatosCompletos(resultEstudiantesPagosOrdenados) // datos completos para tabla
-                    const resultadoFinal = await filtrarPorEstatusNoSolvente(datosCompletos)
-                    console.log('datosCompletos', datosCompletos[0])
-                    res.send({ ok: true, message: 'Consulta exitosa', data: resultadoFinal })
+                    
 
                 } else {
                     res.send({ ok: false, message: 'Sin resultados para mostrar', data: [] })
@@ -1128,12 +1143,13 @@ console.log('periodLevelSectionI********************', periodLevelSectionI)
     // }
 }
 
+
+const morososPorEstudiantes = async (data) => {
+
+}
 function crearArregloDePagosPorEstudiante(estudiantes) {
-
-    console.log('estudiantes', estudiantes[0])
-
     const estudiantesConPagos = estudiantes.reduce((acc, estudiante) => {
-        const { idEstudiante, pName, pSurname, sSurname, familia, typeInd, identificacion, level, section  } = estudiante;
+        const { idEstudiante, pName, pSurname, sSurname, familia, typeInd, identificacion, level, section, idFam  } = estudiante;
         const estudianteExistente = acc.find((e) => e.idEstudiante === idEstudiante);
 
         if (estudianteExistente) {
@@ -1153,7 +1169,8 @@ function crearArregloDePagosPorEstudiante(estudiantes) {
             pSurname,
             sSurname,
             level,
-            section
+            section,
+            idFam,     
         });
 
         return acc;
@@ -1226,6 +1243,35 @@ function validarPagosEstudiantes(estudiantes) {
     return estatusEstudiantes;
 }
 
+async function procesarDatosMorososFamilia(arreglo) {
+    const resultados = arreglo.reduce((acumulador, actual) => {
+        const existente = acumulador.find(item => item.familia === actual.familia);
+
+        if (existente) {
+            // Si ya existe la familia, sumar los valores y actualizar el estatus
+            existente.valorEstatus += actual.valorEstatus;
+            existente.estatus = calcularNuevoEstatus(existente.valorEstatus);
+        } else {
+            // Si no existe, agregar al acumulador
+            acumulador.push(actual);
+        }
+
+        return acumulador;
+    }, []);
+
+    return resultados;
+}
+
+function calcularNuevoEstatus(valorEstatus) {
+    if (valorEstatus === 0) {
+        return 'SOLVENTE';
+    } else if (valorEstatus === 1) {
+        return '1 MES MOROSO';
+    } else {
+        return '+1 MES MOROSO';
+    }
+}
+
 function validarPagosEstudiantesDatosCompletos(estudiantes) {
 
     const fechaActual = new Date();
@@ -1243,17 +1289,16 @@ function validarPagosEstudiantesDatosCompletos(estudiantes) {
         const pagoMesActual = pagosEstudiante.find((pago) => pago.mes.toLowerCase() === mesActual);
         const pagoMesAnterior = pagosEstudiante.find((pago) => pago.mes.toLowerCase() === mesAnterior);
 
-        console.log('estudiante....................', estudiante)
         if (pagoMesActual) {
             // Si el estudiante tiene el pago del mes actual, validar si está al día
             if (pagoMesActual.mopStatus === 1) {
 
-                return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'SOLVENTE' };
+                return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'SOLVENTE', valorEstatus:0, idFam: estudiante.idFam };
             } else if (pagoMesActual.mopStatus === 2) {
                 if (pagoMesAnterior.mopStatus === 1) {
-                    return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '1 MES MOROSO' };
+                    return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level: estudiante.level, section: estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '1 MES MOROSO', valorEstatus: 1, idFam: estudiante.idFam };
                 } else {
-                    return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '+1 MES MOROSO' };
+                    return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level: estudiante.level, section: estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '+1 MES MOROSO', valorEstatus: 2, idFam: estudiante.idFam };
                 }
             }
         }
@@ -1304,8 +1349,6 @@ const graficaMorosos = async (req, res, next) => {
                 levId: req.body.level.levId
             }
         })
-
-        console.log('perLevSecResultantes.....', perLevSecResultantes);
 
         let where = {
             perId: req.body.periodo.perId
@@ -1371,8 +1414,6 @@ const graficaMorosos = async (req, res, next) => {
                             mes: item.dataValues.mopMonth,
                         }
                     });
-
-                    console.log('este resulttttttttttttttttttt',result)
 
                     const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
                     const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
