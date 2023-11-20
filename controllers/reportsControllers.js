@@ -787,116 +787,42 @@ function extraerPlsIdsPromesa(arreglo) {
 
 const morososConFiltros = async (req, res, next) => {
 
+
+    let consulta = {}; 
     try {
-        const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]]
-        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
-        const mesActual = new Date().getMonth();
-        let consulta = {};
-        let perLevSecResultantes;
         
-        let where = {
-            perId: req.body.periodo.perId,
-            mopStatus: 2,
-            mopMonth: meses[mesActual]
-        }
-        if (req.body.etapa != 1) {
-            if (req.body.level == null && req.body.section == null) {
-                // where.secId = {
-                //     [Op.in]: [1, 2]
-                // }
-                // where.levId = {
-                //     [Op.in]: etapasArray[req.body.etapa]
-                // }
-
-                perLevSecResultantes = await PeriodLevelSectionModel.findAll({
-                    where: {
-                        perId: req.body.periodo.perId,
-                        secId: {
-                            [Op.in]: [1, 2]
-                        },
-                        levId: {
-                            [Op.in]: etapasArray[req.body.etapa]
-                        }
-                    }
-                })
-
-            } else {
-                let where2 = {
-                    perId: req.body.periodo.perId,
-                }
-                if (req.body.level != null) where2.levId = req.body.level.levId;
-                if (req.body.section != null) where2.secId = req.body.section.secId;
-
-                perLevSecResultantes = await PeriodLevelSectionModel.findAll({
-                    where: where2
-                })
-
-                // if (req.body.level != null) where.levId = req.body.level.levId;
-                // if (req.body.section != null) where.secId = req.body.section.secId;
+        const perLevSecResultantes = await PeriodLevelSectionModel.findOne({
+            where: {
+                perId: req.body.periodo.perId,
+                secId: req.body.section.secId,
+                levId: req.body.level.levId
             }
+        })
 
-            
+        console.log('perLevSecResultantes.....', perLevSecResultantes);
+
+        let where = {
+            perId: req.body.periodo.perId
         }
-
-        if (req.body.clasificacion == 2) { //busqueda por estudiantes
-            consulta.include =[
-                {
-                    model: StudentModel,
-                    as: 'student',
-                    require: true
-                }
-                , {
-                    model: LevelsModel,
-                    as: 'level',
-                    order: [['lev_id', 'ASC']],
-                    require: true
-                },
-                {
-                    model: SectionsModel,
-                    as: 'section',
-                    order: [['sec_id', 'ASC']],
-                    require: true
-                }, {
-                    model: FamilyModel,
-                    as: 'family',
-                    require: true
-                },
-            ]
-        } else { // busqueda por familias
-            consulta.group = ["famId"]
-            consulta.include = [
-                {
-                    model: LevelsModel,
-                    as: 'level',
-                    order: [['lev_id', 'ASC']],
-                    require: true
-                },
-                {
-                    model: SectionsModel,
-                    as: 'section',
-                    order: [['sec_id', 'ASC']],
-                    require: true
-                }, {
-                    model: FamilyModel,
-                    as: 'family',
-                    require: true
-                },
-            ]
-        }
-
-        
-        const plsIds = await extraerPlsIdsPromesa(perLevSecResultantes);
-
-        consulta.where = where 
-        if (consulta.include){
-            consulta.include.push({
+        consulta.include = [
+            {
+                model: StudentModel,
+                as: 'student',
+                require: true
+            },
+             {
+                model: FamilyModel,
+                as: 'family',
+                require: true
+            },
+            {
                 model: InscriptionsModel,
                 as: 'inscriptionMonthly',
                 require: true,
                 where: {
                     perId: req.body.periodo.perId,
                     plsId: {
-                        [Op.in]: plsIds
+                        [Op.in]: [perLevSecResultantes.dataValues.plsId]
                     }
                 },
                 include: [
@@ -915,87 +841,272 @@ const morososConFiltros = async (req, res, next) => {
                         }]
                     }
                 ]
-            })
-        }else{
-            consulta.include = [
-                {
-                    model: InscriptionsModel,
-                    as: 'inscriptionMonthly',
-                    require: true,
-                    where: {
-                        perId: req.body.periodo.perId,
-                        plsId: {
-                            [Op.in]: plsIds
-                        }
-                    },
-                    include: [
-                        {
-                            model: PeriodLevelSectionModel,
-                            as: 'periodLevelSectionI',
-                            require: true,
-                            include: [{
-                                model: LevelsModel,
-                                as: 'level',
-                                require: true
-                            }, {
-                                model: SectionsModel,
-                                as: 'section',
-                                require: true
-                            }]
-                        }
-                    ]
-                }
-            ]
-        }
+            }
+        ]
+        consulta.where = where 
+
         MonthlyPaymentModel.findAll(consulta)
             .then((monthlyPayment) => {
                 if (monthlyPayment.length > 0) {
-                    if (req.body.clasificacion == 2) { //organizar por estudiantes
-                        const result = monthlyPayment.map((item, index) => {
-                            const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
-                            return {
-                                numer: index,
-                                mes: meses[mesActual],
-                                familia: item.dataValues.family.dataValues.famName,
-                                pName: item.dataValues.student.dataValues.stuFirstName,
-                                sNmae: item.dataValues.student.dataValues.stuSecondName,
-                                pSurname: item.dataValues.student.dataValues.stuSurname,
-                                sSurname: item.dataValues.student.dataValues.stuSecondSurname,
-                                typeInd: item.dataValues.student.dataValues.stuIdType,
-                                identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
-                                level: periodLevelSectionI.level.dataValues.levName,
-                                section: periodLevelSectionI.section.dataValues.secName,
-                            }
-                        });
-                        res.status(StatusCodes.OK).json({ ok: true, data: result })
-                    } else { // organizar por familias
+                    const result = monthlyPayment.map((item, index) => {
+                        const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
+ 
+                        return {
+                            numer: index,
+                            idEstudiante: item.dataValues.stuId,
+                            familia: item.dataValues.family.dataValues.famName,
+                            pName: item.dataValues.student.dataValues.stuFirstName,
+                            sNmae: item.dataValues.student.dataValues.stuSecondName,
+                            pSurname: item.dataValues.student.dataValues.stuSurname,
+                            sSurname: item.dataValues.student.dataValues.stuSecondSurname,
+                            typeInd: item.dataValues.student.dataValues.stuIdType,
+                            identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
+                            mopStatus: item.dataValues.mopStatus,
+                            mes: item.dataValues.mopMonth,
+                        }
+                    });
 
-                        const result = monthlyPayment.map((item, index) => {
-                            const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
+                    console.log('este resulttttttttttttttttttt',result)
 
-                            return {
-                                numer: index,
-                                mes: meses[mesActual],
-                                familia: item.dataValues.family.dataValues.famName,
-                                level: periodLevelSectionI.level.dataValues.levName,
-                                section: periodLevelSectionI.section.dataValues.secName,
-                            }
-                        });
-                        res.status(StatusCodes.OK).json({ ok: true, data: result })
+                    const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
+                    const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
+                    const resultadoEstudianteEstatusPago = validarPagosEstudiantes(resultEstudiantesPagosOrdenados) // estatus por estudiante para tabla
+                    const conteoEstatusEstudiantes = contarEstatusEstudiantes(resultadoEstudianteEstatusPago) // conteo de estatus por estudiante para grafica
+                    const arrayDataGrafica = ArrayDataParaGrafica(conteoEstatusEstudiantes) //arreglo para data de grafica
+
+                    const dataFinal = {
+                        arrayDataGrafica,
+                        labelsGrafica: ['Solventes', '1 Mes Moroso', '+1 Mes Morosos'],
+                        arrayEstudiantesEstatusPago: resultadoEstudianteEstatusPago,
+                        nombreReporte: `Reporte de morosos de ${req.body.level.levName} sección "${req.body.section.secName}"`,
                     }
+                    res.send({ ok: true, message: 'Consulta exitosa', data: [dataFinal] })
+
                 } else {
-                    message = 'Sin datos para mostrar';
-                    res.status(StatusCodes.OK).json({ ok: false, data: [], message })
+                    res.send({ ok: falsa, message: 'Sin resultados para mostrar', data: [] })
                 }
+                
             }, (err) => {
                 message = 'Error al consultar reporte de Morosos con filtro'
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
                 next(err)
             })
+
     } catch (error) {
         console.log('este error', error)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
+
     }
+
+    // try {
+    //     const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]]
+    //     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+    //     const mesActual = new Date().getMonth();
+    //     let consulta = {};
+    //     let perLevSecResultantes;
+        
+    //     let where = {
+    //         perId: req.body.periodo.perId,
+    //         mopStatus: 2,
+    //         mopMonth: meses[mesActual]
+    //     }
+    //     if (req.body.etapa != 1) {
+    //         if (req.body.level == null && req.body.section == null) {
+    //             // where.secId = {
+    //             //     [Op.in]: [1, 2]
+    //             // }
+    //             // where.levId = {
+    //             //     [Op.in]: etapasArray[req.body.etapa]
+    //             // }
+
+    //             perLevSecResultantes = await PeriodLevelSectionModel.findAll({
+    //                 where: {
+    //                     perId: req.body.periodo.perId,
+    //                     secId: {
+    //                         [Op.in]: [1, 2]
+    //                     },
+    //                     levId: {
+    //                         [Op.in]: etapasArray[req.body.etapa]
+    //                     }
+    //                 }
+    //             })
+
+    //         } else {
+    //             let where2 = {
+    //                 perId: req.body.periodo.perId,
+    //             }
+    //             if (req.body.level != null) where2.levId = req.body.level.levId;
+    //             if (req.body.section != null) where2.secId = req.body.section.secId;
+
+    //             perLevSecResultantes = await PeriodLevelSectionModel.findAll({
+    //                 where: where2
+    //             })
+
+    //             // if (req.body.level != null) where.levId = req.body.level.levId;
+    //             // if (req.body.section != null) where.secId = req.body.section.secId;
+    //         }
+
+            
+    //     }
+
+    //     if (req.body.clasificacion == 2) { //busqueda por estudiantes
+    //         consulta.include =[
+    //             {
+    //                 model: StudentModel,
+    //                 as: 'student',
+    //                 require: true
+    //             }
+    //             , {
+    //                 model: LevelsModel,
+    //                 as: 'level',
+    //                 order: [['lev_id', 'ASC']],
+    //                 require: true
+    //             },
+    //             {
+    //                 model: SectionsModel,
+    //                 as: 'section',
+    //                 order: [['sec_id', 'ASC']],
+    //                 require: true
+    //             }, {
+    //                 model: FamilyModel,
+    //                 as: 'family',
+    //                 require: true
+    //             },
+    //         ]
+    //     } else { // busqueda por familias
+    //         consulta.group = ["famId"]
+    //         consulta.include = [
+    //             {
+    //                 model: LevelsModel,
+    //                 as: 'level',
+    //                 order: [['lev_id', 'ASC']],
+    //                 require: true
+    //             },
+    //             {
+    //                 model: SectionsModel,
+    //                 as: 'section',
+    //                 order: [['sec_id', 'ASC']],
+    //                 require: true
+    //             }, {
+    //                 model: FamilyModel,
+    //                 as: 'family',
+    //                 require: true
+    //             },
+    //         ]
+    //     }
+
+        
+    //     const plsIds = await extraerPlsIdsPromesa(perLevSecResultantes);
+
+    //     consulta.where = where 
+    //     if (consulta.include){
+    //         consulta.include.push({
+    //             model: InscriptionsModel,
+    //             as: 'inscriptionMonthly',
+    //             require: true,
+    //             where: {
+    //                 perId: req.body.periodo.perId,
+    //                 plsId: {
+    //                     [Op.in]: plsIds
+    //                 }
+    //             },
+    //             include: [
+    //                 {
+    //                     model: PeriodLevelSectionModel,
+    //                     as: 'periodLevelSectionI',
+    //                     require: true,
+    //                     include: [{
+    //                         model: LevelsModel,
+    //                         as: 'level',
+    //                         require: true
+    //                     }, {
+    //                         model: SectionsModel,
+    //                         as: 'section',
+    //                         require: true
+    //                     }]
+    //                 }
+    //             ]
+    //         })
+    //     }else{
+    //         consulta.include = [
+    //             {
+    //                 model: InscriptionsModel,
+    //                 as: 'inscriptionMonthly',
+    //                 require: true,
+    //                 where: {
+    //                     perId: req.body.periodo.perId,
+    //                     plsId: {
+    //                         [Op.in]: plsIds
+    //                     }
+    //                 },
+    //                 include: [
+    //                     {
+    //                         model: PeriodLevelSectionModel,
+    //                         as: 'periodLevelSectionI',
+    //                         require: true,
+    //                         include: [{
+    //                             model: LevelsModel,
+    //                             as: 'level',
+    //                             require: true
+    //                         }, {
+    //                             model: SectionsModel,
+    //                             as: 'section',
+    //                             require: true
+    //                         }]
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //     }
+    //     MonthlyPaymentModel.findAll(consulta)
+    //         .then((monthlyPayment) => {
+    //             if (monthlyPayment.length > 0) {
+    //                 if (req.body.clasificacion == 2) { //organizar por estudiantes
+    //                     const result = monthlyPayment.map((item, index) => {
+    //                         const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
+    //                         return {
+    //                             numer: index,
+    //                             mes: meses[mesActual],
+    //                             familia: item.dataValues.family.dataValues.famName,
+    //                             pName: item.dataValues.student.dataValues.stuFirstName,
+    //                             sNmae: item.dataValues.student.dataValues.stuSecondName,
+    //                             pSurname: item.dataValues.student.dataValues.stuSurname,
+    //                             sSurname: item.dataValues.student.dataValues.stuSecondSurname,
+    //                             typeInd: item.dataValues.student.dataValues.stuIdType,
+    //                             identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
+    //                             level: periodLevelSectionI.level.dataValues.levName,
+    //                             section: periodLevelSectionI.section.dataValues.secName,
+    //                         }
+    //                     });
+    //                     res.status(StatusCodes.OK).json({ ok: true, data: result })
+    //                 } else { // organizar por familias
+
+    //                     const result = monthlyPayment.map((item, index) => {
+    //                         const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
+
+    //                         return {
+    //                             numer: index,
+    //                             mes: meses[mesActual],
+    //                             familia: item.dataValues.family.dataValues.famName,
+    //                             level: periodLevelSectionI.level.dataValues.levName,
+    //                             section: periodLevelSectionI.section.dataValues.secName,
+    //                         }
+    //                     });
+    //                     res.status(StatusCodes.OK).json({ ok: true, data: result })
+    //                 }
+    //             } else {
+    //                 message = 'Sin datos para mostrar';
+    //                 res.status(StatusCodes.OK).json({ ok: false, data: [], message })
+    //             }
+    //         }, (err) => {
+    //             message = 'Error al consultar reporte de Morosos con filtro'
+    //             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
+    //             next(err)
+    //         })
+    // } catch (error) {
+    //     console.log('este error', error)
+    //     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
+    // }
 
  
 }
