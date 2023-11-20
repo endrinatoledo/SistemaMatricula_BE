@@ -785,12 +785,18 @@ function extraerPlsIdsPromesa(arreglo) {
     });
 }
 
+async function filtrarPorEstatusNoSolvente(arrayDeObjetos) {
+    // Utiliza la función filter() para crear un nuevo array excluyendo los objetos con estatus 'SOLVENTE'
+    const resultado = arrayDeObjetos.filter(objeto => objeto.estatus !== 'SOLVENTE');
+
+    return resultado;
+}
+
 const morososConFiltros = async (req, res, next) => {
 
-
-    let consulta = {}; 
+    let consulta = {};
     try {
-        
+
         const perLevSecResultantes = await PeriodLevelSectionModel.findOne({
             where: {
                 perId: req.body.periodo.perId,
@@ -810,7 +816,7 @@ const morososConFiltros = async (req, res, next) => {
                 as: 'student',
                 require: true
             },
-             {
+            {
                 model: FamilyModel,
                 as: 'family',
                 require: true
@@ -844,13 +850,16 @@ const morososConFiltros = async (req, res, next) => {
             }
         ]
         consulta.where = where 
+        consulta.where = where 
+
+        consulta.where = where
 
         MonthlyPaymentModel.findAll(consulta)
-            .then((monthlyPayment) => {
+            .then(async (monthlyPayment) => {
                 if (monthlyPayment.length > 0) {
                     const result = monthlyPayment.map((item, index) => {
                         const periodLevelSectionI = item.dataValues.inscriptionMonthly.dataValues.periodLevelSectionI.dataValues
- 
+console.log('periodLevelSectionI********************', periodLevelSectionI)
                         return {
                             numer: index,
                             idEstudiante: item.dataValues.stuId,
@@ -863,40 +872,38 @@ const morososConFiltros = async (req, res, next) => {
                             identificacion: item.dataValues.student.dataValues.stuIdentificationNumber,
                             mopStatus: item.dataValues.mopStatus,
                             mes: item.dataValues.mopMonth,
+                            level: periodLevelSectionI.level.dataValues.levName,
+                            section: periodLevelSectionI.section.dataValues.secName,
                         }
                     });
 
-                    console.log('este resulttttttttttttttttttt',result)
 
                     const resultEstudiantesPagos = crearArregloDePagosPorEstudiante(result)
                     const resultEstudiantesPagosOrdenados = ordenarPagosDesdeSeptiembreHastaAgosto(resultEstudiantesPagos)
-                    const resultadoEstudianteEstatusPago = validarPagosEstudiantes(resultEstudiantesPagosOrdenados) // estatus por estudiante para tabla
-                    const conteoEstatusEstudiantes = contarEstatusEstudiantes(resultadoEstudianteEstatusPago) // conteo de estatus por estudiante para grafica
-                    const arrayDataGrafica = ArrayDataParaGrafica(conteoEstatusEstudiantes) //arreglo para data de grafica
 
-                    const dataFinal = {
-                        arrayDataGrafica,
-                        labelsGrafica: ['Solventes', '1 Mes Moroso', '+1 Mes Morosos'],
-                        arrayEstudiantesEstatusPago: resultadoEstudianteEstatusPago,
-                        nombreReporte: `Reporte de morosos de ${req.body.level.levName} sección "${req.body.section.secName}"`,
-                    }
-                    res.send({ ok: true, message: 'Consulta exitosa', data: [dataFinal] })
+                    const datosCompletos = validarPagosEstudiantesDatosCompletos(resultEstudiantesPagosOrdenados) // datos completos para tabla
+                    const resultadoFinal = await filtrarPorEstatusNoSolvente(datosCompletos)
+                    console.log('datosCompletos', datosCompletos[0])
+                    res.send({ ok: true, message: 'Consulta exitosa', data: resultadoFinal })
 
                 } else {
-                    res.send({ ok: falsa, message: 'Sin resultados para mostrar', data: [] })
+                    res.send({ ok: false, message: 'Sin resultados para mostrar', data: [] })
                 }
-                
+
             }, (err) => {
                 message = 'Error al consultar reporte de Morosos con filtro'
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message })
                 next(err)
             })
 
+
     } catch (error) {
         console.log('este error', error)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
 
     }
+
+    // console.log('req.body', req.body)
 
     // try {
     //     const etapasArray = [[], [], [1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14]]
@@ -911,7 +918,10 @@ const morososConFiltros = async (req, res, next) => {
     //         mopMonth: meses[mesActual]
     //     }
     //     if (req.body.etapa != 1) {
+    //         console.log('entro a 1')
     //         if (req.body.level == null && req.body.section == null) {
+    //             console.log('entro a 2')
+
     //             // where.secId = {
     //             //     [Op.in]: [1, 2]
     //             // }
@@ -930,6 +940,8 @@ const morososConFiltros = async (req, res, next) => {
     //                     }
     //                 }
     //             })
+    //             console.log('entro a 2 + resultado',perLevSecResultantes.length)
+
 
     //         } else {
     //             let where2 = {
@@ -997,9 +1009,10 @@ const morososConFiltros = async (req, res, next) => {
 
         
     //     const plsIds = await extraerPlsIdsPromesa(perLevSecResultantes);
-
+    //     console.log('plsIds...............', plsIds)
     //     consulta.where = where 
     //     if (consulta.include){
+    //         console.log('entro a 3')
     //         consulta.include.push({
     //             model: InscriptionsModel,
     //             as: 'inscriptionMonthly',
@@ -1028,6 +1041,9 @@ const morososConFiltros = async (req, res, next) => {
     //             ]
     //         })
     //     }else{
+
+    //         console.log('entro a 4')
+
     //         consulta.include = [
     //             {
     //                 model: InscriptionsModel,
@@ -1060,6 +1076,9 @@ const morososConFiltros = async (req, res, next) => {
     //     }
     //     MonthlyPaymentModel.findAll(consulta)
     //         .then((monthlyPayment) => {
+
+    //             console.log('monthlyPayment', monthlyPayment.length)
+
     //             if (monthlyPayment.length > 0) {
     //                 if (req.body.clasificacion == 2) { //organizar por estudiantes
     //                     const result = monthlyPayment.map((item, index) => {
@@ -1107,13 +1126,14 @@ const morososConFiltros = async (req, res, next) => {
     //     console.log('este error', error)
     //     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ ok: false, message: 'Error al consultar reporte de Morosos con filtro' })
     // }
-
- 
 }
 
 function crearArregloDePagosPorEstudiante(estudiantes) {
+
+    console.log('estudiantes', estudiantes[0])
+
     const estudiantesConPagos = estudiantes.reduce((acc, estudiante) => {
-        const { idEstudiante, pName, pSurname, sSurname } = estudiante;
+        const { idEstudiante, pName, pSurname, sSurname, familia, typeInd, identificacion, level, section  } = estudiante;
         const estudianteExistente = acc.find((e) => e.idEstudiante === idEstudiante);
 
         if (estudianteExistente) {
@@ -1125,7 +1145,15 @@ function crearArregloDePagosPorEstudiante(estudiantes) {
         acc.push({
             idEstudiante,
             nombre: `${pName} ${pSurname} ${sSurname}`,
+            familia,
+            typeInd,
+            identificacion,
             pagos,
+            pName,
+            pSurname,
+            sSurname,
+            level,
+            section
         });
 
         return acc;
@@ -1196,6 +1224,42 @@ function validarPagosEstudiantes(estudiantes) {
     });
 
     return estatusEstudiantes;
+}
+
+function validarPagosEstudiantesDatosCompletos(estudiantes) {
+
+    const fechaActual = new Date();
+    const mesActual = fechaActual.toLocaleString('default', { month: 'long' }).toLowerCase();
+    // Restar un mes a la fecha actual
+    fechaActual.setMonth(fechaActual.getMonth() - 1);
+
+    // Obtener el nombre del mes anterior
+    const mesAnterior = fechaActual.toLocaleString('default', { month: 'long' }).toLowerCase();
+
+    const estatusEstudiantes = estudiantes.map((estudiante) => {
+        const pagosEstudiante = estudiante.pagos;
+
+        // Buscar el pago correspondiente al mes actual
+        const pagoMesActual = pagosEstudiante.find((pago) => pago.mes.toLowerCase() === mesActual);
+        const pagoMesAnterior = pagosEstudiante.find((pago) => pago.mes.toLowerCase() === mesAnterior);
+
+        console.log('estudiante....................', estudiante)
+        if (pagoMesActual) {
+            // Si el estudiante tiene el pago del mes actual, validar si está al día
+            if (pagoMesActual.mopStatus === 1) {
+
+                return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: 'SOLVENTE' };
+            } else if (pagoMesActual.mopStatus === 2) {
+                if (pagoMesAnterior.mopStatus === 1) {
+                    return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '1 MES MOROSO' };
+                } else {
+                    return { pName: estudiante.pName, pSurname: estudiante.pSurname, sSurname: estudiante.sSurname, level:estudiante.level, section:estudiante.section, familia: estudiante.familia, typeInd: estudiante.typeInd, identificacion: estudiante.identificacion, idEstudiante: estudiante.idEstudiante, nombre: estudiante.nombre, estatus: '+1 MES MOROSO' };
+                }
+            }
+        }
+    });
+
+    return estatusEstudiantes; 
 }
 
 function contarEstatusEstudiantes(estudiantes) {
@@ -1325,7 +1389,7 @@ const graficaMorosos = async (req, res, next) => {
                     res.send({ ok: true, message: 'Consulta exitosa', data: [dataFinal] })
 
                 } else {
-                    res.send({ ok: falsa, message: 'Sin resultados para mostrar', data: [] })
+                    res.send({ ok: false, message: 'Sin resultados para mostrar', data: [] })
                 }
                 
             }, (err) => {
